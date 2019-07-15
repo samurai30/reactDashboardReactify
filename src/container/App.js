@@ -12,8 +12,6 @@ import RctThemeProvider from './RctThemeProvider';
 //Main App
 import RctDefaultLayout from './DefaultLayout';
 
-import Service from './service';
-// CRM layout
 import CRMLayout from './CRMLayout';
 /**
  * Initial Path To Check Whether User Is Logged In Or Not
@@ -39,7 +37,6 @@ class App extends Component {
                component={RctDefaultLayout}
             />
             <Route path="/dashboard" component={CRMLayout} />
-            <Route path="/services" component={Service} />
          </RctThemeProvider>
       );
    }

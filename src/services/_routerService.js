@@ -1,7 +1,6 @@
 
 import Dashboard from 'Routes/dashboard';
-import Crm from 'Routes/crm';
-import Tasks from "Routes/Services";
+import Tasks from "Routes/tasks";
 
 
 export default [
@@ -10,11 +9,7 @@ export default [
       component: Dashboard
    },
    {
-      path: 'crm',
-      component: Crm
-   },
-   {
-      path: 'services',
+      path: 'tasks',
       component: Tasks
    }
 ]

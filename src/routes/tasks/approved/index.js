@@ -1,7 +1,9 @@
+/* eslint-disable */
 import React ,{Component} from 'react';
 import {Helmet} from "react-helmet";
-import PageTitleBar from "Routes/crm/dashboard";
+
 import IntlMessages from "Util/IntlMessages";
+import PageTitleBar from "Components/PageTitleBar/PageTitleBar";
 
 
 

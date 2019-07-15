@@ -14,19 +14,13 @@ const AsyncHomeDashboardComponent = Loadable({
    loading: () => <RctPageLoader />,
 });
 
-// crm dashboard
-const AsyncCrmComponent = Loadable({
-   loader: () => import("Routes/crm/dashboard"),
-   loading: () => <RctPageLoader />,
-});
 
 const AysncTasksComponent = Loadable({
-   loader: () => import('Routes/Services/approved'),
+   loader: () => import('Routes/tasks/approved'),
    loading : () => <RctPageLoader/>
 });
 
 export {
    AsyncHomeDashboardComponent,
-   AsyncCrmComponent,
    AysncTasksComponent
 };
