@@ -10,10 +10,9 @@ import classNames from 'classnames';
 import AgencyWelcomeBarChart from "Components/Charts/AgencyWelcomeBarChart"
 
 //Chart Data
-import {
-	WelcomeBarChart1,
-	WelcomeBarChart2
-} from '../../routes/dashboard/agency/data'
+WelcomeBarChart1=null;
+
+WelcomeBarChart2=null;
 
 // function to get today weather icon
 function getIcon(id) {

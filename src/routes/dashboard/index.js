@@ -10,7 +10,7 @@ import {
 } from 'Components/AsyncComponent/AsyncComponent';
 
 const Dashboard = ({ match }) => (
-   <div className="dashboard-wrapper">
+   <div className="Crm-wrapper">
       <Switch>
          <Redirect exact from={`${match.url}/`} to={`${match.url}/home`} />
          <Route path={`${match.url}/home`} component={AsyncHomeDashboardComponent} />

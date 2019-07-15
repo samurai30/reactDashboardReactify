@@ -14,7 +14,7 @@ class CRMLayout extends Component {
    render() {
       const { match, location } = this.props;
       if (location.pathname === '/dashboard') {
-         return (<Redirect to={'/dashboard/services/approved'} />);
+         return (<Redirect to={'/dashboard/tasks/approved'} />);
       }
       return (
          <RctCRMLayout >

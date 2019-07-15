@@ -15,13 +15,13 @@ import ChartConfig from 'Constants/chart-config';
 // intl messages
 import IntlMessages from 'Util/IntlMessages';
 
-const DailySales = ({ label, chartdata, labels }) => (
+const DailySales = ({ label, chartdata, labels,today }) => (
 	<div>
 		<div className="p-20">
 			<div className="mb-20 d-flex">
 				<i className="mr-15 ti-arrow-up text-success font-lg"></i>
 				<div>
-					<h2 className="mb-5">12,255 Today</h2>
+					<h2 className="mb-5">{today}</h2>
 					<p className="mb-0">10% increase from yesterday</p>
 				</div>
 			</div>

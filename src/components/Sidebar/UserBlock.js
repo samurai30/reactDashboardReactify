@@ -83,7 +83,7 @@ class UserBlock extends Component {
 								/>
 							</div>
 							<div className="user-info">
-								<span className="user-name ml-4">Lucile Beck</span>
+								<span className="user-name ml-4">Patrik Freeman</span>
 								<i className="zmdi zmdi-chevron-down dropdown-icon mx-4"></i>
 							</div>
 						</DropdownToggle>
