@@ -111,6 +111,8 @@
       "redux-thunk": "^2.3.0",
       "screenfull": "^4.0.1",
       "slick-carousel": "^1.8.1",
+      "superagent": "^5.1.0",
+      "superagent-promise": "^1.1.0",
       "video-react": "^0.13.4",
       "weather-icons": "^1.3.2"
    }

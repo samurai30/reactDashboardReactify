@@ -20,7 +20,13 @@ const AysncTasksComponent = Loadable({
    loading : () => <RctPageLoader/>
 });
 
+const AsyncAdminLoginComponent = Loadable({
+   loader: () => import('Routes/login'),
+   loading: () => <RctPageLoader/>
+});
+
 export {
    AsyncHomeDashboardComponent,
-   AysncTasksComponent
+   AysncTasksComponent,
+   AsyncAdminLoginComponent
 };

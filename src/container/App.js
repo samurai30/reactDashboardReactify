@@ -13,6 +13,7 @@ import RctThemeProvider from './RctThemeProvider';
 import RctDefaultLayout from './DefaultLayout';
 
 import CRMLayout from './CRMLayout';
+import {AsyncAdminLoginComponent} from "Components/AsyncComponent/AsyncComponent";
 /**
  * Initial Path To Check Whether User Is Logged In Or Not
  */
@@ -37,6 +38,7 @@ class App extends Component {
                component={RctDefaultLayout}
             />
             <Route path="/dashboard" component={CRMLayout} />
+            <Route path="/admin-login" component={AsyncAdminLoginComponent}/>
          </RctThemeProvider>
       );
    }

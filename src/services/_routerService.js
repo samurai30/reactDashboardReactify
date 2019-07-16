@@ -1,6 +1,7 @@
 
 import Dashboard from 'Routes/dashboard';
 import Tasks from "Routes/tasks";
+import AdminLoginPage from "Routes/login";
 
 
 export default [
