@@ -11,6 +11,7 @@ import authUserReducer from './AuthUserReducer';
 import feedbacksReducer from './FeedbacksReducer';
 import ecommerceReducer from './EcommerceReducer';
 import {reducer as formReducer} from 'redux-form'
+import {routerReducer} from 'react-router-redux'
 const reducers = combineReducers({
   settings,
   chatAppReducer,
@@ -21,7 +22,8 @@ const reducers = combineReducers({
   feedback: feedbacksReducer,
   ecommerce: ecommerceReducer,
   auth: authUserReducer,
-  form: formReducer
+  form: formReducer,
+  router: routerReducer
 });
 
 export default reducers;

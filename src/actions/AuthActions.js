@@ -1,6 +1,6 @@
 import {requests} from "Api";
-import {SubmissionError} from "redux-form";
-import {LOGIN_USER, LOGIN_USER_SUCCESS} from "Actions/types";
+import {SubmissionError} from 'redux-form'
+import {LOGIN_USER, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS} from "Actions/types";
 
 
 export const userLoginAttempt = (username,password) =>{
@@ -8,11 +8,10 @@ export const userLoginAttempt = (username,password) =>{
         dispatch({type:LOGIN_USER});
         return requests.post('/login_check',{username,password},false).then(
             response => {
-                dispatch(userLoginSuccess(response.token,response.id))
+                dispatch(userLoginSuccess(response.token,response.id));
             }).catch(error => {
-                throw new SubmissionError({
-                    _error:"Username or Password Invalid",
-                });
+            dispatch({type:LOGIN_USER_FAILURE});
+            throw new SubmissionError({_error: "Username Password Invalid"});
         });
     }
 

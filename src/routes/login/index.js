@@ -36,7 +36,7 @@ class AdminLoginPage extends Component{
     }
     render(){
         const {loading} = this.props;
-        const {handleSubmit,error} = this.props
+        const {handleSubmit,error} = this.props;
         return(
             <QueueAnim type="bottom" duration={2000}>
                 <div className="rct-session-wrapper">
@@ -67,6 +67,7 @@ class AdminLoginPage extends Component{
                                             <p className="mb-0">Please provide details to authenticate</p>
                                         </div>
                                         <Form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+                                            {error && <div className="alert alert-danger">{error}</div>}
                                             <Field name="username" label="Username" type="text" placeholder="Username" spanIcon="ti-email" component={renderField}/>
                                             <Field name="password" label="Password" type="Password" placeholder="Password" spanIcon="ti-lock" component={renderField}/>
                                             <FormGroup className="mb-15">
