@@ -29,7 +29,10 @@ class AdminLoginPage extends Component{
 
 
     onSubmit(values){
-        console.log(values);
+        this.props.userLoginAttempt(
+            values.username,
+            values.password
+        );
     }
     render(){
         const {loading} = this.props;
