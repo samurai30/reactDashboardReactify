@@ -8,7 +8,6 @@ export const tokenMiddleWare = store => next => action =>{
             window.localStorage.setItem('jwtToken',action.token);
             window.localStorage.setItem('user_id','user');
             requests.setToken(action.token);
-            console.log("middleware",action.token)
     }
     next(action)
 };

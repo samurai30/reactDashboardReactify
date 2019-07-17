@@ -12,7 +12,6 @@ export const userLoginAttempt = (username,password) =>{
             }).catch(error => {
                 throw new SubmissionError({
                     _error:"Username or Password Invalid",
-
                 });
         });
     }
