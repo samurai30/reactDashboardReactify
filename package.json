@@ -108,6 +108,7 @@
       "reactstrap": "^7.1.0",
       "recharts": "^1.5.0",
       "redux": "^4.0.1",
+      "redux-form": "^8.2.4",
       "redux-thunk": "^2.3.0",
       "screenfull": "^4.0.1",
       "slick-carousel": "^1.8.1",

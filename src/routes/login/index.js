@@ -12,13 +12,28 @@ import { SessionSlider } from 'Components/Widgets';
 
 // app config
 import AppConfig from 'Constants/AppConfig';
+import {userLoginAttempt} from "Actions";
+import {Field, reduxForm} from "redux-form";
+import {renderField} from "../../forms/form";
 
+
+const mapStateToProps = state =>({
+   ...state.auth
+});
+
+const mapDispatchToProps = {
+    userLoginAttempt
+};
 
 class AdminLoginPage extends Component{
 
 
+    onSubmit(values){
+        console.log(values);
+    }
     render(){
         const {loading} = this.props;
+        const {handleSubmit,error} = this.props
         return(
             <QueueAnim type="bottom" duration={2000}>
                 <div className="rct-session-wrapper">
@@ -48,22 +63,16 @@ class AdminLoginPage extends Component{
                                             <h2 className="font-weight-bold">Polucon Admin-Dashboard Login</h2>
                                             <p className="mb-0">Please provide details to authenticate</p>
                                         </div>
-                                        <Form>
-                                            <FormGroup className="has-wrapper">
-                                                <Input type="mail" name="user-mail" id="user-mail" className="has-input input-lg" placeholder="Enter Email Address" />
-                                                <span className="has-icon"><i className="ti-email"></i></span>
-                                            </FormGroup>
-                                            <FormGroup className="has-wrapper">
-                                                <Input type="Password" name="user-pwd" id="pwd" className="has-input input-lg" placeholder="Password" />
-                                                <span className="has-icon"><i className="ti-lock"></i></span>
-                                            </FormGroup>
+                                        <Form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+                                            <Field name="username" label="Username" type="text" placeholder="Username" spanIcon="ti-email" component={renderField}/>
+                                            <Field name="password" label="Password" type="Password" placeholder="Password" spanIcon="ti-lock" component={renderField}/>
                                             <FormGroup className="mb-15">
                                                 <Button
+                                                    type="submit"
                                                     color="primary"
                                                     className="btn-block text-white w-100"
                                                     variant="contained"
-                                                    size="large"
-                                                    onClick={() => this.onUserLogin()}>
+                                                    size="large">
                                                     Sign In
                                                 </Button>
                                             </FormGroup>
@@ -82,4 +91,4 @@ class AdminLoginPage extends Component{
     }
 }
 
-export default AdminLoginPage;
+export default reduxForm({form:'adminLoginForm'})(connect(mapStateToProps,mapDispatchToProps)(AdminLoginPage));

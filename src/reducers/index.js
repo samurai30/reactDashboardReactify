@@ -10,7 +10,7 @@ import todoAppReducer from './TodoAppReducer';
 import authUserReducer from './AuthUserReducer';
 import feedbacksReducer from './FeedbacksReducer';
 import ecommerceReducer from './EcommerceReducer';
-
+import {reducer as formReducer} from 'redux-form'
 const reducers = combineReducers({
   settings,
   chatAppReducer,
@@ -19,7 +19,9 @@ const reducers = combineReducers({
   todoApp: todoAppReducer,
   authUser: authUserReducer,
   feedback: feedbacksReducer,
-  ecommerce: ecommerceReducer
+  ecommerce: ecommerceReducer,
+  auth: authUserReducer,
+  form: formReducer
 });
 
 export default reducers;

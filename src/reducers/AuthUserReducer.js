@@ -12,8 +12,10 @@ import {
  * initial auth user
  */
 const INIT_STATE = {
-    user: localStorage.getItem('user_id'),
-    loading: false
+    user_id: null,
+    loading: false,
+    token: null,
+    isAuthenticated: false
 };
 
 export default (state = INIT_STATE, action) => {
@@ -23,7 +25,11 @@ export default (state = INIT_STATE, action) => {
             return { ...state, loading: true };
 
         case LOGIN_USER_SUCCESS:
-            return { ...state, loading: false, user: action.payload };
+            return { ...state,
+                loading: false,
+                user_id: action.user_id,
+                token: action.token,
+                isAuthenticated: true};
 
         case LOGIN_USER_FAILURE:
             return { ...state, loading: false };
