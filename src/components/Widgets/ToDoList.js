@@ -19,7 +19,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Snackbar from '@material-ui/core/Snackbar';
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 // intl messages
 import IntlMessages from 'Util/IntlMessages';

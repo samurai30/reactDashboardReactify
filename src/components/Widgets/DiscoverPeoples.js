@@ -7,7 +7,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 class DiscoverPeoplesWidget extends Component {
 

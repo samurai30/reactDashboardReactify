@@ -4,7 +4,7 @@
 import React, { Component } from 'react';
 
 // api
-import api from 'Api'
+import {api} from 'Api'
 
 export default class OrderStatus extends Component {
 

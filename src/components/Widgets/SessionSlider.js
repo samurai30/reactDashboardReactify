@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import Slider from "react-slick";
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 export default class SessionSlider extends Component {
 

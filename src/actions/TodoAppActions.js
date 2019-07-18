@@ -1,7 +1,7 @@
 /**
  * Todo App Actions
  */
-import api from 'Api';
+import {api} from 'Api';
 import {
     GET_TODOS,
     FETCH_TODOS,

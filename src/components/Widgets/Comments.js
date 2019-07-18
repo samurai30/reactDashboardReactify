@@ -8,7 +8,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 
 // Api
-import api from 'Api';
+import {api} from 'Api';
 
 // intl messages
 import IntlMessages from 'Util/IntlMessages';

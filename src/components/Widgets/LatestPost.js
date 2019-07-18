@@ -21,7 +21,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import { Fab } from '@material-ui/core';
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 //Helper
 import { getTheDate, convertDateToTimeStamp } from 'Helpers/helpers';

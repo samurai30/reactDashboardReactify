@@ -11,7 +11,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 //Helper
 import { getTheDate, convertDateToTimeStamp } from 'Helpers/helpers';

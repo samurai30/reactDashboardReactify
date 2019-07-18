@@ -1,7 +1,7 @@
 /**
  * Email App Actions
  */
-import api from 'Api';
+import {api} from 'Api';
 import {
     GET_EMAILS,
     GET_EMAIL_SUCCESS,

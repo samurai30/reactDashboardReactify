@@ -6,7 +6,7 @@ import update from 'react-addons-update';
 import { Badge } from 'reactstrap';
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 // rct section loader
 import RctSectionLoader from 'Components/RctSectionLoader/RctSectionLoader';

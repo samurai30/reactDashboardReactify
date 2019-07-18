@@ -10,7 +10,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Tooltip from '@material-ui/core/Tooltip';
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 // card component
 import { RctCardFooter } from 'Components/RctCard';

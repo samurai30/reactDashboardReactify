@@ -17,24 +17,37 @@ import {AsyncAdminLoginComponent} from "Components/AsyncComponent/AsyncComponent
 /**
  * Initial Path To Check Whether User Is Logged In Or Not
  */
-const InitialPath = ({ component: Component, ...rest }) =>
-   <Route
-      {...rest}
-      render={props => <Component {...props} />}
-   />;
-
+const InitialPath = ({ component: Component, authUser,...rest }) =>{
+   return( <Route
+       {...rest}
+       render={props =>
+           authUser.token
+               ? <Component {...props} />
+               : <Redirect
+                   to={{
+                       pathname: '/admin-login',
+                       state: { from: props.location }
+                   }}
+               />}
+   />)
+}
 class App extends Component {
    render() {
-      const { location, match, user } = this.props;
+      const { location, match, token, user_id } = this.props;
       if (location.pathname === '/') {
-         return <Redirect to={'/app/dashboard/home'} />;
+
+          if (token === null && user_id === null) {
+              return (<Redirect to={'/admin-login'} />);
+          } else {
+              return (<Redirect to={'/app/dashboard/home'} />);
+          }
       }
       return (
          <RctThemeProvider>
             <NotificationContainer />
             <InitialPath
                path={`${match.url}app`}
-               authUser={user}
+               authUser={{token,user_id}}
                component={RctDefaultLayout}
             />
             <Route path="/dashboard" component={CRMLayout} />
@@ -45,9 +58,9 @@ class App extends Component {
 }
 
 // map state to props
-const mapStateToProps = ({ authUser }) => {
-   const { user } = authUser;
-   return { user };
+const mapStateToProps = ({ auth }) => {
+   const { token,user_id } = auth;
+   return { token,user_id };
 };
 
 export default connect(mapStateToProps)(App);

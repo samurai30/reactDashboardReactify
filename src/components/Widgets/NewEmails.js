@@ -17,7 +17,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { withRouter } from 'react-router-dom';
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 // intl messages
 import IntlMessages from 'Util/IntlMessages';

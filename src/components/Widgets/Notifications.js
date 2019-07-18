@@ -11,7 +11,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Typography from '@material-ui/core/Typography';
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 // intl messages
 import IntlMessages from 'Util/IntlMessages';

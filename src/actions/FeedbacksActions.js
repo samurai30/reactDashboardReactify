@@ -1,7 +1,7 @@
 /**
  * Feedback Actions
  */
-import api from 'Api';
+import {api} from 'Api';
 import {
     GET_FEEDBACKS,
     GET_FEEDBACKS_SUCCESS,

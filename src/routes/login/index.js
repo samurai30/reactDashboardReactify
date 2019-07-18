@@ -15,7 +15,7 @@ import AppConfig from 'Constants/AppConfig';
 import {userLoginAttempt} from "Actions";
 import {Field, reduxForm, SubmissionError} from "redux-form";
 import {renderField} from "../../forms/form";
-
+import {Helmet} from "react-helmet";
 
 const mapStateToProps = state =>({
    ...state.auth
@@ -29,9 +29,11 @@ const mapDispatchToProps = {
 class AdminLoginPage extends Component{
 
 
+    componentDidMount(){
+
+    }
     componentDidUpdate(prevProps, prevState) {
-    
-       if(prevProps.token != this.props.token){
+       if(prevProps.token !== this.props.token){
            this.props.history.push("/")
        }
 
@@ -49,7 +51,13 @@ class AdminLoginPage extends Component{
         const {handleSubmit,error} = this.props;
         
         return(
+
             <QueueAnim type="bottom" duration={2000}>
+                <Helmet>
+                    <title>Polucon Admin Login</title>
+                    <meta name="description" content="Admin-Login Polucon" />
+                </Helmet>
+
                 <div className="rct-session-wrapper">
                     {loading &&
                     <LinearProgress />

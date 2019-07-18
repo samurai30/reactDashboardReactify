@@ -6,7 +6,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { Badge } from 'reactstrap';
 
 // api
-import api from 'Api';
+import {api} from 'Api';
 
 class RecentActivity extends Component {
 
