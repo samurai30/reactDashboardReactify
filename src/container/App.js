@@ -19,7 +19,7 @@ import {api} from "Api";
  * Initial Path To Check Whether User Is Logged In Or Not
  */
 const InitialPath = ({ component: Component,authToken,...rest }) =>{
-
+    console.log(authToken)
    return(   <Route
        {...rest}
        render={props =>
@@ -41,6 +41,8 @@ class App extends Component {
             api.setToken(token);
         }
     }
+
+
 
    render() {
       const {  location,match,token } = this.props;

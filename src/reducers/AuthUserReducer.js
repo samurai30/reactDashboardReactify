@@ -5,7 +5,7 @@ import {
     LOGIN_USER,
     LOGIN_USER_SUCCESS,
     LOGIN_USER_FAILURE,
-    LOGOUT_USER
+    LOGOUT_USER, CHECK_USER_LOGIN
 } from 'Actions/types';
 
 /**
@@ -35,8 +35,9 @@ export default (state = INIT_STATE, action) => {
             return { ...state, loading: false };
 
         case LOGOUT_USER:
-            
+
             return { ...state, user_id: null,token:null,isAuthenticated:false };
+   
 
         default: return { ...state };
     }

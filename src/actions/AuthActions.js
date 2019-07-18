@@ -1,6 +1,6 @@
 import {api} from "Api";
 import {SubmissionError} from 'redux-form'
-import {LOGIN_USER, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS,LOGOUT_USER} from "Actions/types";
+import {CHECK_USER_LOGIN, LOGIN_USER, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER} from "Actions/types";
 import {NotificationManager} from "react-notifications";
 
 export const userLoginAttempt = (username,password) =>{
@@ -25,6 +25,7 @@ export const userLoginSuccess = (token,user_id) =>{
         user_id
     }
 };
+
 
 export const userLogoutAction  = () =>({
     type: LOGOUT_USER

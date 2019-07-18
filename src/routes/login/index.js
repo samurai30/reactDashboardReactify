@@ -16,6 +16,7 @@ import {Field, reduxForm, SubmissionError} from "redux-form";
 import {renderField} from "../../forms/form";
 import {Helmet} from "react-helmet";
 import {NotificationContainer} from "react-notifications";
+import {api} from "Api";
 
 const mapStateToProps = state =>({
    ...state.auth
@@ -29,9 +30,6 @@ const mapDispatchToProps = {
 class AdminLoginPage extends Component{
 
 
-    componentDidMount(){
-
-     }
     componentDidUpdate(prevProps, prevState) {
        if(prevProps.token !== this.props.token){
            this.props.history.push("/")

@@ -11,9 +11,10 @@ export const tokenMiddleWare = store => next => action =>{
             break;
         case LOGOUT_USER:
             window.localStorage.setItem('jwtToken',null);
-            window.localStorage.setItem('user_id',null)
-            api.setToken(null)
+            window.localStorage.setItem('user_id',null);
+            api.setToken(null);
             break;
+        default:
     }
     next(action)
 };
