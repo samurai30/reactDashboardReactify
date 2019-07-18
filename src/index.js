@@ -13,16 +13,17 @@ const rootEl = document.getElementById("root");
 // Create a reusable render method that we can call more than once
 let render = () => {
   // Dynamically import our main App component, and render it
-  const MainApp = require('./App').default;
+  const MainApp = require('./App');
   ReactDOM.render(
     <MainApp />,
     rootEl
   );
 };
 
+
 if (module.hot) {
   module.hot.accept('./App', () => {
-    const NextApp = require('./App').default;
+    const NextApp = require('./App');
     render(
       <NextApp />,
       rootEl

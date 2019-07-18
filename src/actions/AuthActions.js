@@ -12,7 +12,7 @@ export const userLoginAttempt = (username,password) =>{
             }).catch(error => {
             dispatch({type:LOGIN_USER_FAILURE});
             throw new SubmissionError({_error: "Username Password Invalid"});
-        });
+                            });
     }
 
 };

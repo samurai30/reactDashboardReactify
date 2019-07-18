@@ -37,6 +37,7 @@ class AdminLoginPage extends Component{
     render(){
         const {loading} = this.props;
         const {handleSubmit,error} = this.props;
+        console.log(error);
         return(
             <QueueAnim type="bottom" duration={2000}>
                 <div className="rct-session-wrapper">
