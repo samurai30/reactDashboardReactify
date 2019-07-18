@@ -7,7 +7,7 @@ import { Badge } from 'reactstrap';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 // api
-import api from 'Api';
+import requests from 'Api';
 import { Fab } from '@material-ui/core';
 
 class SocialCompanines extends Component {
@@ -22,7 +22,7 @@ class SocialCompanines extends Component {
 
    // get social companies
    getSocialCompanies() {
-      api.get('socialCompanies.js')
+      requests.get('socialCompanies.js')
          .then((response) => {
             this.setState({ socialCompanies: response.data });
          })

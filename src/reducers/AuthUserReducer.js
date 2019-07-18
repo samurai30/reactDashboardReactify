@@ -35,7 +35,8 @@ export default (state = INIT_STATE, action) => {
             return { ...state, loading: false };
 
         case LOGOUT_USER:
-            return { ...state, user: null };
+            
+            return { ...state, user_id: null,token:null,isAuthenticated:false };
 
         default: return { ...state };
     }

@@ -13,7 +13,7 @@ import { SessionSlider } from 'Components/Widgets';
 // app config
 import AppConfig from 'Constants/AppConfig';
 import {userLoginAttempt} from "Actions";
-import {Field, reduxForm} from "redux-form";
+import {Field, reduxForm, SubmissionError} from "redux-form";
 import {renderField} from "../../forms/form";
 
 
@@ -25,11 +25,21 @@ const mapDispatchToProps = {
     userLoginAttempt
 };
 
+
 class AdminLoginPage extends Component{
 
 
+    componentDidUpdate(prevProps, prevState) {
+    
+       if(prevProps.token != this.props.token){
+           this.props.history.push("/")
+       }
+
+    }
+
+
     onSubmit(values){
-        this.props.userLoginAttempt(
+        return this.props.userLoginAttempt(
             values.username,
             values.password
         );
@@ -37,7 +47,7 @@ class AdminLoginPage extends Component{
     render(){
         const {loading} = this.props;
         const {handleSubmit,error} = this.props;
-        console.log(error);
+        
         return(
             <QueueAnim type="bottom" duration={2000}>
                 <div className="rct-session-wrapper">

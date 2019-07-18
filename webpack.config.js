@@ -54,7 +54,7 @@ module.exports = {
         contentBase: './src/index.js',
         host: '0.0.0.0',
         compress: true,
-        port: 3000, // port number
+        port: 4100, // port number
         historyApiFallback: true,
         quiet: true
     },
@@ -77,7 +77,7 @@ module.exports = {
                 test: /\.(js|jsx)$/,
                 exclude: /node_modules/,
                 use: {
-                    loader: "babel-loader"
+                    loader: "babel-loader",
                 }
             },
             {
