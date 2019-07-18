@@ -3,12 +3,11 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import { Link } from 'react-router-dom';
+import {Link, Redirect} from 'react-router-dom';
 import { Form, FormGroup, Input } from 'reactstrap';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import QueueAnim from 'rc-queue-anim';
 // components
-import { SessionSlider } from 'Components/Widgets';
 
 // app config
 import AppConfig from 'Constants/AppConfig';
@@ -16,6 +15,7 @@ import {userLoginAttempt} from "Actions";
 import {Field, reduxForm, SubmissionError} from "redux-form";
 import {renderField} from "../../forms/form";
 import {Helmet} from "react-helmet";
+import {NotificationContainer} from "react-notifications";
 
 const mapStateToProps = state =>({
    ...state.auth
@@ -31,7 +31,7 @@ class AdminLoginPage extends Component{
 
     componentDidMount(){
 
-    }
+     }
     componentDidUpdate(prevProps, prevState) {
        if(prevProps.token !== this.props.token){
            this.props.history.push("/")
@@ -49,10 +49,10 @@ class AdminLoginPage extends Component{
     render(){
         const {loading} = this.props;
         const {handleSubmit,error} = this.props;
-        
         return(
 
             <QueueAnim type="bottom" duration={2000}>
+                <NotificationContainer />
                 <Helmet>
                     <title>Polucon Admin Login</title>
                     <meta name="description" content="Admin-Login Polucon" />
@@ -62,6 +62,7 @@ class AdminLoginPage extends Component{
                     {loading &&
                     <LinearProgress />
                     }
+
                     <AppBar position="static" className="session-header">
                         <Toolbar>
                             <div className="container">

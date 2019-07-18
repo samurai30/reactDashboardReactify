@@ -14,15 +14,16 @@ import RctDefaultLayout from './DefaultLayout';
 
 import CRMLayout from './CRMLayout';
 import {AsyncAdminLoginComponent} from "Components/AsyncComponent/AsyncComponent";
+import {api} from "Api";
 /**
  * Initial Path To Check Whether User Is Logged In Or Not
  */
-const InitialPath = ({ component: Component, isAuthenticated,...rest }) =>{
+const InitialPath = ({ component: Component,authToken,...rest }) =>{
 
-   return( <Route
+   return(   <Route
        {...rest}
        render={props =>
-           isAuthenticated
+           authToken
                ? <Component {...props} />
                : <Redirect
                    to={{
@@ -33,26 +34,34 @@ const InitialPath = ({ component: Component, isAuthenticated,...rest }) =>{
    />);
 };
 class App extends Component {
-   render() {
-      const { location, match, isAuthenticated } = this.props;
-      if (location.pathname === '/') {
+    constructor(props){
+        super(props);
+        const token = window.localStorage.getItem('jwtToken');
+        if(token){
+            api.setToken(token);
+        }
+    }
 
-          if (!isAuthenticated) {
-              return (<Redirect to={'/admin-login'} />);
-          } else {
-              return (<Redirect to={'/app/dashboard/home'} />);
-          }
-      }
+   render() {
+      const {  location,match,token } = this.props;
+       if (location.pathname === '/') {
+
+           if (token === null) {
+               return (<Redirect to={'/admin-login'} />);
+           } else {
+               return (<Redirect to={'/app/dashboard/home'} />);
+           }
+       }
       return (
          <RctThemeProvider>
             <NotificationContainer />
             <InitialPath
                path={`${match.url}app`}
-               isAuthenticated={isAuthenticated}
+               authToken = {token}
                component={RctDefaultLayout}
             />
             <Route path="/dashboard" component={CRMLayout} />
-            <Route path="/admin-login" component={AsyncAdminLoginComponent}/>
+            <Route path="/admin-login" authToken={token} component={AsyncAdminLoginComponent}/>
          </RctThemeProvider>
       );
    }
@@ -60,8 +69,8 @@ class App extends Component {
 
 // map state to props
 const mapStateToProps = ({ auth }) => {
-   const { isAuthenticated } = auth;
-   return { isAuthenticated };
+   const { token } = auth;
+   return { token };
 };
 
 export default connect(mapStateToProps)(App);

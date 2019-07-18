@@ -1,6 +1,7 @@
 import {api} from "Api";
 import {SubmissionError} from 'redux-form'
 import {LOGIN_USER, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS,LOGOUT_USER} from "Actions/types";
+import {NotificationManager} from "react-notifications";
 
 export const userLoginAttempt = (username,password) =>{
     return(dispatch) => {
@@ -10,6 +11,7 @@ export const userLoginAttempt = (username,password) =>{
                 dispatch(userLoginSuccess(response.token,response.id));
             }).catch(error => {
             dispatch({type:LOGIN_USER_FAILURE});
+            NotificationManager.error("Error");
             throw new SubmissionError({_error: "Username or Password Invalid"});
                             });
     }
