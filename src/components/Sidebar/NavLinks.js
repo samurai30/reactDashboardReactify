@@ -25,12 +25,12 @@ export default {
             {
                "menu_title": "sidebar.approved",
                "new_item": false,
-               "path": "/dashboard/tasks/approved",
+               "path": "/app/tasks/approved",
             },
             {
                "menu_title": "sidebar.pending",
                "new_item": false,
-               "path": "/dashboard/tasks/pending",
+               "path": "/app/tasks/pending",
             }
          ]
       }

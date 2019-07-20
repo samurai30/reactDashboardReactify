@@ -12,11 +12,10 @@ import QueueAnim from 'rc-queue-anim';
 // app config
 import AppConfig from 'Constants/AppConfig';
 import {userLoginAttempt} from "Actions";
-import {Field, reduxForm, SubmissionError} from "redux-form";
+import {Field, reduxForm} from "redux-form";
 import {renderField} from "../../forms/form";
 import {Helmet} from "react-helmet";
 import {NotificationContainer} from "react-notifications";
-import {api} from "Api";
 
 const mapStateToProps = state =>({
    ...state.auth
@@ -31,12 +30,11 @@ class AdminLoginPage extends Component{
 
 
     componentDidUpdate(prevProps, prevState) {
-       if(prevProps.token !== this.props.token){
+        if(prevProps.token !== this.props.token){
            this.props.history.push("/")
        }
 
     }
-
 
     onSubmit(values){
         return this.props.userLoginAttempt(

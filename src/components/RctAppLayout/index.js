@@ -25,14 +25,14 @@ import PreloadSidebar from 'Components/PreloadLayout/PreloadSidebar';
 import AppConfig from 'Constants/AppConfig';
 
 // actions
-import { collapsedSidebarAction, startUserTour } from 'Actions';
+import {collapsedSidebarAction, startUserTour} from 'Actions';
 
 class MainApp extends Component {
 
     state = {
         loadingHeader: true,
         loadingSidebar: true
-    }
+    };
 
     componentWillMount() {
         this.updateDimensions();
@@ -49,6 +49,7 @@ class MainApp extends Component {
         setTimeout(() => {
             this.setState({ loadingHeader: false, loadingSidebar: false });
         }, 114);
+
     }
 
     componentWillUnmount() {
@@ -66,17 +67,19 @@ class MainApp extends Component {
 
     updateDimensions = () => {
         this.setState({ windowWidth: $(window).width(), windowHeight: $(window).height() });
-    }
+    };
 
     componentDidUpdate(prevProps) {
         if (this.props.location.pathname !== prevProps.location.pathname) {
             window.scrollTo(0, 0);
         }
+
     }
 
     renderPage() {
         const { pathname } = this.props.location;
         const { children } = this.props;
+
         if (pathname === '/app/chat' || pathname.startsWith('/app/mail') || pathname === '/app/todo') {
             return (
                 <div className="rct-page-content p-0">
@@ -111,10 +114,11 @@ class MainApp extends Component {
     //render Sidebar
     renderSidebar() {
         const { loadingSidebar } = this.state;
+        const {userData} = this.props;
         if (loadingSidebar) {
             return <PreloadSidebar />;
         }
-        return <SidebarContent />
+        return <SidebarContent userData={userData} />
     }
 
     //Scrollbar height
@@ -125,13 +129,16 @@ class MainApp extends Component {
     }
 
     render() {
+
         const { navCollapsed, rtlLayout, miniSidebar } = this.props.settings;
         const { windowWidth } = this.state;
+
         return (
             <div className="app">
                 <div className="app-main-container">
                     <Tour />
                     <Sidebar
+
                         sidebar={this.renderSidebar()}
                         open={windowWidth <= 1199 ? navCollapsed : false}
                         docked={windowWidth > 1199 ? !navCollapsed : false}
@@ -160,8 +167,9 @@ class MainApp extends Component {
 
 // map state to props
 const mapStateToProps = ({ settings }) => {
+
     return { settings }
-}
+};
 
 export default withRouter(connect(mapStateToProps, {
     collapsedSidebarAction,

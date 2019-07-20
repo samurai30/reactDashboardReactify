@@ -25,8 +25,24 @@ const AsyncAdminLoginComponent = Loadable({
    loading: () => <RctPageLoader/>
 });
 
+const AsyncUsersListComponent = Loadable({
+   loader: () => import('Routes/users/user-list'),
+   loading: () => <RctPageLoader/>
+});
+
+const AsyncUserProfile1Component = Loadable({
+   loader: () => import('Routes/users/user-profile-1'),
+   loading: () => <RctPageLoader/>
+});
+const AsyncUserManagementComponent = Loadable({
+   loader: () => import('Routes/users/user-management'),
+   loading: () => <RctPageLoader/>
+});
 export {
    AsyncHomeDashboardComponent,
    AysncTasksComponent,
-   AsyncAdminLoginComponent
+   AsyncAdminLoginComponent,
+   AsyncUsersListComponent,
+   AsyncUserProfile1Component,
+   AsyncUserManagementComponent
 };

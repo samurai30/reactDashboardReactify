@@ -12,23 +12,25 @@ import { NotificationManager } from 'react-notifications';
 import SupportPage from '../Support/Support';
 
 // redux action
-import { userLogoutAction } from 'Actions';
+import {fetchUserDetails, userLogoutAction} from 'Actions';
 
 // intl messages
 import IntlMessages from 'Util/IntlMessages';
+import CircularProgress from "@material-ui/core/CircularProgress";
+
+
 
 class UserBlock extends Component {
 
 	state = {
 		userDropdownMenu: false,
 		isSupportModal: false
-	}
+	};
 
 	/**
 	 * Logout User
 	 */
 	logoutUser() {
-		console.log("logout")
 		this.props.userLogoutAction();
 	}
 
@@ -62,6 +64,7 @@ class UserBlock extends Component {
 	}
 
 	render() {
+		const {userData}= this.props;
 		return (
 			<div className="top-sidebar">
 				<div className="sidebar-user-block">
@@ -84,15 +87,19 @@ class UserBlock extends Component {
 								/>
 							</div>
 							<div className="user-info">
-								<span className="user-name ml-4">Patrik Freeman</span>
-								<i className="zmdi zmdi-chevron-down dropdown-icon mx-4"></i>
+								{userData ?
+									<div>
+										<span className="user-name ml-4">{userData.username}</span><i className="zmdi zmdi-chevron-down dropdown-icon mx-4"></i>
+									</div>
+									:<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={2.5} />}
+
 							</div>
 						</DropdownToggle>
 						<DropdownMenu>
 							<ul className="list-unstyled mb-0">
 								<li className="p-15 border-bottom user-profile-top bg-primary rounded-top">
-									<p className="text-white mb-0 fs-14">Lucile Beck</p>
-									<span className="text-white fs-14">info@example.com</span>
+									{userData ?<p className="text-white mb-0 fs-14">{userData.firstName+" "+userData.lastName}</p> :<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={2.5} />}
+									{userData ? <span className="text-white fs-14">{userData.email}</span>:<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={2.5} />}
 								</li>
 								<li>
 									<Link to={{
@@ -141,10 +148,11 @@ class UserBlock extends Component {
 }
 
 // map state to props
-const mapStateToProps = ({ settings,auth }) => {
-	return settings,auth;
-}
+const mapStateToProps = ({ settings }) => {
+	return {settings};
+};
 
 export default connect(mapStateToProps, {
+	fetchUserDetails,
 	userLogoutAction
 })(UserBlock);

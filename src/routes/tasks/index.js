@@ -4,6 +4,7 @@ import {AysncTasksComponent} from "Components/AsyncComponent/AsyncComponent";
 
 
 const Tasks = ({match}) =>(
+
     <div className="dashboard-wrapper">
         <Switch>
             <Redirect exact from={`${match.url}/`} to={`${match.url}/approved`} />

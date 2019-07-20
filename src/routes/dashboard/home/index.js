@@ -11,10 +11,10 @@ import {Helmet} from "react-helmet";
 import PageTitleBar from 'Components/PageTitleBar/PageTitleBar';
 
 
-
 export default class EcommerceDashboard extends Component {
    render() {
       const { match } = this.props;
+
       return (
          <div className="ecom-dashboard-wrapper">
             <Helmet>

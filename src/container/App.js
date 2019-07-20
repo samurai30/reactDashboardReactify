@@ -12,19 +12,17 @@ import RctThemeProvider from './RctThemeProvider';
 //Main App
 import RctDefaultLayout from './DefaultLayout';
 
-import CRMLayout from './CRMLayout';
 import {AsyncAdminLoginComponent} from "Components/AsyncComponent/AsyncComponent";
 import {api} from "Api";
 /**
  * Initial Path To Check Whether User Is Logged In Or Not
  */
 const InitialPath = ({ component: Component,authToken,...rest }) =>{
-    console.log(authToken)
-   return(   <Route
+    return(   <Route
        {...rest}
        render={props =>
            authToken
-               ? <Component {...props} />
+               ? <Component {...props}/>
                : <Redirect
                    to={{
                        pathname: '/admin-login',
@@ -36,22 +34,34 @@ const InitialPath = ({ component: Component,authToken,...rest }) =>{
 class App extends Component {
     constructor(props){
         super(props);
-        const token = window.localStorage.getItem('jwtToken');
+        const token = localStorage.getItem('jwtToken');
         if(token){
             api.setToken(token);
         }
     }
 
+    componentDidMount(){
+        const {token} = this.props;
+        if(token === null){
+            this.props.history.push("/admin-login");
+        }
+    }
+    componentDidUpdate(prevProps,prevState){
+        const {token} = this.props;
+        if (prevProps.token !== token){
+            this.props.history.push("/admin-login")
+        }
 
+    }
 
    render() {
       const {  location,match,token } = this.props;
-       if (location.pathname === '/') {
 
-           if (token === null) {
-               return (<Redirect to={'/admin-login'} />);
+       if (location.pathname === '/') {
+           if(token === null){
+              return (<Redirect to={'/admin-login'}/>);
            } else {
-               return (<Redirect to={'/app/dashboard/home'} />);
+              return (<Redirect to={'/app/dashboard/home'}/>)
            }
        }
       return (
@@ -62,17 +72,15 @@ class App extends Component {
                authToken = {token}
                component={RctDefaultLayout}
             />
-            <Route path="/dashboard" component={CRMLayout} />
-            <Route path="/admin-login" authToken={token} component={AsyncAdminLoginComponent}/>
+            <Route path="/admin-login" component={AsyncAdminLoginComponent}/>
          </RctThemeProvider>
       );
    }
 }
 
 // map state to props
-const mapStateToProps = ({ auth }) => {
-   const { token } = auth;
-   return { token };
-};
+const mapStateToProps = state =>({
+    ...state.auth
+});
 
 export default connect(mapStateToProps)(App);
