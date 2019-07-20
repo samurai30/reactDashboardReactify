@@ -5,7 +5,7 @@ import {
     LOGIN_USER,
     LOGIN_USER_SUCCESS,
     LOGIN_USER_FAILURE,
-    LOGOUT_USER, USER_FETCH_SUCCESS, USER_FETCH_REQUEST,
+    LOGOUT_USER, USER_FETCH_SUCCESS, USER_FETCH_REQUEST, USER_FETCH_ERROR,
 } from 'Actions/types';
 
 /**
@@ -33,10 +33,8 @@ export default (state = INIT_STATE, action) => {
                 user_id: action.user_id,
                 token: action.token,
                 isAuthenticated: true};
-
         case LOGIN_USER_FAILURE:
             return { ...state, loading: false };
-
         case LOGOUT_USER:
             return { ...state, user_id: null,token:null,isAuthenticated:false };
         case USER_FETCH_REQUEST:
@@ -45,6 +43,11 @@ export default (state = INIT_STATE, action) => {
             return {...state,
                 loading:false,
                 userData: action.userData
+            };
+        case USER_FETCH_ERROR:
+            return{
+                ...state,
+                user_id: null,token:null,isAuthenticated:false
             };
         default: return { ...state };
     }

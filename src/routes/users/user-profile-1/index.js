@@ -36,7 +36,7 @@ export default class UserProfile extends Component {
 
    state = {
       activeTab: this.props.location.state ? this.props.location.state.activeTab : 0
-   }
+   };
 
    handleChange = (event, value) => {
       this.setState({ activeTab: value });

@@ -59,7 +59,7 @@ export default class Messages extends Component {
 
    // get user messages
    getUserMessages() {
-      api.get('userMessages.js')
+      api.get('')
          .then((response) => {
             this.setState({ messages: response.data, allMessages: response.data });
          })

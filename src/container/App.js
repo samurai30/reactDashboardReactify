@@ -14,6 +14,7 @@ import RctDefaultLayout from './DefaultLayout';
 
 import {AsyncAdminLoginComponent} from "Components/AsyncComponent/AsyncComponent";
 import {api} from "Api";
+import {userLoginSuccess} from "Actions";
 /**
  * Initial Path To Check Whether User Is Logged In Or Not
  */
@@ -31,32 +32,21 @@ const InitialPath = ({ component: Component,authToken,...rest }) =>{
                />}
    />);
 };
+
+
 class App extends Component {
     constructor(props){
         super(props);
-        const token = localStorage.getItem('jwtToken');
-        if(token){
-            api.setToken(token);
+        const tokenJwt = localStorage.getItem('jwtToken');
+        if(tokenJwt){
+            api.setToken(tokenJwt);
         }
     }
 
-    componentDidMount(){
-        const {token} = this.props;
-        if(token === null){
-            this.props.history.push("/admin-login");
-        }
-    }
-    componentDidUpdate(prevProps,prevState){
-        const {token} = this.props;
-        if (prevProps.token !== token){
-            this.props.history.push("/admin-login")
-        }
-
-    }
+    componentDid
 
    render() {
-      const {  location,match,token } = this.props;
-
+      const { location,match,token } = this.props;
        if (location.pathname === '/') {
            if(token === null){
               return (<Redirect to={'/admin-login'}/>);
@@ -67,12 +57,12 @@ class App extends Component {
       return (
          <RctThemeProvider>
             <NotificationContainer />
-            <InitialPath
-               path={`${match.url}app`}
-               authToken = {token}
-               component={RctDefaultLayout}
-            />
-            <Route path="/admin-login" component={AsyncAdminLoginComponent}/>
+             <InitialPath
+                 path={`${match.url}app`}
+                 authToken = {token}
+                 component={RctDefaultLayout}
+             />
+             <Route path="/admin-login" component={AsyncAdminLoginComponent}/>
          </RctThemeProvider>
       );
    }
@@ -83,4 +73,8 @@ const mapStateToProps = state =>({
     ...state.auth
 });
 
-export default connect(mapStateToProps)(App);
+
+
+export default connect(mapStateToProps,{
+    userLoginSuccess
+})(App);

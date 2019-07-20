@@ -55,7 +55,7 @@ class Sidebar extends Component {
 	}
 
 	render() {
-		const { enableSidebarBackgroundImage, selectedSidebarImage, isDarkSidenav, agencySidebar,userData } = this.props;
+		const { enableSidebarBackgroundImage, selectedSidebarImage, isDarkSidenav, agencySidebar } = this.props;
 		return (
 			<Fragment>
 				<div
@@ -78,7 +78,7 @@ class Sidebar extends Component {
 								autoHideDuration={100}
 								style={{ height: 'calc(100vh - 60px)' }}
 							>
-								<UserBlock userData={userData}/>
+								<UserBlock/>
 								{!agencySidebar ?
 									<SidebarContent />
 									:

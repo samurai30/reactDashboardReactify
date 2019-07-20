@@ -10,24 +10,17 @@ import RctAppLayout from 'Components/RctAppLayout';
 
 // router service
 import routerService from "../services/_routerService";
-import {fetchUserDetails} from "Actions";
+import {fetchUserDetails, fetchUserError} from "Actions";
+import {NotificationManager} from "react-notifications";
 
 
 class DefaultLayout extends Component {
-
-
-	componentDidMount(){
-		const {user_id} = this.props;
-		if (user_id !== null){
-			this.props.fetchUserDetails(user_id);
-		}
-	}
 
 	render() {
 		const { match,userData } = this.props;
 
 		return (
-			<RctAppLayout userData={userData}>
+			<RctAppLayout>
 				{routerService && routerService.map((route,key)=>
 					<Route key={key} path={`${match.url}/${route.path}`} component={route.component} />
 				)}
@@ -40,5 +33,6 @@ const mapStateToProps = state =>({
 	...state.auth
 });
 export default withRouter(connect(mapStateToProps,{
-	fetchUserDetails
+	fetchUserDetails,
+	fetchUserError
 })(DefaultLayout));

@@ -17,6 +17,7 @@ import {fetchUserDetails, userLogoutAction} from 'Actions';
 // intl messages
 import IntlMessages from 'Util/IntlMessages';
 import CircularProgress from "@material-ui/core/CircularProgress";
+import {api} from "Api";
 
 
 
@@ -26,6 +27,13 @@ class UserBlock extends Component {
 		userDropdownMenu: false,
 		isSupportModal: false
 	};
+
+	componentDidMount(){
+		const {user_id} = this.props.auth;
+		if (user_id !== null){
+			this.props.fetchUserDetails(user_id);
+		}
+	}
 
 	/**
 	 * Logout User
@@ -64,7 +72,7 @@ class UserBlock extends Component {
 	}
 
 	render() {
-		const {userData}= this.props;
+		const {userData}= this.props.auth;
 		return (
 			<div className="top-sidebar">
 				<div className="sidebar-user-block">
@@ -98,8 +106,8 @@ class UserBlock extends Component {
 						<DropdownMenu>
 							<ul className="list-unstyled mb-0">
 								<li className="p-15 border-bottom user-profile-top bg-primary rounded-top">
-									{userData ?<p className="text-white mb-0 fs-14">{userData.firstName+" "+userData.lastName}</p> :<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={2.5} />}
-									{userData ? <span className="text-white fs-14">{userData.email}</span>:<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={2.5} />}
+									{userData ?<p className="text-white mb-0 fs-14">{userData.firstName+" "+userData.lastName}</p> :<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={1.5} />}
+									{userData ? <span className="text-white fs-14">{userData.email}</span>:<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={1.5} />}
 								</li>
 								<li>
 									<Link to={{
@@ -148,8 +156,9 @@ class UserBlock extends Component {
 }
 
 // map state to props
-const mapStateToProps = ({ settings }) => {
-	return {settings};
+const mapStateToProps = ({ settings,auth }) => {
+
+	return {settings,auth};
 };
 
 export default connect(mapStateToProps, {

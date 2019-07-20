@@ -29,11 +29,16 @@ const mapDispatchToProps = {
 class AdminLoginPage extends Component{
 
 
+
+    componentDidMount(){
+        if(this.props.isAuthenticated){
+            this.props.history.push("/")
+        }
+    }
     componentDidUpdate(prevProps, prevState) {
         if(prevProps.token !== this.props.token){
            this.props.history.push("/")
        }
-
     }
 
     onSubmit(values){
@@ -45,6 +50,7 @@ class AdminLoginPage extends Component{
     render(){
         const {loading} = this.props;
         const {handleSubmit,error} = this.props;
+
         return(
 
             <QueueAnim type="bottom" duration={2000}>

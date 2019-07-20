@@ -114,11 +114,10 @@ class MainApp extends Component {
     //render Sidebar
     renderSidebar() {
         const { loadingSidebar } = this.state;
-        const {userData} = this.props;
         if (loadingSidebar) {
             return <PreloadSidebar />;
         }
-        return <SidebarContent userData={userData} />
+        return <SidebarContent/>
     }
 
     //Scrollbar height

@@ -1,4 +1,4 @@
-import {LOGIN_USER_SUCCESS,LOGOUT_USER} from "Actions/types";
+import {LOGIN_USER_SUCCESS, LOGOUT_USER, USER_FETCH_ERROR} from "Actions/types";
 import {api} from "Api";
 
 
@@ -14,6 +14,10 @@ export const tokenMiddleWare = store => next => action =>{
             window.localStorage.removeItem('user_id');
             api.setToken(null);
             break;
+        case USER_FETCH_ERROR:
+            window.localStorage.removeItem('jwtToken');
+            window.localStorage.removeItem('user_id');
+            api.setToken(null);
         default:
     }
     next(action)

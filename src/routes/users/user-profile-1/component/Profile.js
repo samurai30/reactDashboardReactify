@@ -27,7 +27,7 @@ export default class Profile extends Component {
                <FormGroup row>
                   <Label for="firstName" sm={3}><IntlMessages id="components.firstName" /></Label>
                   <Col sm={9}>
-                     <Input type="text" name="firstName" id="firstName" className="input-lg" />
+                     <Input value="suyog mishal" type="text" name="firstName" id="firstName" className="input-lg" />
                   </Col>
                </FormGroup>
                <FormGroup row>
@@ -88,34 +88,7 @@ export default class Profile extends Component {
                </FormGroup>
             </Form>
             <hr />
-            <h2 className="heading"><IntlMessages id="components.social Connection" /></h2>
-            <div>
-               <InputGroup className="mb-20">
-                  <InputGroupAddon addonType="prepend">
-                     <IconButton aria-label="facebook">
-                        <i className="zmdi zmdi-facebook"></i>
-                     </IconButton>
-                  </InputGroupAddon>
-                  <Input defaultValue="https://www.facebook.com" />
-               </InputGroup>
-               <InputGroup className="mb-20">
-                  <InputGroupAddon addonType="prepend">
-                     <IconButton aria-label="facebook">
-                        <i className="zmdi zmdi-twitter"></i>
-                     </IconButton>
-                  </InputGroupAddon>
-                  <Input defaultValue="https://www.twitter.com" />
-               </InputGroup>
-               <InputGroup className="mb-20">
-                  <InputGroupAddon addonType="prepend">
-                     <IconButton aria-label="facebook">
-                        <i className="zmdi zmdi-linkedin"></i>
-                     </IconButton>
-                  </InputGroupAddon>
-                  <Input defaultValue="https://www.linkedin.com" />
-               </InputGroup>
-            </div>
-            <hr />
+
             <Button variant="contained" color="primary" className="text-white" onClick={() => this.onUpdateProfile()}><IntlMessages id="widgets.updateProfile" /></Button>
          </div>
       );
