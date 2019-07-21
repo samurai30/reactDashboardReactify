@@ -43,7 +43,6 @@ class App extends Component {
         }
     }
 
-    componentDid
 
    render() {
       const { location,match,token } = this.props;

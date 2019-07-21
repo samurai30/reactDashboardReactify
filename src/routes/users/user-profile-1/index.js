@@ -40,18 +40,18 @@ export default class UserProfile extends Component {
 
    handleChange = (event, value) => {
       this.setState({ activeTab: value });
-   }
+   };
 
    render() {
       const { activeTab } = this.state;
-
+      const {match} = this.props;
       return (
          <div className="userProfile-wrapper">
             <Helmet>
                <title>User Profile</title>
                <meta name="description" content="User Profile" />
             </Helmet>
-            <PageTitleBar title={<IntlMessages id="sidebar.userProfile" />} match={this.props.match} />
+            <PageTitleBar title={<IntlMessages id="sidebar.userProfile" />} match={match} />
             <RctCard>
                <UserBlock />
                <div className="rct-tabs">

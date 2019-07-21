@@ -10,17 +10,23 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import $ from 'jquery';
 
 // redux actions
-import { collapsedSidebarAction } from 'Actions';
+import {collapsedSidebarAction, fetchUserDetails} from 'Actions';
 
 // components
 import UserBlock from './UserBlock';
-import SidebarContent from './SidebarContent';
+import SidebarContentSuperAdmin from './SidebarContentSuperAdmin';
 import AgencySidebar from '../AgencyMenu/AgencySidebar';
+import SidebarContentAdmin from "Components/Sidebar/SidebarContentAdmin";
+import SidebarContentSubAdmin from "Components/Sidebar/SidebarContentSubAdmin";
+import SidebarContentClient from "Components/Sidebar/SidebarContentClient";
+import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
+import RctSectionLoader from "Components/RctSectionLoader/RctSectionLoader";
 
 class Sidebar extends Component {
 
 	componentWillMount() {
 		this.updateDimensions();
+
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -34,6 +40,10 @@ class Sidebar extends Component {
 
 	componentDidMount() {
 		window.addEventListener("resize", this.updateDimensions);
+		const {user_id} = this.props.auth;
+		if (user_id !== null){
+			this.props.fetchUserDetails(user_id);
+		}
 	}
 
 	componentWillUnmount() {
@@ -55,7 +65,13 @@ class Sidebar extends Component {
 	}
 
 	render() {
-		const { enableSidebarBackgroundImage, selectedSidebarImage, isDarkSidenav, agencySidebar } = this.props;
+		const { enableSidebarBackgroundImage, selectedSidebarImage, isDarkSidenav } = this.props;
+		const {userData} = this.props.auth;
+		let ROLE = null;
+		if (userData){
+			ROLE = userData.roles[0];
+		}
+
 		return (
 			<Fragment>
 				<div
@@ -78,12 +94,16 @@ class Sidebar extends Component {
 								autoHideDuration={100}
 								style={{ height: 'calc(100vh - 60px)' }}
 							>
-								<UserBlock/>
-								{!agencySidebar ?
-									<SidebarContent />
-									:
-									<AgencySidebar />
+								<UserBlock userData={userData}/>
+								{userData?(ROLE === 'ROLE_SUPERADMIN')?<SidebarContentSuperAdmin userData={userData}/>
+								:(ROLE === 'ROLE_ADMIN')?<SidebarContentAdmin userData={userData}/>
+								:(ROLE === 'ROLE_SUBADMIN')?<SidebarContentSubAdmin userData={userData}/>
+								:(ROLE === 'ROLE_CLIENT') && <SidebarContentClient userData={userData}/>
+								:<RctSectionLoader/>
 								}
+
+
+
 							</Scrollbars>
 						</div>
 					</div>
@@ -94,11 +114,12 @@ class Sidebar extends Component {
 }
 
 // map state to props
-const mapStateToProps = ({ settings }) => {
+const mapStateToProps = ({ settings,auth }) => {
 	const { enableSidebarBackgroundImage, selectedSidebarImage, collapsedSidebar, isDarkSidenav, locale } = settings;
-	return { enableSidebarBackgroundImage, selectedSidebarImage, collapsedSidebar, isDarkSidenav, locale };
+	return { enableSidebarBackgroundImage, selectedSidebarImage, collapsedSidebar, isDarkSidenav, locale, auth };
 };
 
 export default withRouter(connect(mapStateToProps, {
 	collapsedSidebarAction,
+	fetchUserDetails
 })(Sidebar));

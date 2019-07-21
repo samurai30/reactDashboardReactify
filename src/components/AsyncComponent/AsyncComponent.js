@@ -29,13 +29,28 @@ const AsyncUsersListComponent = Loadable({
    loader: () => import('Routes/users/user-list'),
    loading: () => <RctPageLoader/>
 });
-
+const AsyncUserProfileComponent = Loadable({
+   loader: () => import('Routes/users/user-profile'),
+   loading: () => <RctPageLoader/>
+});
 const AsyncUserProfile1Component = Loadable({
    loader: () => import('Routes/users/user-profile-1'),
    loading: () => <RctPageLoader/>
 });
-const AsyncUserManagementComponent = Loadable({
-   loader: () => import('Routes/users/user-management'),
+const AsyncUserManagementClientComponent = Loadable({
+   loader: () => import('Routes/users/user-management/client'),
+   loading: () => <RctPageLoader/>
+});
+const AsyncUserManagementAdminComponent = Loadable({
+   loader: () => import('Routes/users/user-management/admin'),
+   loading: () => <RctPageLoader/>
+});
+const AsyncUserManagementSubAdminComponent = Loadable({
+   loader: () => import('Routes/users/user-management/sub-admin'),
+   loading: () => <RctPageLoader/>
+});
+const AsyncUserManagementSurveyorComponent = Loadable({
+   loader: () => import('Routes/users/user-management/surveyor'),
    loading: () => <RctPageLoader/>
 });
 export {
@@ -44,5 +59,9 @@ export {
    AsyncAdminLoginComponent,
    AsyncUsersListComponent,
    AsyncUserProfile1Component,
-   AsyncUserManagementComponent
+   AsyncUserManagementClientComponent,
+   AsyncUserManagementAdminComponent,
+   AsyncUserManagementSubAdminComponent,
+   AsyncUserManagementSurveyorComponent,
+   AsyncUserProfileComponent
 };

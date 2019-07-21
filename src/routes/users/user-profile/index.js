@@ -25,7 +25,6 @@ import { RctCard } from 'Components/RctCard';
 import RctCollapsibleCard from 'Components/RctCollapsibleCard/RctCollapsibleCard';
 
 // widgets data
-import { discoverPeoples, productsReports } from 'Routes/widgets/data';
 
 class UserComponent extends Component {
    render() {
@@ -130,7 +129,7 @@ class UserComponent extends Component {
                         closeable
                         fullBlock
                      >
-                        <ProductReportsWidget data={productsReports} />
+                        <ProductReportsWidget  />
                      </RctCollapsibleCard>
                      <RctCollapsibleCard
                         heading={<IntlMessages id="widgets.toDoList" />}
@@ -139,7 +138,7 @@ class UserComponent extends Component {
                         closeable
                         fullBlock
                      >
-                        <DiscoverPeoplesWidget data={discoverPeoples} />
+                        <DiscoverPeoplesWidget />
                      </RctCollapsibleCard>
                      <RctCollapsibleCard
                         customClasses="to-do-list"

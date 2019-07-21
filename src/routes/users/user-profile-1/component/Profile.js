@@ -27,7 +27,7 @@ export default class Profile extends Component {
                <FormGroup row>
                   <Label for="firstName" sm={3}><IntlMessages id="components.firstName" /></Label>
                   <Col sm={9}>
-                     <Input value="suyog mishal" type="text" name="firstName" id="firstName" className="input-lg" />
+                     <Input type="text" name="firstName" id="firstName" className="input-lg" />
                   </Col>
                </FormGroup>
                <FormGroup row>

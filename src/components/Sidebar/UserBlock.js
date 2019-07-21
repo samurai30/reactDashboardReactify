@@ -28,13 +28,6 @@ class UserBlock extends Component {
 		isSupportModal: false
 	};
 
-	componentDidMount(){
-		const {user_id} = this.props.auth;
-		if (user_id !== null){
-			this.props.fetchUserDetails(user_id);
-		}
-	}
-
 	/**
 	 * Logout User
 	 */
@@ -72,7 +65,7 @@ class UserBlock extends Component {
 	}
 
 	render() {
-		const {userData}= this.props.auth;
+		const {userData}= this.props;
 		return (
 			<div className="top-sidebar">
 				<div className="sidebar-user-block">
@@ -156,12 +149,11 @@ class UserBlock extends Component {
 }
 
 // map state to props
-const mapStateToProps = ({ settings,auth }) => {
+const mapStateToProps = ({ settings }) => {
 
-	return {settings,auth};
+	return {settings};
 };
 
 export default connect(mapStateToProps, {
-	fetchUserDetails,
 	userLogoutAction
 })(UserBlock);

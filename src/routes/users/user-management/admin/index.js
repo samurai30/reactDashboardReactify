@@ -37,13 +37,14 @@ import UpdateUserForm from './UpdateUserForm';
 import PageTitleBar from 'Components/PageTitleBar/PageTitleBar';
 
 // intl messages
-import IntlMessages from 'Util/IntlMessages';
+
 
 // rct card box
 import RctCollapsibleCard from 'Components/RctCollapsibleCard/RctCollapsibleCard';
 
 // rct section loader
 import RctSectionLoader from 'Components/RctSectionLoader/RctSectionLoader';
+import IntlMessages from "Util/IntlMessages";
 
 export default class UserProfile extends Component {
 
