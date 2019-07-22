@@ -608,7 +608,7 @@ module.exports = {
    "widgets.primary": "Elsődleges",
    "widgets.social": "Társadalmi",
    "widgets.user": "használó",
-   "widgets.admin": "admin",
+   "widgets.admin": "create-user",
    "widgets.permanentdrawer": "Állandó fiók",
    "widgets.persistentdrawer": "Tartós fiók",
    "widgets.swiches": "Swiches",

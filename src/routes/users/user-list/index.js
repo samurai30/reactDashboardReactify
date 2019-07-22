@@ -43,7 +43,7 @@ export default class UserComponent extends Component {
       return (
          <div className="user-list-wrapper">
             <Helmet>
-               <title>Reactify | Users List</title>
+               <title>Polucon | Users List</title>
                <meta name="description" content="Reactify Widgets" />
             </Helmet>
             <PageTitleBar title={<IntlMessages id="sidebar.userList" />} match={this.props.match} />

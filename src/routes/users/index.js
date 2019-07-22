@@ -10,8 +10,7 @@ import {
     AsyncUsersListComponent,
     AsyncUserProfile1Component,
     AsyncUserProfileComponent,
-    AsyncUserManagementClientComponent,
-    AsyncUserManagementAdminComponent, AsyncUserManagementSubAdminComponent, AsyncUserManagementSurveyorComponent
+    AsyncUserManagementCreateUserComponent,
 } from 'Components/AsyncComponent/AsyncComponent';
 
 const Forms = ({ match }) => {
@@ -23,10 +22,7 @@ const Forms = ({ match }) => {
                 <Route path={`${match.url}/user-list`} component={AsyncUsersListComponent} />
                 <Route path={`${match.url}/user-profile-1`} component={AsyncUserProfile1Component} />
                 <Route path={`${match.url}/user-profile`} component={AsyncUserProfileComponent} />
-                <Route path={`${match.url}/user-management/clients`} component={AsyncUserManagementClientComponent} />
-                <Route path={`${match.url}/user-management/admin`} component={AsyncUserManagementAdminComponent} />
-                <Route path={`${match.url}/user-management/subadmin`} component={AsyncUserManagementSubAdminComponent} />
-                <Route path={`${match.url}/user-management/surveyor`} component={AsyncUserManagementSurveyorComponent} />
+                <Route path={`${match.url}/user-management/create-user`} component={AsyncUserManagementCreateUserComponent} />
             </Switch>
         </div>
     )

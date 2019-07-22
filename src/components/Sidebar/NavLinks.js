@@ -64,26 +64,10 @@ export default {
          "menu_icon": "zmdi zmdi-accounts-add",
          "child_routes":[
             {
-               "menu_title": "sidebar.addUserClient",
+               "menu_title": "sidebar.createUser",
                "new_item": false,
-               "path": "/app/users/user-management/clients",
-            },
-            {
-               "menu_title": "sidebar.addUserSurveyor",
-               "new_item": false,
-               "path": "/app/users/user-management/surveyor",
-            },
-            {
-               "menu_title": "sidebar.addUserAdmin",
-               "new_item": false,
-               "path": "/app/users/user-management/admin",
-            },
-            {
-               "menu_title": "sidebar.addUserSubAdmin",
-               "new_item": false,
-               "path": "/app/users/user-management/subadmin",
+               "path": "/app/users/user-management/create-user",
             }
-
          ]
       },
 
@@ -96,12 +80,7 @@ export default {
          "type_multi": null,
          "child_routes": [
             {
-               "menu_title": "sidebar.client",
-               "new_item": false,
-               "path": "/app/users/approved",
-            },
-            {
-               "menu_title": "sidebar.pending",
+               "menu_title": "sidebar.createform",
                "new_item": false,
                "path": "/app/tasks/pending",
             }

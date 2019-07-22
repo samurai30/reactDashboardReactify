@@ -48,7 +48,7 @@ export default class UserProfile extends Component {
       return (
          <div className="userProfile-wrapper">
             <Helmet>
-               <title>User Profile</title>
+               <title>Polucon | User-Profile</title>
                <meta name="description" content="User Profile" />
             </Helmet>
             <PageTitleBar title={<IntlMessages id="sidebar.userProfile" />} match={match} />

@@ -56,16 +56,14 @@ export default class UserProfile extends Component {
       addNewUserModal: false, // add new user form modal
       addNewUserDetail: {
          id: '',
-         name: '',
-         avatar: '',
-         type: '',
-         emailAddress: '',
-         status: 'Active',
-         lastSeen: '',
-         accountType: '',
-         badgeClass: 'badge-success',
-         dateCreated: 'Just Now',
-         checked: false
+         firstName: '',
+         lastName: '',
+         username:'',
+         password:'',
+         retypePassword:'',
+         roles: [],
+         email: '',
+         countries: ""
       },
       openViewUserDialog: false, // view user dialog box
       editUser: null,
@@ -170,7 +168,7 @@ export default class UserProfile extends Component {
          let newUser = {
             ...this.state.addNewUserDetail,
             id: new Date().getTime()
-         }
+         };
          users.push(newUser);
          this.setState({ addNewUserModal: false, loading: true });
          let self = this;
@@ -260,7 +258,7 @@ export default class UserProfile extends Component {
       return (
          <div className="user-management">
             <Helmet>
-               <title>Reactify | Users Management</title>
+               <title>Polucon | Users Management</title>
                <meta name="description" content="Reactify Widgets" />
             </Helmet>
             <PageTitleBar
@@ -299,7 +297,7 @@ export default class UserProfile extends Component {
                            <th>User</th>
                            <th>Email Address</th>
                            <th>Status</th>
-                           <th>Plans Type</th>
+                           <th>Roles</th>
                            <th>Date Created</th>
                            <th>Action</th>
                         </tr>

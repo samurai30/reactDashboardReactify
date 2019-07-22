@@ -13,7 +13,7 @@ export default class ApprovedTask extends Component{
         return(
             <div className="ecom-dashboard-wrapper">
                 <Helmet>
-                    <title>Task Approved</title>
+                    <title>Polucon | Task Approved</title>
                     <meta name="description" content="Task Approved" />
                 </Helmet>
                 <PageTitleBar title={<IntlMessages id="sidebar.approved" />} match={match} />

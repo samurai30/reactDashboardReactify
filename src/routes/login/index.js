@@ -56,7 +56,7 @@ class AdminLoginPage extends Component{
             <QueueAnim type="bottom" duration={2000}>
                 <NotificationContainer />
                 <Helmet>
-                    <title>Polucon Admin Login</title>
+                    <title>Polucon | Login Portal</title>
                     <meta name="description" content="Admin-Login Polucon" />
                 </Helmet>
 
