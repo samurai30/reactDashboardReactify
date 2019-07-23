@@ -21,6 +21,7 @@ import SidebarContentSubAdmin from "Components/Sidebar/SidebarContentSubAdmin";
 import SidebarContentClient from "Components/Sidebar/SidebarContentClient";
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 import RctSectionLoader from "Components/RctSectionLoader/RctSectionLoader";
+import {ROLE_ADMIN, ROLE_CLIENT, ROLE_SUBADMIN, ROLE_SUPERADMIN} from "Util/apiUtils";
 
 class Sidebar extends Component {
 
@@ -95,10 +96,10 @@ class Sidebar extends Component {
 								style={{ height: 'calc(100vh - 60px)' }}
 							>
 								<UserBlock userData={userData}/>
-								{userData?(ROLE === 'ROLE_SUPERADMIN')?<SidebarContentSuperAdmin userData={userData}/>
-								:(ROLE === 'ROLE_ADMIN')?<SidebarContentAdmin userData={userData}/>
-								:(ROLE === 'ROLE_SUBADMIN')?<SidebarContentSubAdmin userData={userData}/>
-								:(ROLE === 'ROLE_CLIENT') && <SidebarContentClient userData={userData}/>
+								{userData?(ROLE === ROLE_SUPERADMIN)?<SidebarContentSuperAdmin userData={userData}/>
+								:(ROLE === ROLE_ADMIN)?<SidebarContentAdmin userData={userData}/>
+								:(ROLE === ROLE_SUBADMIN)?<SidebarContentSubAdmin userData={userData}/>
+								:(ROLE === ROLE_CLIENT) && <SidebarContentClient userData={userData}/>
 								:<RctSectionLoader/>
 								}
 

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import {Link, Redirect} from 'react-router-dom';
-import { Form, FormGroup, Input } from 'reactstrap';
+import {Link} from 'react-router-dom';
+import { Form, FormGroup } from 'reactstrap';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import QueueAnim from 'rc-queue-anim';
 // components
@@ -13,7 +13,7 @@ import QueueAnim from 'rc-queue-anim';
 import AppConfig from 'Constants/AppConfig';
 import {userLoginAttempt} from "Actions";
 import {Field, reduxForm} from "redux-form";
-import {renderField} from "../../forms/form";
+import {renderField} from "../../forms/LoginForm";
 import {Helmet} from "react-helmet";
 import {NotificationContainer} from "react-notifications";
 

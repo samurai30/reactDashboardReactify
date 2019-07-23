@@ -14,7 +14,7 @@ import {
    ModalHeader,
    ModalBody,
    ModalFooter,
-   Badge
+   Badge, Form, FormGroup, Input
 } from 'reactstrap';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -28,8 +28,6 @@ import {api} from 'Api';
 import DeleteConfirmationDialog from 'Components/DeleteConfirmationDialog/DeleteConfirmationDialog';
 
 // add new user form
-import AddNewUserForm from './AddNewUserForm';
-
 // update user form
 import UpdateUserForm from './UpdateUserForm';
 
@@ -45,8 +43,14 @@ import RctCollapsibleCard from 'Components/RctCollapsibleCard/RctCollapsibleCard
 // rct section loader
 import RctSectionLoader from 'Components/RctSectionLoader/RctSectionLoader';
 import IntlMessages from "Util/IntlMessages";
+import {Field, reduxForm, SubmissionError} from "redux-form";
+import {renderField} from "../../../../forms/LoginForm";
+import {connect} from "react-redux";
+import {parseApiErrors} from "Util/apiUtils";
 
-export default class UserProfile extends Component {
+
+const valueList = [];
+class UserProfile extends Component {
 
    state = {
       all: false,
@@ -54,6 +58,7 @@ export default class UserProfile extends Component {
       selectedUser: null, // selected user to perform operations
       loading: false, // loading activity
       addNewUserModal: false, // add new user form modal
+      countries: {},
       addNewUserDetail: {
          id: '',
          firstName: '',
@@ -65,6 +70,28 @@ export default class UserProfile extends Component {
          email: '',
          countries: ""
       },
+      roles:[
+         {
+            id:1,
+            value:'ADMIN',
+            URI: 'ROLE_ADMIN'
+         },
+         {
+            id:2,
+            value:'SUB-ADMIN',
+            URI: 'ROLE_ADMIN'
+         },
+         {
+            id:3,
+            value:'CLIENT',
+            URI: 'ROLE_ADMIN'
+         },
+         {
+            id:4,
+            value:'SURVEYOR',
+            URI: 'ROLE_SURVEYOR'
+         }
+      ],
       openViewUserDialog: false, // view user dialog box
       editUser: null,
       allSelected: false,
@@ -72,9 +99,14 @@ export default class UserProfile extends Component {
    };
 
    componentDidMount() {
-      api.get('/users',true)
+      this.setState({loading:true});
+      api.get('/user_countries',true)
          .then(response => {
-            console.log(response)
+            response['hydra:member'].map(country =>{
+               valueList.push({id:country.id,URI:country['@id'],value:country.countryName});
+               this.setState({countries:valueList});
+                })
+            this.setState({loading:false});
          })
          .catch(error => {
             // error hanlding
@@ -252,184 +284,211 @@ export default class UserProfile extends Component {
          this.setState({ selectedUsers: 0, users: unselectedUsers });
       }
    }
+   onSubmit(values){
+      values.roles = [values.roles];
+      console.log(values);
+      api.post('/users',values,true).then(respone =>{
+         console.log(respone)
+      }).catch(error =>{
+         console.log(parseApiErrors(error));
+         throw new SubmissionError({
+            _error:"messag"
+         })
+      });
+   }
 
    render() {
-      const { users, loading, selectedUser, editUser, allSelected, selectedUsers } = this.state;
+      const { users, loading, selectedUser, editUser, countries , selectedUsers } = this.state;
+      const {handleSubmit,error} = this.props;
       return (
-         <div className="user-management">
-            <Helmet>
-               <title>Polucon | Users Management</title>
-               <meta name="description" content="Reactify Widgets" />
-            </Helmet>
-            <PageTitleBar
-               title={<IntlMessages id="sidebar.userManagement" />}
-               match={this.props.match}
-            />
-            <RctCollapsibleCard fullBlock>
-               <div className="table-responsive">
-                  <div className="d-flex justify-content-between py-20 px-10 border-bottom">
-                     <div>
-                        <a href="javascript:void(0)" onClick={() => this.onReload()} className="btn-outline-default mr-10"><i className="ti-reload"></i></a>
-                        <a href="javascript:void(0)" className="btn-outline-default mr-10">More</a>
-                     </div>
-                     <div>
-                        <a href="javascript:void(0)" className="btn-sm btn-outline-default mr-10">Export to Excel</a>
-                        <a href="javascript:void(0)" onClick={() => this.opnAddNewUserModal()} color="primary" className="caret btn-sm mr-10">Add New User <i className="zmdi zmdi-plus"></i></a>
-                     </div>
-                  </div>
-                  <table className="table table-middle table-hover mb-0">
-                     <thead>
-                        <tr>
-                           <th className="w-5">
-                              <FormControlLabel
-                                 control={
-                                    <Checkbox
+          <div className="user-management">
+             <Helmet>
+                <title>Polucon | Users Management</title>
+                <meta name="description" content="Reactify Widgets" />
+             </Helmet>
+             <PageTitleBar
+                 title={<IntlMessages id="sidebar.userManagement" />}
+                 match={this.props.match}
+             />
+             <RctCollapsibleCard fullBlock>
+                <div className="table-responsive">
+                   <div className="d-flex justify-content-between py-20 px-10 border-bottom">
+                      <div>
+                         <a href="javascript:void(0)" onClick={() => this.onReload()} className="btn-outline-default mr-10"><i className="ti-reload"></i></a>
+                      </div>
+                      <div>
+                         <a href="javascript:void(0)" onClick={() => this.opnAddNewUserModal()} color="primary" className="caret btn-sm mr-10">Add New User <i className="zmdi zmdi-plus"></i></a>
+                      </div>
+                   </div>
+                   <table className="table table-middle table-hover mb-0">
+                      <thead>
+                      <tr>
+                         <th className="w-5">
+                            <FormControlLabel
+                                control={
+                                   <Checkbox
                                        indeterminate={selectedUsers > 0 && selectedUsers < users.length}
                                        checked={selectedUsers > 0}
                                        onChange={(e) => this.onSelectAllUser(e)}
                                        value="all"
                                        color="primary"
-                                    />
-                                 }
-                                 label="All"
-                              />
-                           </th>
-                           <th>User</th>
-                           <th>Email Address</th>
-                           <th>Status</th>
-                           <th>Roles</th>
-                           <th>Date Created</th>
-                           <th>Action</th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        {users && users.map((user, key) => (
-                           <tr key={key}>
-                              <td>
-                                 <FormControlLabel
+                                   />
+                                }
+                                label="All"
+                            />
+                         </th>
+                         <th>User</th>
+                         <th>Email Address</th>
+                         <th>Status</th>
+                         <th>Roles</th>
+                         <th>Date Created</th>
+                         <th>Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      {users && users.map((user, key) => (
+                          <tr key={key}>
+                             <td>
+                                <FormControlLabel
                                     control={
                                        <Checkbox
-                                          checked={user.checked}
-                                          onChange={() => this.onSelectUser(user)}
-                                          color="primary"
+                                           checked={user.checked}
+                                           onChange={() => this.onSelectUser(user)}
+                                           color="primary"
                                        />
                                     }
-                                 />
-                              </td>
-                              <td>
-                                 <div className="media">
-                                    {user.avatar !== '' ?
+                                />
+                             </td>
+                             <td>
+                                <div className="media">
+                                   {user.avatar !== '' ?
                                        <img src={user.avatar} alt="user prof" className="rounded-circle mr-15" width="50" height="50" />
                                        : <Avatar className="mr-15">{user.name.charAt(0)}</Avatar>
-                                    }
-                                    <div className="media-body">
-                                       <h5 className="mb-5 fw-bold">{user.name}</h5>
-                                       <Badge color="warning">{user.type}</Badge>
-                                    </div>
-                                 </div>
-                              </td>
-                              <td>{user.emailAddress}</td>
-                              <td className="d-flex justify-content-start">
-                                 <span className={`badge badge-xs ${user.badgeClass} mr-10 mt-10 position-relative`}>&nbsp;</span>
-                                 <div className="status">
-                                    <span className="d-block">{user.status}</span>
-                                    <span className="small">{user.lastSeen}</span>
-                                 </div>
-                              </td>
-                              <td><span className={`badge ${user.badgeClass} badge-pill`}>{user.accountType}</span></td>
-                              <td>{user.dateCreated}</td>
-                              <td className="list-action">
-                                 <a href="javascript:void(0)" onClick={() => this.viewUserDetail(user)}><i className="ti-eye"></i></a>
-                                 <a href="javascript:void(0)" onClick={() => this.onEditUser(user)}><i className="ti-pencil"></i></a>
-                                 <a href="javascript:void(0)" onClick={() => this.onDelete(user)}><i className="ti-close"></i></a>
-                              </td>
-                           </tr>
-                        ))}
-                     </tbody>
-                     <tfoot className="border-top">
-                        <tr>
-                           <td colSpan="100%">
-                              <Pagination className="mb-0 py-10 px-10">
-                                 <PaginationItem>
-                                    <PaginationLink previous href="#" />
-                                 </PaginationItem>
-                                 <PaginationItem active>
-                                    <PaginationLink href="javascript:void(0)">1</PaginationLink>
-                                 </PaginationItem>
-                                 <PaginationItem>
-                                    <PaginationLink href="javascript:void(0)">2</PaginationLink>
-                                 </PaginationItem>
-                                 <PaginationItem>
-                                    <PaginationLink href="javascript:void(0)">3</PaginationLink>
-                                 </PaginationItem>
-                                 <PaginationItem>
-                                    <PaginationLink next href="javascript:void(0)" />
-                                 </PaginationItem>
-                              </Pagination>
-                           </td>
-                        </tr>
-                     </tfoot>
-                  </table>
-               </div>
-               {loading &&
-                  <RctSectionLoader />
-               }
-            </RctCollapsibleCard>
-            <DeleteConfirmationDialog
-               ref="deleteConfirmationDialog"
-               title="Are You Sure Want To Delete?"
-               message="This will delete user permanently."
-               onConfirm={() => this.deleteUserPermanently()}
-            />
-            <Modal isOpen={this.state.addNewUserModal} toggle={() => this.onAddUpdateUserModalClose()}>
-               <ModalHeader toggle={() => this.onAddUpdateUserModalClose()}>
-                  {editUser === null ?
-                     'Add New User' : 'Update User'
-                  }
-               </ModalHeader>
-               <ModalBody>
-                  {editUser === null ?
-                     <AddNewUserForm
-                        addNewUserDetails={this.state.addNewUserDetail}
-                        onChangeAddNewUserDetails={this.onChangeAddNewUserDetails.bind(this)}
-                     />
-                     : <UpdateUserForm user={editUser} onUpdateUserDetail={this.onUpdateUserDetails.bind(this)} />
-                  }
-               </ModalBody>
-               <ModalFooter>
-                  {editUser === null ?
-                     <Button variant="contained" className="text-white btn-success" onClick={() => this.addNewUser()}>Add</Button>
-                     : <Button variant="contained" color="primary" className="text-white" onClick={() => this.updateUser()}>Update</Button>
-                  }
-                  {' '}
-                  <Button variant="contained" className="text-white btn-danger" onClick={() => this.onAddUpdateUserModalClose()}>Cancel</Button>
-               </ModalFooter>
-            </Modal>
-            <Dialog
-               onClose={() => this.setState({ openViewUserDialog: false })}
-               open={this.state.openViewUserDialog}
-            >
-               <DialogContent>
-                  {selectedUser !== null &&
-                     <div>
-                        <div className="clearfix d-flex">
-                           <div className="media pull-left">
-                              <img src={selectedUser.avatar} alt="user prof" className="rounded-circle mr-15" width="50" height="50" />
-                              <div className="media-body">
-                                 <p>Name: <span className="fw-bold">{selectedUser.name}</span></p>
-                                 <p>Email: <span className="fw-bold">{selectedUser.emailAddress}</span></p>
-                                 <p>Type: <span className="badge badge-warning">{selectedUser.type}</span></p>
-                                 <p>Account Type: <span className={`badge ${selectedUser.badgeClass} badge-pill`}>{selectedUser.accountType}</span></p>
-                                 <p>Status: {selectedUser.status}</p>
-                                 <p>Last Seen: {selectedUser.lastSeen}</p>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  }
-               </DialogContent>
-            </Dialog>
-         </div>
+                                   }
+                                   <div className="media-body">
+                                      <h5 className="mb-5 fw-bold">{user.name}</h5>
+                                      <Badge color="warning">{user.type}</Badge>
+                                   </div>
+                                </div>
+                             </td>
+                             <td>{user.emailAddress}</td>
+                             <td className="d-flex justify-content-start">
+                                <span className={`badge badge-xs ${user.badgeClass} mr-10 mt-10 position-relative`}>&nbsp;</span>
+                                <div className="status">
+                                   <span className="d-block">{user.status}</span>
+                                   <span className="small">{user.lastSeen}</span>
+                                </div>
+                             </td>
+                             <td><span className={`badge ${user.badgeClass} badge-pill`}>{user.accountType}</span></td>
+                             <td>{user.dateCreated}</td>
+                             <td className="list-action">
+                                <a href="javascript:void(0)" onClick={() => this.viewUserDetail(user)}><i className="ti-eye"></i></a>
+                                <a href="javascript:void(0)" onClick={() => this.onEditUser(user)}><i className="ti-pencil"></i></a>
+                                <a href="javascript:void(0)" onClick={() => this.onDelete(user)}><i className="ti-close"></i></a>
+                             </td>
+                          </tr>
+                      ))}
+                      </tbody>
+                      <tfoot className="border-top">
+                      <tr>
+                         <td colSpan="100%">
+                            <Pagination className="mb-0 py-10 px-10">
+                               <PaginationItem>
+                                  <PaginationLink previous href="#" />
+                               </PaginationItem>
+                               <PaginationItem active>
+                                  <PaginationLink href="javascript:void(0)">1</PaginationLink>
+                               </PaginationItem>
+                               <PaginationItem>
+                                  <PaginationLink href="javascript:void(0)">2</PaginationLink>
+                               </PaginationItem>
+                               <PaginationItem>
+                                  <PaginationLink href="javascript:void(0)">3</PaginationLink>
+                               </PaginationItem>
+                               <PaginationItem>
+                                  <PaginationLink next href="javascript:void(0)" />
+                               </PaginationItem>
+                            </Pagination>
+                         </td>
+                      </tr>
+                      </tfoot>
+                   </table>
+                </div>
+                {loading &&
+                <RctSectionLoader />
+                }
+             </RctCollapsibleCard>
+             <DeleteConfirmationDialog
+                 ref="deleteConfirmationDialog"
+                 title="Are You Sure Want To Delete?"
+                 message="This will delete user permanently."
+                 onConfirm={() => this.deleteUserPermanently()}
+             />
+             <Modal isOpen={this.state.addNewUserModal} toggle={() => this.onAddUpdateUserModalClose()}>
+                <ModalHeader toggle={() => this.onAddUpdateUserModalClose()}>
+                   {editUser === null ?
+                       'Add New User' : 'Update User'
+                   }
+                </ModalHeader>
+                <ModalBody>
+                   {editUser === null ?
+                       <Form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+                          {error && <div className="alert alert-danger">{error}</div>}
+                          <Field name="firstName" label="First Name" type="text" placeholder="First Name" component={renderField}/>
+                          <Field name="lastName" label="Last Name" type="text" placeholder="Last Name" component={renderField}/>
+                          <Field name="username" label="Username" type="text" placeholder="Username" component={renderField}/>
+                          <Field name="password"  label="Password" type="password" placeholder="Password" component={renderField}/>
+                          <Field name="retypePassword"  label="Confirm Password" type="password" placeholder="Confirm Password" component={renderField}/>
+                          <Field name="email" label="Email" type="email" placeholder="Email" component={renderField}/>
+                          <Field name="roles" label="Role" type="select" selectItems={this.state.roles} component={renderField}/>
+                          <Field name="countries" label="Country" type="select" selectItems={countries} component={renderField}/>
+                          <FormGroup className="mb-15">
+                             <Button variant="contained" className="text-white btn-success" type="submit">Add</Button>
+                             {' '}
+                             <Button variant="contained" className="text-white btn-danger" onClick={() => this.onAddUpdateUserModalClose()}>Cancel</Button>
+                          </FormGroup>
+                       </Form>
+
+                       : <UpdateUserForm user={editUser} onUpdateUserDetail={this.onUpdateUserDetails.bind(this)} />
+                   }
+                </ModalBody>
+
+             </Modal>
+             <Dialog
+                 onClose={() => this.setState({ openViewUserDialog: false })}
+                 open={this.state.openViewUserDialog}
+             >
+                <DialogContent>
+                   {selectedUser !== null &&
+                   <div>
+                      <div className="clearfix d-flex">
+                         <div className="media pull-left">
+                            <img src={selectedUser.avatar} alt="user prof" className="rounded-circle mr-15" width="50" height="50" />
+                            <div className="media-body">
+                               <p>Name: <span className="fw-bold">{selectedUser.name}</span></p>
+                               <p>Email: <span className="fw-bold">{selectedUser.emailAddress}</span></p>
+                               <p>Type: <span className="badge badge-warning">{selectedUser.type}</span></p>
+                               <p>Account Type: <span className={`badge ${selectedUser.badgeClass} badge-pill`}>{selectedUser.accountType}</span></p>
+                               <p>Status: {selectedUser.status}</p>
+                               <p>Last Seen: {selectedUser.lastSeen}</p>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   }
+                </DialogContent>
+             </Dialog>
+          </div>
       );
    }
 }
+
+const mapStateToProps = state=>({
+   ...state.auth
+});
+
+const mapDispatchToProps = {
+
+};
+
+export default reduxForm({form:'addUserForm'})(connect(mapStateToProps,mapDispatchToProps)(UserProfile))
