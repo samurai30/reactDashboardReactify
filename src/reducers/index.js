@@ -6,8 +6,8 @@ import settings from './settings';
 import chatAppReducer from './ChatAppReducer';
 import emailAppReducer from './EmailAppReducer';
 import sidebarReducer from './SidebarReducer';
-import todoAppReducer from './TodoAppReducer';
 import authUserReducer from './AuthUserReducer';
+import addUserReducer from './AddUserReducer';
 import feedbacksReducer from './FeedbacksReducer';
 import ecommerceReducer from './EcommerceReducer';
 import {reducer as formReducer} from 'redux-form'
@@ -17,11 +17,10 @@ const reducers = combineReducers({
   chatAppReducer,
   emailApp: emailAppReducer,
   sidebar: sidebarReducer,
-  todoApp: todoAppReducer,
-  authUser: authUserReducer,
   feedback: feedbacksReducer,
   ecommerce: ecommerceReducer,
   auth: authUserReducer,
+  addUser: addUserReducer,
   form: formReducer,
   router: routerReducer
 });

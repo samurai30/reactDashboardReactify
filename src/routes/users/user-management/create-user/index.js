@@ -47,6 +47,8 @@ import {Field, reduxForm, SubmissionError} from "redux-form";
 import {renderField} from "../../../../forms/LoginForm";
 import {connect} from "react-redux";
 import {parseApiErrors} from "Util/apiUtils";
+import {AddUserRequest} from "Actions/AddUserActions";
+import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 
 
 const valueList = [];
@@ -286,20 +288,12 @@ class UserProfile extends Component {
    }
    onSubmit(values){
       values.roles = [values.roles];
-      console.log(values);
-      api.post('/users',values,true).then(respone =>{
-         console.log(respone)
-      }).catch(error =>{
-         console.log(parseApiErrors(error));
-         throw new SubmissionError({
-            _error:"messag"
-         })
-      });
+      return this.props.AddUserRequest(values);
    }
 
    render() {
       const { users, loading, selectedUser, editUser, countries , selectedUsers } = this.state;
-      const {handleSubmit,error} = this.props;
+      const {handleSubmit,error,addUserLoader,userAdded} = this.props;
       return (
           <div className="user-management">
              <Helmet>
@@ -443,7 +437,12 @@ class UserProfile extends Component {
                           <Field name="roles" label="Role" type="select" selectItems={this.state.roles} component={renderField}/>
                           <Field name="countries" label="Country" type="select" selectItems={countries} component={renderField}/>
                           <FormGroup className="mb-15">
-                             <Button variant="contained" className="text-white btn-success" type="submit">Add</Button>
+                             {addUserLoader?
+                                 <RctPageLoader/>
+                                 :
+                                 <Button variant="contained" className="text-white btn-success" type="submit">Add</Button>
+                             }
+
                              {' '}
                              <Button variant="contained" className="text-white btn-danger" onClick={() => this.onAddUpdateUserModalClose()}>Cancel</Button>
                           </FormGroup>
@@ -484,11 +483,11 @@ class UserProfile extends Component {
 }
 
 const mapStateToProps = state=>({
-   ...state.auth
+   ...state.addUser
 });
 
 const mapDispatchToProps = {
-
+   AddUserRequest
 };
 
 export default reduxForm({form:'addUserForm'})(connect(mapStateToProps,mapDispatchToProps)(UserProfile))
