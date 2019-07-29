@@ -12,6 +12,7 @@ import feedbacksReducer from './FeedbacksReducer';
 import ecommerceReducer from './EcommerceReducer';
 import {reducer as formReducer} from 'redux-form'
 import {routerReducer} from 'react-router-redux'
+import {ADD_USER_SUCCESS, LOGIN_USER_FAILURE} from "Actions/types";
 const reducers = combineReducers({
   settings,
   chatAppReducer,
@@ -21,7 +22,26 @@ const reducers = combineReducers({
   ecommerce: ecommerceReducer,
   auth: authUserReducer,
   addUser: addUserReducer,
-  form: formReducer,
+  form: formReducer.plugin({
+    addUserForm: (state,action)=>{
+      switch (action.type) {
+        case ADD_USER_SUCCESS:
+          return undefined;
+        default:
+          return state;
+
+      }
+    },
+    adminLoginForm: (state,action) =>{
+      switch (action.type) {
+        case LOGIN_USER_FAILURE:
+          return undefined;
+        default:
+          return state;
+
+      }
+    }
+  }),
   router: routerReducer
 });
 

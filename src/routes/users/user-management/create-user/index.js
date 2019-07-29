@@ -13,8 +13,7 @@ import {
    Modal,
    ModalHeader,
    ModalBody,
-   ModalFooter,
-   Badge, Form, FormGroup, Input
+   Badge, Form, FormGroup
 } from 'reactstrap';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -43,12 +42,13 @@ import RctCollapsibleCard from 'Components/RctCollapsibleCard/RctCollapsibleCard
 // rct section loader
 import RctSectionLoader from 'Components/RctSectionLoader/RctSectionLoader';
 import IntlMessages from "Util/IntlMessages";
-import {Field, reduxForm, SubmissionError} from "redux-form";
-import {renderField} from "../../../../forms/LoginForm";
+import {Field, reduxForm,reset} from "redux-form";
+import {renderField} from "../../../../forms/ComonForm";
 import {connect} from "react-redux";
-import {parseApiErrors} from "Util/apiUtils";
 import {AddUserRequest} from "Actions/AddUserActions";
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
+import {NotificationContainer} from "react-notifications";
+import {fetchUserError} from "Actions";
 
 
 const valueList = [];
@@ -81,12 +81,12 @@ class UserProfile extends Component {
          {
             id:2,
             value:'SUB-ADMIN',
-            URI: 'ROLE_ADMIN'
+            URI: 'ROLE_SUBADMIN'
          },
          {
             id:3,
             value:'CLIENT',
-            URI: 'ROLE_ADMIN'
+            URI: 'ROLE_CLIENT'
          },
          {
             id:4,
@@ -107,12 +107,13 @@ class UserProfile extends Component {
             response['hydra:member'].map(country =>{
                valueList.push({id:country.id,URI:country['@id'],value:country.countryName});
                this.setState({countries:valueList});
-                })
+                });
             this.setState({loading:false});
          })
          .catch(error => {
-            // error hanlding
-         })
+            NotificationManager.error("Session Timed out");
+            this.props.dispatch(this.props.fetchUserError);
+         });
    }
 
 	/**
@@ -231,6 +232,7 @@ class UserProfile extends Component {
 	 * On Add & Update User Modal Close
 	 */
    onAddUpdateUserModalClose() {
+      this.props.dispatch(reset('addUserForm'));
       this.setState({ addNewUserModal: false, editUser: null })
    }
 
@@ -274,13 +276,13 @@ class UserProfile extends Component {
       let selectAll = selectedUsers < users.length;
       if (selectAll) {
          let selectAllUsers = users.map(user => {
-            user.checked = true
+            user.checked = true;
             return user
          });
          this.setState({ users: selectAllUsers, selectedUsers: selectAllUsers.length })
       } else {
          let unselectedUsers = users.map(user => {
-            user.checked = false
+            user.checked = false;
             return user;
          });
          this.setState({ selectedUsers: 0, users: unselectedUsers });
@@ -293,12 +295,13 @@ class UserProfile extends Component {
 
    render() {
       const { users, loading, selectedUser, editUser, countries , selectedUsers } = this.state;
-      const {handleSubmit,error,addUserLoader,userAdded} = this.props;
+      const {handleSubmit,error,addUserLoader} = this.props;
       return (
           <div className="user-management">
+             <NotificationContainer />
              <Helmet>
                 <title>Polucon | Users Management</title>
-                <meta name="description" content="Reactify Widgets" />
+                <meta name="description" content="Polucon User Management" />
              </Helmet>
              <PageTitleBar
                  title={<IntlMessages id="sidebar.userManagement" />}
@@ -440,11 +443,14 @@ class UserProfile extends Component {
                              {addUserLoader?
                                  <RctPageLoader/>
                                  :
-                                 <Button variant="contained" className="text-white btn-success" type="submit">Add</Button>
+                                 <div>
+                                    <Button variant="contained" className="text-white btn-success" type="submit">Add</Button>
+                                    {' '}
+                                    <Button variant="contained" className="text-white btn-danger" onClick={() => this.onAddUpdateUserModalClose()}>Cancel</Button>
+                                 </div>
                              }
 
-                             {' '}
-                             <Button variant="contained" className="text-white btn-danger" onClick={() => this.onAddUpdateUserModalClose()}>Cancel</Button>
+
                           </FormGroup>
                        </Form>
 
@@ -487,7 +493,8 @@ const mapStateToProps = state=>({
 });
 
 const mapDispatchToProps = {
-   AddUserRequest
+   AddUserRequest,
+   fetchUserError
 };
 
 export default reduxForm({form:'addUserForm'})(connect(mapStateToProps,mapDispatchToProps)(UserProfile))

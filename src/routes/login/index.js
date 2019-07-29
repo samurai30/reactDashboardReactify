@@ -13,7 +13,7 @@ import QueueAnim from 'rc-queue-anim';
 import AppConfig from 'Constants/AppConfig';
 import {userLoginAttempt} from "Actions";
 import {Field, reduxForm} from "redux-form";
-import {renderField} from "../../forms/LoginForm";
+import {renderForm} from "../../forms/LoginForm";
 import {Helmet} from "react-helmet";
 import {NotificationContainer} from "react-notifications";
 
@@ -90,8 +90,8 @@ class AdminLoginPage extends Component{
                                         </div>
                                         <Form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                                             {error && <div className="alert alert-danger">{error}</div>}
-                                            <Field name="username" label="Username" type="text" placeholder="Username" spanIcon="ti-email" component={renderField}/>
-                                            <Field name="password" label="Password" type="Password" placeholder="Password" spanIcon="ti-lock" component={renderField}/>
+                                            <Field name="username" type="text" placeholder="Username" spanIcon="ti-email" component={renderForm}/>
+                                            <Field name="password" type="Password" placeholder="Password" spanIcon="ti-lock" component={renderForm}/>
                                             <FormGroup className="mb-15">
                                                 <Button
                                                     type="submit"

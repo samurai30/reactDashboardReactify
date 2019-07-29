@@ -3,22 +3,10 @@ import {FormGroup, Input, Label} from "reactstrap";
 import classNames from 'classnames'
 
 
-export const renderField = ({selectItems,input,label,type,placeholder,spanIcon,meta:{error}})=>{
-    const classes = classNames(
-        'form-control',
-        {
-            'is-invalid':error
-        }
-    );
+export const renderForm = ({input,type,placeholder,spanIcon,meta:{error}})=>{
     return(<FormGroup className="has-wrapper">
-        {label !== null && label !== '' && <Label>{label}</Label>}
-        {type !== 'select' && <Input {...input} type={type} placeholder={placeholder}  className={classes} required/>}
-        {type === 'select' && <Input {...input} type={type} required>
-            <option value="">Select {label}</option>
-            {selectItems && selectItems.map(item =><option key={item.id} value={item.URI}>{item.value}</option>)}
-        </Input>}
-        {spanIcon !== '' && spanIcon !== null && <span className="has-icon"><i className={spanIcon}></i></span>}
-        {error && <small className="form-text text-danger">{error}</small>}
+        <Input {...input} type={type} placeholder={placeholder}  className="has-input input-lg" required/>
+        <span className="has-icon"><i className={spanIcon}></i></span>
     </FormGroup>)
 };
 

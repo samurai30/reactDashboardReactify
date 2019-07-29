@@ -61,7 +61,6 @@ export const fetchUserDetails = (userId) =>{
             store.dispatch(userLoginSuccess(localStorage.getItem('jwtToken'),localStorage.getItem('user_id')));
             dispatch(userFetchReceived(response.id,response));
         }).catch(error=>{
-            console.log(error.message);
             if(error.message === 'Unauthorized'){
                 NotificationManager.error("Session Timed out")
             }
