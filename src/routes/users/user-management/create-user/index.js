@@ -94,6 +94,7 @@ class UserProfile extends Component {
             URI: 'ROLE_SURVEYOR'
          }
       ],
+      profilePicUploaded: false,
       openViewUserDialog: false, // view user dialog box
       editUser: null,
       allSelected: false,
@@ -289,8 +290,12 @@ class UserProfile extends Component {
       }
    }
    onSubmit(values){
-      values.roles = [values.roles];
-      return this.props.AddUserRequest(values);
+      if(this.state.profilePicUploaded){
+         values.roles = [values.roles];
+         return this.props.AddUserRequest(values);
+      }else{
+         NotificationManager.error("Please upload the image again");
+      }
    }
 
    render() {
