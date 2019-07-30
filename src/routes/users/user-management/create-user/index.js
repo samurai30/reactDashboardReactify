@@ -49,6 +49,7 @@ import {AddUserRequest} from "Actions/AddUserActions";
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 import {NotificationContainer} from "react-notifications";
 import {fetchUserError} from "Actions";
+import UserProfilePic from "Components/ImageUploader/UserProfilePic";
 
 
 const valueList = [];
@@ -444,6 +445,9 @@ class UserProfile extends Component {
                           <Field name="email" label="Email" type="email" placeholder="Email" component={renderField}/>
                           <Field name="roles" label="Role" type="select" selectItems={this.state.roles} component={renderField}/>
                           <Field name="countries" label="Country" type="select" selectItems={countries} component={renderField}/>
+                          <hr/>
+                             <UserProfilePic/>
+                           <hr/>
                           <FormGroup className="mb-15">
                              {addUserLoader?
                                  <RctPageLoader/>
