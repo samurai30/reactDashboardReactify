@@ -1,7 +1,13 @@
 import {api} from "Api";
 import {parseApiErrors} from "Util/apiUtils";
 import {SubmissionError,reset} from "redux-form";
-import {ADD_USER_FAILURE, ADD_USER_REQUEST, ADD_USER_SUCCESS, PROFILE_PIC_UPLOADED} from "Actions/types";
+import {
+  ADD_USER_FAILURE,
+  ADD_USER_REQUEST,
+  ADD_USER_SUCCESS,
+  PROFILE_PIC_ERROR, PROFILE_PIC_REQUEST, PROFILE_PIC_SET,
+  PROFILE_PIC_UPLOADED
+} from "Actions/types";
 import {NotificationManager} from "react-notifications";
 
 export const AddUserRequest = (values) =>{
@@ -24,11 +30,23 @@ export const profilePicUploaded  = (data)=>{
   }
 };
 
-export const profilePicUploadError = () => ({});
+export const profilePicUploadError = () => {
+  return{
+    type:PROFILE_PIC_ERROR
+  }
+};
+
+export const profilePicUploadRequest = () =>{
+  return{
+    type:PROFILE_PIC_REQUEST
+  }
+};
+
 
 export const profilePicUpload = (file) =>{
   return (dispatch) =>{
-      return api.upload('/images',file).then(response => dispatch(profilePicUploaded(response)))
+      dispatch(profilePicUploadRequest());
+      return api.upload('/images/user',file).then(response => dispatch(profilePicUploaded(response)))
           .catch(error => dispatch(profilePicUploadError))
   }
 };

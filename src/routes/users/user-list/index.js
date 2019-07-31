@@ -16,6 +16,8 @@ import IntlMessages from 'Util/IntlMessages';
 
 // rct card box
 import { RctCard } from 'Components/RctCard';
+import {SERVER_PATH} from "Actions/types";
+import CardImg from "reactstrap/es/CardImg";
 
 export default class UserComponent extends Component {
 
@@ -50,13 +52,13 @@ export default class UserComponent extends Component {
             <div className="row">
                {users && users.map((user, key) => (
                   <RctCard customClasses="p-10" colClasses="col-sm-6 col-lg-4 col-xl-3" key={key}>
-                     <img className="img-fluid" alt="user listing" width="100%" height="140" />
                      <div className="card-block-content">
                         <div className="d-flex justify-content-between mb-20">
                            <div className="d-flex align-items-start">
                               <div className="media">
                                  <div className="media-left mx-10">
-                                    <img alt="user profile" className="rounded-circle img-fluid" width="90" height="90" />
+                                    <img alt="user profile" src={`${SERVER_PATH}${user.profilePic.url}`} className="rounded-circle img-fluid" width="90" height="90" />
+
                                  </div>
                                  <div className="media-body py-10">
                                     <p className="mb-0">{user.username}</p>

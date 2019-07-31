@@ -8,14 +8,17 @@ const mapDispatchToProps={
 };
 
 class UserProfilePic extends React.Component{
+
+
     onChange(e){
-        console.log(e.target.files[0])
+        const file = e.target.files[0];
+         this.props.profilePicUpload(file);
     }
     render() {
         return(<div className="form-group input-image-upload">
             <input type="file" className="form-control-file text-primary font-weight-bold"
                    data-title="Click me or Drag & Drop file"
-                    onChange={this.onChange.bind(this)} accept="image/*"/>
+                   onChange={this.onChange.bind(this)} accept="image/*"/>
         </div>)
     }
 }

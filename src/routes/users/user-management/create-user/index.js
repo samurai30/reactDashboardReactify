@@ -50,9 +50,14 @@ import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 import {NotificationContainer} from "react-notifications";
 import {fetchUserError} from "Actions";
 import UserProfilePic from "Components/ImageUploader/UserProfilePic";
+import ProfilePicBrowser from "Components/ImageUploader/ProfilePicBrowser";
 
 
 const valueList = [];
+const mapStateToProps = state => ({
+   ...state.addUser
+});
+
 class UserProfile extends Component {
 
    state = {
@@ -106,7 +111,7 @@ class UserProfile extends Component {
       this.setState({loading:true});
       api.get('/user_countries',true)
          .then(response => {
-            response['hydra:member'].map(country =>{
+            response['hydra:member'].map(country => {
                valueList.push({id:country.id,URI:country['@id'],value:country.countryName});
                this.setState({countries:valueList});
                 });
@@ -116,6 +121,11 @@ class UserProfile extends Component {
             NotificationManager.error("Session Timed out");
             this.props.dispatch(this.props.fetchUserError);
          });
+
+   }
+
+   componentWillUnmount(){
+
    }
 
 	/**
@@ -291,8 +301,10 @@ class UserProfile extends Component {
       }
    }
    onSubmit(values){
-      if(this.state.profilePicUploaded){
+      if(this.props.profilePicUploaded){
          values.roles = [values.roles];
+         const {profilePicImage} = this.props;
+         values.profilePic = profilePicImage["@id"];
          return this.props.AddUserRequest(values);
       }else{
          NotificationManager.error("Please upload the image again");
@@ -301,8 +313,9 @@ class UserProfile extends Component {
 
    render() {
       const { users, loading, selectedUser, editUser, countries , selectedUsers } = this.state;
-      const {handleSubmit,error,addUserLoader} = this.props;
+      const {handleSubmit,error,addUserLoader,profilePicImage} = this.props;
       return (
+
           <div className="user-management">
              <NotificationContainer />
              <Helmet>
@@ -447,6 +460,7 @@ class UserProfile extends Component {
                           <Field name="countries" label="Country" type="select" selectItems={countries} component={renderField}/>
                           <hr/>
                              <UserProfilePic/>
+                             <ProfilePicBrowser ProfilePic={profilePicImage}/>
                            <hr/>
                           <FormGroup className="mb-15">
                              {addUserLoader?
@@ -497,9 +511,6 @@ class UserProfile extends Component {
    }
 }
 
-const mapStateToProps = state=>({
-   ...state.addUser
-});
 
 const mapDispatchToProps = {
    AddUserRequest,
