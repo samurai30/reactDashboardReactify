@@ -118,8 +118,10 @@ class UserProfile extends Component {
             this.setState({loading:false});
          })
          .catch(error => {
-            NotificationManager.error("Session Timed out");
-            this.props.dispatch(this.props.fetchUserError);
+            if (error.message === 'Unauthorized'){
+               NotificationManager.error("Session Timed out");
+               this.props.dispatch(this.props.fetchUserError);
+            }
          });
 
    }

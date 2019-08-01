@@ -17,6 +17,10 @@ export const AddUserRequest = (values) =>{
       dispatch({type:ADD_USER_SUCCESS});
       NotificationManager.success("User Added");
     }).catch(error =>{
+      if (error.message === 'Unauthorized'){
+        NotificationManager.error("Session Timed out");
+        this.props.dispatch(this.props.fetchUserError);
+      }
       dispatch({type:ADD_USER_FAILURE});
       throw new SubmissionError(parseApiErrors(error));
     });
@@ -47,7 +51,12 @@ export const profilePicUpload = (file) =>{
   return (dispatch) =>{
       dispatch(profilePicUploadRequest());
       return api.upload('/images/user',file).then(response => dispatch(profilePicUploaded(response)))
-          .catch(error => dispatch(profilePicUploadError))
+          .catch(error => {
+            if (error.message === 'Unauthorized'){
+              NotificationManager.error("Session Timed out");
+              this.props.dispatch(this.props.fetchUserError);
+            }
+            dispatch(profilePicUploadError())})
   }
 };
 
