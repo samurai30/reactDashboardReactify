@@ -302,7 +302,14 @@ class UserProfile extends Component {
    }
    onSubmit(values){
       if(this.props.profilePicUploaded){
-         values.roles = [values.roles];
+         if(Array.isArray(values.roles)){
+            let temp = values.roles[0];
+            values.roles = [];
+            values.roles[0] = temp
+         }else {
+            values.roles = [values.roles]
+         }
+
          const {profilePicImage} = this.props;
          values.profilePic = profilePicImage["@id"];
          return this.props.AddUserRequest(values);
