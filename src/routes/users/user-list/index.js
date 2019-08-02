@@ -18,6 +18,7 @@ import IntlMessages from 'Util/IntlMessages';
 import { RctCard } from 'Components/RctCard';
 import {SERVER_PATH} from "Actions/types";
 import CardImg from "reactstrap/es/CardImg";
+import {ROLE_ADMIN, ROLE_CLIENT, ROLE_SUBADMIN, ROLE_SURVEYOR} from "Util/apiUtils";
 
 export default class UserComponent extends Component {
 
@@ -57,12 +58,18 @@ export default class UserComponent extends Component {
                            <div className="d-flex align-items-start">
                               <div className="media">
                                  <div className="media-left mx-10">
-                                    <img alt="user profile" src={`${SERVER_PATH}${user.profilePic.url}`} className="rounded-circle img-fluid" width="90" height="90" />
-
+                                     {(user.profilePic !== null) ? <img alt="user profile" src={`${SERVER_PATH}${user.profilePic.url}`} className="rounded-circle img-fluid" width="90" height="90" />
+                                     :<img alt="user profile" src={require('Assets/img/profileLogo.png')} className="rounded-circle img-fluid" width="90" height="90" />
+                                     }
                                  </div>
                                  <div className="media-body py-10">
                                     <p className="mb-0">{user.username}</p>
                                     <span className="text-muted fs-12"><i className="ti-world mr-5"></i>{user.countries.countryName}</span>
+                                     {user.roles[0] === ROLE_ADMIN ?   <p className="mb-0">Admin</p> :
+                                         user.roles[0] === ROLE_SUBADMIN ?   <p className="mb-0">Sub-Admin</p> :
+                                             user.roles[0] === ROLE_CLIENT ?   <p className="mb-0">Client</p> :
+                                                 user.roles[0] === ROLE_SURVEYOR &&  <p className="mb-0">Surveyor</p>}
+
                                  </div>
                               </div>
                            </div>
@@ -72,15 +79,16 @@ export default class UserComponent extends Component {
                               {/*))}*/}
                            </div>
                         </div>
-                        {user ?
+
+                        {user.enabled ?
                            <div className="d-flex justify-content-between">
                               <Button variant="contained" color="primary" className="text-white btn-xs">
-                                 <i className="zmdi zmdi-comment-outline mr-10"></i>Send Message
+                                 <i className="zmdi zmdi-assignment-o mr-10"></i>Assign Task
                               </Button>
-                              <Button className="text-success btn-xs"><i className="zmdi zmdi-check-circle mr-10"></i> Available for Hire</Button>
+                              <Button className="text-success btn-xs"><i className="zmdi zmdi-check-circle mr-10"></i> Activated</Button>
                            </div>
                            : <div className="d-flex justify-content-center">
-                              <Button className="text-secondary btn-xs"><i className="zmdi zmdi-circle mr-10"></i> Not Available for Hiring</Button>
+                              <Button className="text-secondary btn-xs"><i className="zmdi zmdi-circle mr-10"></i> Not Activated yet</Button>
                            </div>
                         }
                      </div>

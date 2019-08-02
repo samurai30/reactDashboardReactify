@@ -18,7 +18,6 @@ action) =>{
         case ADD_USER_SUCCESS:
             return {...state,addUserLoader:false,profilePicImage:null,profilePicUploaded:false};
         case ADD_USER_FAILURE:
-
             return {...state,addUserLoader:false,profilePicImage:(state.profilePicImage)?state.profilePicImage:null};
         case PROFILE_PIC_REQUEST:
             return { ...state,addUserLoader: true};
