@@ -19,6 +19,7 @@ import { RctCard } from 'Components/RctCard';
 import {SERVER_PATH} from "Actions/types";
 import CardImg from "reactstrap/es/CardImg";
 import {ROLE_ADMIN, ROLE_CLIENT, ROLE_SUBADMIN, ROLE_SURVEYOR} from "Util/apiUtils";
+import {NotificationManager} from "react-notifications";
 
 export default class UserComponent extends Component {
 
@@ -37,7 +38,13 @@ export default class UserComponent extends Component {
             this.setState({ users: response['hydra:member'] });
          })
          .catch(error => {
-            // error handling
+             if (error.message === 'Unauthorized'){
+                 NotificationManager.error("Session Timed out");
+                 this.props.dispatch(this.props.fetchUserError);
+             }
+             else {
+                 NotificationManager.error(error.message);
+             }
          })
    }
 
@@ -51,8 +58,8 @@ export default class UserComponent extends Component {
             </Helmet>
             <PageTitleBar title={<IntlMessages id="sidebar.userList" />} match={this.props.match} />
             <div className="row">
-               {users && users.map((user, key) => (
-                  <RctCard customClasses="p-10" colClasses="col-sm-6 col-lg-4 col-xl-3" key={key}>
+               {users && users.map((user) => (
+                  <RctCard customClasses="p-10" colClasses="col-sm-6 col-lg-4 col-xl-3" key={user.id}>
                      <div className="card-block-content">
                         <div className="d-flex justify-content-between mb-20">
                            <div className="d-flex align-items-start">

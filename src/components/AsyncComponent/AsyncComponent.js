@@ -42,6 +42,14 @@ const AsyncUserManagementCreateUserComponent = Loadable({
    loader: () => import('Routes/users/user-management/create-user'),
    loading: () => <RctPageLoader/>
 });
+const AsyncSessionPage404Component = Loadable({
+   loader: () => import('Routes/session/404'),
+   loading: () => <RctPageLoader/>
+});
+const AsyncSessionPage500Component = Loadable({
+   loader: () => import('Routes/session/500'),
+   loading: () => <RctPageLoader/>
+});
 
 export {
    AsyncHomeDashboardComponent,
@@ -50,5 +58,7 @@ export {
    AsyncUsersListComponent,
    AsyncUserProfile1Component,
    AsyncUserManagementCreateUserComponent,
-   AsyncUserProfileComponent
+   AsyncUserProfileComponent,
+   AsyncSessionPage404Component,
+   AsyncSessionPage500Component
 };

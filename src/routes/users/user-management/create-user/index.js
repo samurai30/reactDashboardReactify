@@ -51,7 +51,16 @@ import {NotificationContainer} from "react-notifications";
 import {fetchUserError} from "Actions";
 import UserProfilePic from "Components/ImageUploader/UserProfilePic";
 import ProfilePicBrowser from "Components/ImageUploader/ProfilePicBrowser";
-
+import {SERVER_PATH} from "Actions/types";
+import Moment from 'react-moment';
+import {
+   ROLE_ADMIN,
+   ROLE_ADMIN_BADGE,
+   ROLE_CLIENT, ROLE_CLIENT_BADGE,
+   ROLE_SUBADMIN,
+   ROLE_SUBADMIN_BADGE,
+   ROLE_SURVEYOR, ROLE_SURVEYOR_BADGE
+} from "Util/apiUtils";
 
 const valueList = [];
 const mapStateToProps = state => ({
@@ -124,9 +133,17 @@ class UserProfile extends Component {
             }
          });
 
-   }
-
-   componentWillUnmount(){
+      api.get('/users',true)
+          .then(response => {
+             this.setState({users: response['hydra:member']});
+             this.setState({loading:false});
+          })
+          .catch(error => {
+             if (error.message === 'Unauthorized'){
+                NotificationManager.error("Session Timed out");
+                this.props.dispatch(this.props.fetchUserError);
+             }
+          });
 
    }
 
@@ -135,6 +152,7 @@ class UserProfile extends Component {
 	 */
    onDelete(data) {
       this.refs.deleteConfirmationDialog.open();
+      console.log(data);
       this.setState({ selectedUser: data });
    }
 
@@ -145,14 +163,23 @@ class UserProfile extends Component {
       const { selectedUser } = this.state;
       let users = this.state.users;
       let indexOfDeleteUser = users.indexOf(selectedUser);
-      users.splice(indexOfDeleteUser, 1);
-      this.refs.deleteConfirmationDialog.close();
       this.setState({ loading: true });
-      let self = this;
-      setTimeout(() => {
-         self.setState({ loading: false, users, selectedUser: null });
+      api.delete(`/users/${selectedUser['id']}`).then(response =>{
+         users.splice(indexOfDeleteUser, 1);
+         this.refs.deleteConfirmationDialog.close();
+         this.setState({ loading: false, users, selectedUser: null });
          NotificationManager.success('User Deleted!');
-      }, 2000);
+      }).catch(error =>{
+         this.setState({ loading: false, users, selectedUser: null });
+         if (error.message === 'Unauthorized'){
+            NotificationManager.error("Session Timed out");
+            this.props.dispatch(this.props.fetchUserError);
+         }
+         else {
+            NotificationManager.error('Something Went Wrong');
+         }
+      });
+
    }
 
 	/**
@@ -250,22 +277,11 @@ class UserProfile extends Component {
       this.setState({ addNewUserModal: false, editUser: null })
    }
 
-	/**
-	 * On Update User Details
-	 */
-   onUpdateUserDetails(key, value) {
-      this.setState({
-         editUser: {
-            ...this.state.editUser,
-            [key]: value
-         }
-      });
-   }
 
 	/**
 	 * Update User
 	 */
-   updateUser() {
+   updateUser(value) {
       const { editUser } = this.state;
       let indexOfUpdateUser = '';
       let users = this.state.users;
@@ -313,7 +329,7 @@ class UserProfile extends Component {
          }
 
          const {profilePicImage} = this.props;
-         values.profilePic = profilePicImage["@id"];
+         values.profilePic = `/api/images/${profilePicImage['id']}`;
          return this.props.AddUserRequest(values);
       }else{
          NotificationManager.error("Please upload the image again");
@@ -371,13 +387,12 @@ class UserProfile extends Component {
                       </tr>
                       </thead>
                       <tbody>
-                      {users && users.map((user, key) => (
-                          <tr key={key}>
+                      {users && users.map((user) => (
+                          <tr key={user.id}>
                              <td>
                                 <FormControlLabel
                                     control={
                                        <Checkbox
-                                           checked={user.checked}
                                            onChange={() => this.onSelectUser(user)}
                                            color="primary"
                                        />
@@ -386,26 +401,38 @@ class UserProfile extends Component {
                              </td>
                              <td>
                                 <div className="media">
-                                   {user.avatar !== '' ?
-                                       <img src={user.avatar} alt="user prof" className="rounded-circle mr-15" width="50" height="50" />
-                                       : <Avatar className="mr-15">{user.name.charAt(0)}</Avatar>
+                                   {(user.profilePic !== null) ?
+                                       <img src={`${SERVER_PATH}${user.profilePic.url}`} alt="user prof" className="rounded-circle mr-15" width="50" height="50" />
+                                       : <Avatar className="mr-15">{`${user.firstName.charAt(0)}${user.lastName.charAt(0)}`}</Avatar>
                                    }
                                    <div className="media-body">
-                                      <h5 className="mb-5 fw-bold">{user.name}</h5>
-                                      <Badge color="warning">{user.type}</Badge>
+                                      <h5 className="mb-5 fw-bold">{user.firstName}</h5>
+                                     {user.roles[0] === ROLE_ADMIN ?    <Badge color="warning">Admin</Badge> :
+                                          user.roles[0] === ROLE_SUBADMIN ?   <Badge color="warning">Sub-Admin</Badge> :
+                                              user.roles[0] === ROLE_CLIENT ?   <Badge color="warning">Client</Badge> :
+                                                  user.roles[0] === ROLE_SURVEYOR &&  <Badge color="warning">Surveyor</Badge>}
                                    </div>
                                 </div>
                              </td>
-                             <td>{user.emailAddress}</td>
+                             <td>{user.email}</td>
                              <td className="d-flex justify-content-start">
-                                <span className={`badge badge-xs ${user.badgeClass} mr-10 mt-10 position-relative`}>&nbsp;</span>
+                                {user.enabled ?  <span className={`badge badge-xs badge-success mr-10 mt-10 position-relative`}>&nbsp;</span>:
+                                    <span className={`badge badge-xs badge-warning mr-10 mt-10 position-relative`}>&nbsp;</span>}
                                 <div className="status">
-                                   <span className="d-block">{user.status}</span>
-                                   <span className="small">{user.lastSeen}</span>
+                                   {user.enabled ?  <span className="d-block text-uppercase">Activated</span>:
+                                       <span className="d-block text-uppercase text-yellow">Not Activated</span>}
+
                                 </div>
                              </td>
-                             <td><span className={`badge ${user.badgeClass} badge-pill`}>{user.accountType}</span></td>
-                             <td>{user.dateCreated}</td>
+                             <td> {user.roles[0] === ROLE_ADMIN ?    <span className={`badge ${ROLE_ADMIN_BADGE} badge-pill`}>Admin</span> :
+                                 user.roles[0] === ROLE_SUBADMIN ?    <span className={`badge ${ROLE_SUBADMIN_BADGE}  badge-pill`}>Sub-Admin</span>  :
+                                     user.roles[0] === ROLE_CLIENT ?   <span className={`badge ${ROLE_CLIENT_BADGE}  badge-pill`}>Client</span>  :
+                                         user.roles[0] === ROLE_SURVEYOR &&  <span className={`badge ${ROLE_SURVEYOR_BADGE}  badge-pill`}>Surveyor</span> }
+                                        </td>
+
+                             <td>  <Moment format="YYYY/MM/DD">
+                                {user.createdDate}
+                             </Moment></td>
                              <td className="list-action">
                                 <a href="javascript:void(0)" onClick={() => this.viewUserDetail(user)}><i className="ti-eye"></i></a>
                                 <a href="javascript:void(0)" onClick={() => this.onEditUser(user)}><i className="ti-pencil"></i></a>
@@ -486,7 +513,26 @@ class UserProfile extends Component {
                           </FormGroup>
                        </Form>
 
-                       : <UpdateUserForm user={editUser} onUpdateUserDetail={this.onUpdateUserDetails.bind(this)} />
+                       :
+                       <Form onSubmit={handleSubmit(this.updateUser.bind(this))}>
+                      {error && <div className="alert alert-danger">{error}</div>}
+                         <Field name="firstName" values={editUser.firstName} label="First Name" type="text" placeholder="First Name" component={renderField}/>
+                         <Field name="lastName" values={editUser.lastName} label="Last Name" type="text" placeholder="Last Name" component={renderField}/>
+                         <Field name="username" values={editUser.username} label="Username" type="text" placeholder="Username" component={renderField}/>
+                         <Field name="email" values={editUser.email} label="Email" type="email" placeholder="Email" component={renderField}/>
+                         <hr/>
+                         <FormGroup className="mb-15">
+                         {addUserLoader?
+                            <RctPageLoader/>
+                            :
+                            <div>
+                            <Button variant="contained" className="text-white btn-success" type="submit">Update</Button>
+                            {' '}
+                            <Button variant="contained" className="text-white btn-danger" onClick={() => this.onAddUpdateUserModalClose()}>Cancel</Button>
+                            </div>
+                         }
+                         </FormGroup>
+                      </Form>
                    }
                 </ModalBody>
 

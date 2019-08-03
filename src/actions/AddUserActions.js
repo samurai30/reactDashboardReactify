@@ -22,7 +22,9 @@ export const AddUserRequest = (values) =>{
         this.props.dispatch(this.props.fetchUserError);
       }
       dispatch({type:ADD_USER_FAILURE});
+      NotificationManager.error("Something is not right! Please check your form");
       throw new SubmissionError(parseApiErrors(error));
+
     });
   }
 };

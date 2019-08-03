@@ -3,7 +3,7 @@
  */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Redirect, Route } from 'react-router-dom';
+import {Redirect, Route, Switch} from 'react-router-dom';
 import { NotificationContainer } from 'react-notifications';
 
 // rct theme provider
@@ -12,7 +12,11 @@ import RctThemeProvider from './RctThemeProvider';
 //Main App
 import RctDefaultLayout from './DefaultLayout';
 
-import {AsyncAdminLoginComponent} from "Components/AsyncComponent/AsyncComponent";
+import {
+    AsyncAdminLoginComponent,
+    AsyncSessionPage404Component,
+    AsyncSessionPage500Component
+} from "Components/AsyncComponent/AsyncComponent";
 import {api} from "Api";
 import {userLoginSuccess} from "Actions";
 /**
@@ -61,7 +65,10 @@ class App extends Component {
                  authToken = {token}
                  component={RctDefaultLayout}
              />
-             <Route path="/admin-login" component={AsyncAdminLoginComponent}/>
+             <Route exact path="/admin-login" component={AsyncAdminLoginComponent}/>
+             <Route path="/session/404" component={AsyncSessionPage404Component} />
+             <Route path="/session/500" component={AsyncSessionPage500Component} />
+
          </RctThemeProvider>
       );
    }

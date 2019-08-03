@@ -15,6 +15,7 @@ import App from './container/App';
 import { configureStore } from './store';
 
 
+
 const MainApp = () => (
 	<Provider store={configureStore()}>
 		<MuiPickersUtilsProvider utils={MomentUtils}>
