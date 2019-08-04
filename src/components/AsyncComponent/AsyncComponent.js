@@ -14,17 +14,33 @@ const AsyncHomeDashboardComponent = Loadable({
    loading: () => <RctPageLoader />,
 });
 
-
-const AysncTasksComponent = Loadable({
+//tasks
+const AysncTasksApprovedComponent = Loadable({
    loader: () => import('Routes/tasks/approved'),
    loading : () => <RctPageLoader/>
 });
-
+const AysncTasksPendingComponent = Loadable({
+   loader: () => import('Routes/tasks/pending'),
+   loading : () => <RctPageLoader/>
+});
+const AysncTasksRejectedComponent = Loadable({
+   loader: () => import('Routes/tasks/rejected'),
+   loading : () => <RctPageLoader/>
+});
+const AysncAssignTaskComponent = Loadable({
+   loader: () => import('Routes/tasks/AssignTasks'),
+   loading : () => <RctPageLoader/>
+});
+const AysncCreateTaskComponent = Loadable({
+   loader: () => import('Routes/tasks/CreateTasks'),
+   loading : () => <RctPageLoader/>
+});
+//login
 const AsyncAdminLoginComponent = Loadable({
    loader: () => import('Routes/login'),
    loading: () => <RctPageLoader/>
 });
-
+//user management
 const AsyncUsersListComponent = Loadable({
    loader: () => import('Routes/users/user-list'),
    loading: () => <RctPageLoader/>
@@ -42,6 +58,8 @@ const AsyncUserManagementCreateUserComponent = Loadable({
    loader: () => import('Routes/users/user-management/create-user'),
    loading: () => <RctPageLoader/>
 });
+
+//error
 const AsyncSessionPage404Component = Loadable({
    loader: () => import('Routes/session/404'),
    loading: () => <RctPageLoader/>
@@ -53,7 +71,11 @@ const AsyncSessionPage500Component = Loadable({
 
 export {
    AsyncHomeDashboardComponent,
-   AysncTasksComponent,
+   AysncTasksApprovedComponent,
+   AysncCreateTaskComponent,
+   AysncAssignTaskComponent,
+   AysncTasksPendingComponent,
+   AysncTasksRejectedComponent,
    AsyncAdminLoginComponent,
    AsyncUsersListComponent,
    AsyncUserProfile1Component,

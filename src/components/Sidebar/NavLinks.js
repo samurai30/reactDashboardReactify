@@ -37,18 +37,23 @@ export default {
                "menu_title": "sidebar.pending",
                "new_item": false,
                "path": "/app/tasks/pending",
+            },
+            {
+               "menu_title": "sidebar.rejected",
+               "new_item": false,
+               "path": "/app/tasks/rejected",
             }
          ]
       },
       {
-         "menu_title": "sidebar.assignTasks",
+         "menu_title": "sidebar.assignTask",
          "new_item": false,
          "menu_icon": "zmdi zmdi-assignment",
          "path": "/app/tasks/assign-task",
          "child_routes": null
       },
       {
-         "menu_title": "sidebar.createTasks",
+         "menu_title": "sidebar.createTask",
          "new_item": false,
          "menu_icon": "zmdi zmdi-assignment",
          "path": "/app/tasks/create-task",
@@ -86,7 +91,7 @@ export default {
             {
                "menu_title": "sidebar.createform",
                "new_item": false,
-               "path": "/app/tasks/pending",
+               "path": "/app/forms/form-builder",
             }
          ]
       }
