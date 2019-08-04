@@ -10,12 +10,29 @@ import {Button} from "reactstrap";
 const mapDispatchToProps={
     profilePicUpload
 };
+function convertURIToImageData(URI) {
+    return new Promise(function(resolve, reject) {
+        if (URI == null) return reject();
+        var canvas = document.createElement('canvas'),
+            context = canvas.getContext('2d'),
+            image = new Image();
+        image.addEventListener('load', function() {
+            canvas.width = image.width;
+            canvas.height = image.height;
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+            resolve(context.getImageData(0, 0, canvas.width, canvas.height));
+        }, false);
+        image.src = URI;
+    });
+}
+
 
 class UserProfilePic extends React.Component{
     state = {
         src : null,
         cropResult: null
     };
+
     onChange(e){
         e.preventDefault();
         let files;
@@ -38,10 +55,17 @@ class UserProfilePic extends React.Component{
             cropResult: this.cropper.getCroppedCanvas().toDataURL(),
         });
 
+
     }
-    onUpload(file){
-        this.props.profilePicUpload(file);
+
+
+    onUpload(e){
+        e.preventDefault();
+        convertURIToImageData(this.state.cropResult).then(function(imageData) {
+            this.props.profilePicUpload(imageData);
+        });
     }
+
     render() {
         return(<div className="form-group input-image-upload">
             {this.state.src &&  <div>
@@ -68,7 +92,7 @@ class UserProfilePic extends React.Component{
                 heading={<IntlMessages id="widgets.croppedImage" />}
             >
                 <img style={{ width: '100%' }} src={this.state.cropResult} alt="cropped_img" />
-                <Button onClick={this.onUpload.bind(this.state.cropResult)}>Upload</Button>
+                <Button id="upload_pic" onClick={this.onUpload.bind(this)}>Upload</Button>
             </RctCollapsibleCard>
             }
 
