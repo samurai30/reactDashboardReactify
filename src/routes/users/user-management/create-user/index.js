@@ -26,10 +26,6 @@ import {api} from 'Api';
 // delete confirmation dialog
 import DeleteConfirmationDialog from 'Components/DeleteConfirmationDialog/DeleteConfirmationDialog';
 
-// add new user form
-// update user form
-import UpdateUserForm from './UpdateUserForm';
-
 // page title bar
 import PageTitleBar from 'Components/PageTitleBar/PageTitleBar';
 
@@ -76,17 +72,6 @@ class UserProfile extends Component {
       loading: false, // loading activity
       addNewUserModal: false, // add new user form modal
       countries: {},
-      addNewUserDetail: {
-         id: '',
-         firstName: '',
-         lastName: '',
-         username:'',
-         password:'',
-         retypePassword:'',
-         roles: [],
-         email: '',
-         countries: ""
-      },
       roles:[
          {
             id:1,
@@ -407,10 +392,6 @@ class UserProfile extends Component {
                                    }
                                    <div className="media-body">
                                       <h5 className="mb-5 fw-bold">{user.firstName}</h5>
-                                     {user.roles[0] === ROLE_ADMIN ?    <Badge color="warning">Admin</Badge> :
-                                          user.roles[0] === ROLE_SUBADMIN ?   <Badge color="warning">Sub-Admin</Badge> :
-                                              user.roles[0] === ROLE_CLIENT ?   <Badge color="warning">Client</Badge> :
-                                                  user.roles[0] === ROLE_SURVEYOR &&  <Badge color="warning">Surveyor</Badge>}
                                    </div>
                                 </div>
                              </td>

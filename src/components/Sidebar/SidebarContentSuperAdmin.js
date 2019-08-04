@@ -12,7 +12,7 @@ import IntlMessages from 'Util/IntlMessages';
 import NavMenuItem from './NavMenuItem';
 
 // redux actions
-import { onToggleMenu } from 'Actions';
+import {onSupToggleMenu} from "Actions/AppSettingsActions";
 
 class SidebarContentSuperAdmin extends Component {
 
@@ -21,7 +21,7 @@ class SidebarContentSuperAdmin extends Component {
             menu,
             stateCategory
         };
-        this.props.onToggleMenu(data);
+        this.props.onSupToggleMenu(data);
     }
 
     render() {
@@ -42,7 +42,7 @@ class SidebarContentSuperAdmin extends Component {
                             <NavMenuItem
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory1')}
+                                onSupToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory1')}
                             />
                         ))}
                     </List>
@@ -57,7 +57,7 @@ class SidebarContentSuperAdmin extends Component {
                             <NavMenuItem
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory2')}
+                                onSupToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory2')}
                             />
                         ))}
                     </List>
@@ -73,7 +73,7 @@ class SidebarContentSuperAdmin extends Component {
                             <NavMenuItem
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory3')}
+                                onSupToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory3')}
                             />
                         ))}
                     </List>
@@ -88,7 +88,7 @@ class SidebarContentSuperAdmin extends Component {
                             <NavMenuItem
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory4')}
+                                onSupToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory4')}
                             />
                         ))}
                     </List>
@@ -106,5 +106,5 @@ const mapStateToProps = ({ sidebar }) => {
 };
 
 export default withRouter(connect(mapStateToProps, {
-    onToggleMenu
+    onSupToggleMenu
 })(SidebarContentSuperAdmin));

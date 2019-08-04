@@ -10,7 +10,7 @@ const AppConfig = {
    rtlLayout: false,                                         // RTL Layout
    miniSidebar: false,                                       // Mini Sidebar
    enableSidebarBackgroundImage: true,                      // Enable Sidebar Background Image
-   sidebarImage: require('Assets/img/sidebar-4.jpg'),     // Select sidebar image
+   sidebarImage: require('Assets/img/sidebar-1.jpg'),     // Select sidebar image
    isDarkSidenav: true,                                   // Set true to dark sidebar
    enableThemeOptions: false,                              // Enable Theme Options
    locale: {
@@ -19,7 +19,7 @@ const AppConfig = {
       name: 'English',
       icon: 'en',
    },
-   enableUserTour: process.env.NODE_ENV === 'production' ? true : false,  // Enable / Disable User Tour
+   enableUserTour: process.env.NODE_ENV === 'production' ? false : false,  // Enable / Disable User Tour
    copyRightText: 'Polucon © 2019 All Rights Reserved.',      // Copy Right Text
    // light theme colors
    themeColors: {

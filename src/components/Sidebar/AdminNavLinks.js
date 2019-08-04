@@ -1,6 +1,6 @@
 // sidebar nav links
 export default {
-   SupAdmincategory1: [
+   Admincategory1: [
       {
          "menu_title": "sidebar.dashboard",
          "menu_icon": "zmdi zmdi-view-dashboard",
@@ -21,7 +21,7 @@ export default {
       }
    ],
 
-   SupAdmincategory2: [
+   Admincategory2: [
       {
          "menu_title": "sidebar.tasks",
          "menu_icon": "zmdi zmdi-comment-text-alt",
@@ -56,7 +56,7 @@ export default {
       },
 
    ],
-   SupAdmincategory3: [
+   Admincategory3: [
       {
          "menu_title": "sidebar.userManagement",
          "new_item": false,
@@ -76,7 +76,7 @@ export default {
       },
 
    ],
-   SupAdmincategory4: [
+   Admincategory4: [
       {
          "menu_title": "sidebar.formbuilder",
          "menu_icon": "zmdi zmdi-plus-circle",

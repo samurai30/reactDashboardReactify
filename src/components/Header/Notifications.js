@@ -27,13 +27,7 @@ class Notifications extends Component {
 
   // get notifications
   getNotifications() {
-    api.get('notifications.js')
-      .then((response) => {
-        this.setState({ notifications: response.data });
-      })
-      .catch(error => {
-        console.log(error);
-      })
+
   }
 
   render() {
@@ -42,9 +36,9 @@ class Notifications extends Component {
       <UncontrolledDropdown nav className="list-inline-item notification-dropdown">
         <DropdownToggle nav className="p-0">
           <Tooltip title="Notifications" placement="bottom">
-            <IconButton className="shake" aria-label="bell">
+            <IconButton className="" aria-label="bell">
               <i className="zmdi zmdi-notifications-active"></i>
-              <Badge color="danger" className="badge-xs badge-top-right rct-notify">2</Badge>
+              <Badge color="danger" className="badge-xs badge-top-right rct-notify">0</Badge>
             </IconButton>
           </Tooltip>
         </DropdownToggle>

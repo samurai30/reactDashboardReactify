@@ -6,7 +6,6 @@ import {
     DARK_MODE,
     BOXED_LAYOUT,
     RTL_LAYOUT,
-    TOGGLE_MENU,
     MINI_SIDEBAR,
     SEARCH_FORM_ENABLE,
     CHANGE_THEME_COLOR,
@@ -17,8 +16,9 @@ import {
     STOP_USER_TOUR,
     TOGGLE_DARK_SIDENAV,
     AGENCY_TOGGLE_MENU,
-    CHANGE_AGENCY_LAYOUT_BG
+    CHANGE_AGENCY_LAYOUT_BG, TOGGLE_SUP_MENU, TOGGLE_SUB_MENU
 } from './types';
+import {TOGGLE_ADMIN_MENU, TOGGLE_CLIENT_MENU} from "Actions/types";
 
 /**
  * Redux Action To Emit Collapse Sidebar
@@ -73,11 +73,25 @@ export const rtlLayoutAction = (isRtlLayout) => ({
 /**
  * Redux Action To Toggle Sidebar Menus
  */
-export const onToggleMenu = (selectedMenu) => ({
-    type: TOGGLE_MENU,
+export const onSupToggleMenu = (selectedMenu) => ({
+    type: TOGGLE_SUP_MENU,
     payload: selectedMenu
 });
 
+export const onSubToggleMenu = (selectedMenu) => ({
+    type: TOGGLE_SUB_MENU,
+    payload: selectedMenu
+});
+
+export const onAdminToggleMenu = (selectedMenu) => ({
+    type: TOGGLE_ADMIN_MENU,
+    payload: selectedMenu
+});
+
+export const onClientToggleMenu = (selectedMenu) => ({
+    type: TOGGLE_CLIENT_MENU,
+    payload: selectedMenu
+});
 /**
  * Redux Action To Toggle Agency Sidebar Menus
  */

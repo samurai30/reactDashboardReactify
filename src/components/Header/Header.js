@@ -19,6 +19,7 @@ import { collapsedSidebarAction } from 'Actions';
 // components
 import SearchForm from './SearchForm';
 import MobileSearchForm from './MobileSearchForm';
+import Notifications from "Components/Header/Notifications";
 
 
 class Header extends Component {
@@ -103,19 +104,20 @@ class Header extends Component {
 									</li>
 								}
 								<li className="list-inline-item search-icon d-inline-block">
-									<SearchForm />
+
 									<IconButton mini="true" className="search-icon-btn" onClick={() => this.openMobileSearchForm()}>
 										<i className="zmdi zmdi-search"></i>
 									</IconButton>
-									<MobileSearchForm
-										isOpen={isMobileSearchFormVisible}
-										onClose={() => this.setState({ isMobileSearchFormVisible: false })}
-									/>
+									{/*<MobileSearchForm*/}
+									{/*	isOpen={isMobileSearchFormVisible}*/}
+									{/*	onClose={() => this.setState({ isMobileSearchFormVisible: false })}*/}
+									{/*/>*/}
 								</li>
 							</ul>
 						}
 					</div>
 					<ul className="navbar-right list-inline mb-0">
+						<Notifications />
 						<li className="list-inline-item">
 							<Tooltip title="Full Screen" placement="bottom">
 								<IconButton aria-label="settings" onClick={() => this.toggleScreenFull()}>
@@ -123,6 +125,7 @@ class Header extends Component {
 								</IconButton>
 							</Tooltip>
 						</li>
+
 					</ul>
 				</Toolbar>
 			</AppBar>

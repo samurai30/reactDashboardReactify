@@ -9,10 +9,10 @@ import { connect } from 'react-redux';
 
 import IntlMessages from 'Util/IntlMessages';
 
-import NavMenuItem from './NavMenuItem';
+import NavMenuItemAdmin from './NavMenuItemAdmin';
 
 // redux actions
-import { onToggleMenu } from 'Actions';
+import {onAdminToggleMenu} from "Actions/AppSettingsActions";
 
 class SidebarContentAdmin extends Component {
 
@@ -21,11 +21,11 @@ class SidebarContentAdmin extends Component {
             menu,
             stateCategory
         };
-        this.props.onToggleMenu(data);
+        this.props.onAdminToggleMenu(data);
     }
 
     render() {
-        const { sidebarMenus } = this.props.sidebar;
+        const { AdminSidebarMenu } = this.props.sidebar;
         const {userData} = this.props;
 
         return (
@@ -38,11 +38,11 @@ class SidebarContentAdmin extends Component {
                                 <IntlMessages id="sidebar.general" />
                             </ListSubheader>}
                     >
-                        {sidebarMenus.category1.map((menu, key) => (
-                            <NavMenuItem
+                        {AdminSidebarMenu.Admincategory1.map((menu, key) => (
+                            <NavMenuItemAdmin
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'category1')}
+                                onAdminToggleMenu={() => this.toggleMenu(menu, 'Admincategory1')}
                             />
                         ))}
                     </List>
@@ -53,11 +53,11 @@ class SidebarContentAdmin extends Component {
                                 <IntlMessages id="sidebar.tasks" />
                             </ListSubheader>}
                     >
-                        {sidebarMenus.category2.map((menu, key) => (
-                            <NavMenuItem
+                        {AdminSidebarMenu.Admincategory2.map((menu, key) => (
+                            <NavMenuItemAdmin
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'category2')}
+                                onAdminToggleMenu={() => this.toggleMenu(menu, 'Admincategory2')}
                             />
                         ))}
                     </List>
@@ -69,11 +69,11 @@ class SidebarContentAdmin extends Component {
                                 <IntlMessages id="sidebar.users" />
                             </ListSubheader>}
                     >
-                        {sidebarMenus.category3.map((menu, key) => (
-                            <NavMenuItem
+                        {AdminSidebarMenu.Admincategory3.map((menu, key) => (
+                            <NavMenuItemAdmin
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'category3')}
+                                onAdminToggleMenu={() => this.toggleMenu(menu, 'Admincategory3')}
                             />
                         ))}
                     </List>
@@ -92,5 +92,5 @@ const mapStateToProps = ({ sidebar }) => {
 };
 
 export default withRouter(connect(mapStateToProps, {
-    onToggleMenu
+    onAdminToggleMenu
 })(SidebarContentAdmin));

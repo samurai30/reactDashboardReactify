@@ -15,7 +15,6 @@ import {collapsedSidebarAction, fetchUserDetails} from 'Actions';
 // components
 import UserBlock from './UserBlock';
 import SidebarContentSuperAdmin from './SidebarContentSuperAdmin';
-import AgencySidebar from '../AgencyMenu/AgencySidebar';
 import SidebarContentAdmin from "Components/Sidebar/SidebarContentAdmin";
 import SidebarContentSubAdmin from "Components/Sidebar/SidebarContentSubAdmin";
 import SidebarContentClient from "Components/Sidebar/SidebarContentClient";
@@ -27,7 +26,6 @@ class Sidebar extends Component {
 
 	componentWillMount() {
 		this.updateDimensions();
-
 	}
 
 	shouldComponentUpdate(nextProps) {
@@ -68,7 +66,7 @@ class Sidebar extends Component {
 	render() {
 		const { enableSidebarBackgroundImage, selectedSidebarImage, isDarkSidenav } = this.props;
 		const {userData} = this.props.auth;
-		let ROLE = null;
+		var ROLE = null;
 		if (userData){
 			ROLE = userData.roles[0];
 		}
@@ -81,11 +79,9 @@ class Sidebar extends Component {
 				>
 					<div className={classNames("rct-sidebar-content", { "sidebar-overlay-dark": isDarkSidenav, 'sidebar-overlay-light': !isDarkSidenav })}>
 						<div className="site-logo">
-							<Link to="/" className="logo-mini">
-								<img src={require('Assets/img/appLogo.png')} className="mr-15" alt="site logo" width="35" height="35" />
-							</Link>
+
 							<Link to="/" className="logo-normal">
-								<img src={require('Assets/img/appLogoText.png')} className="img-fluid" alt="site-logo" width="67" height="17" />
+								<img src={require('Assets/img/appLogoFull.png')} className="img-fluid" alt="site-logo" width="67" height="17" />
 							</Link>
 						</div>
 						<div className="rct-sidebar-wrap">
@@ -96,15 +92,13 @@ class Sidebar extends Component {
 								style={{ height: 'calc(100vh - 60px)' }}
 							>
 								<UserBlock userData={userData}/>
-								{userData?(ROLE === ROLE_SUPERADMIN)?<SidebarContentSuperAdmin userData={userData}/>
-								:(ROLE === ROLE_ADMIN)?<SidebarContentAdmin userData={userData}/>
-								:(ROLE === ROLE_SUBADMIN)?<SidebarContentSubAdmin userData={userData}/>
-								:(ROLE === ROLE_CLIENT) && <SidebarContentClient userData={userData}/>
+								{userData?
+									(ROLE === ROLE_SUPERADMIN)?<SidebarContentSuperAdmin userData={userData}/>
+									:(ROLE === ROLE_ADMIN)?<SidebarContentAdmin userData={userData}/>
+									:(ROLE === ROLE_SUBADMIN)?<SidebarContentSubAdmin userData={userData}/>
+									:(ROLE === ROLE_CLIENT) && <SidebarContentClient userData={userData}/>
 								:<RctSectionLoader/>
 								}
-
-
-
 							</Scrollbars>
 						</div>
 					</div>

@@ -18,6 +18,7 @@ import {fetchUserDetails, userLogoutAction} from 'Actions';
 import IntlMessages from 'Util/IntlMessages';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {api} from "Api";
+import {SERVER_PATH} from "Actions/types";
 
 
 
@@ -78,15 +79,28 @@ class UserBlock extends Component {
 							tag="div"
 							className="d-flex align-items-center"
 						>
-							<div className="user-profile">
-								<img
-									src={require('Assets/avatars/user-15.jpg')}
-									alt="user profile"
-									className="img-fluid rounded-circle"
-									width="50"
-									height="100"
-								/>
+							{userData ? <div className="user-profile">
+									{
+										(userData.profilePic !== null)?
+											<img
+												src={`${SERVER_PATH}${userData.profilePic.url}`}
+												alt="user profile"
+												className="img-fluid rounded-circle"
+												width="50"
+												height="100"
+											/>
+											: <img
+												src={require('Assets/img/profileLogo.png')}
+												alt="user profile"
+												className="img-fluid rounded-circle bg-light"
+												width="50"
+												height="100"
+											/>
+
+									}
 							</div>
+								:<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={2.5} />
+							}
 							<div className="user-info">
 								{userData ?
 									<div>
@@ -121,13 +135,7 @@ class UserBlock extends Component {
 										<Badge color="danger" className="pull-right">3</Badge>
 									</Link>
 								</li>
-								<li>
-									<Link to="/app/pages/feedback">
-										<i className="zmdi zmdi-edit text-warning mr-3"></i>
-										<IntlMessages id="sidebar.feedback" />
-										<Badge color="info" className="pull-right">1</Badge>
-									</Link>
-								</li>
+
 								<li className="border-top">
 									<a href="javascript:void(0)"  onClick={() => this.logoutUser()}>
 										<i className="zmdi zmdi-power text-danger mr-3"></i>

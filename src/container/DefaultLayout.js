@@ -11,13 +11,12 @@ import RctAppLayout from 'Components/RctAppLayout';
 // router service
 import routerService from "../services/_routerService";
 import {fetchUserDetails, fetchUserError} from "Actions";
-import {NotificationManager} from "react-notifications";
 
 
 class DefaultLayout extends Component {
 
 	render() {
-		const { match,userData } = this.props;
+		const { match } = this.props;
 
 		return (
 			<RctAppLayout>

@@ -9,12 +9,3 @@ export const renderForm = ({input,type,placeholder,spanIcon,meta:{error}})=>{
         <span className="has-icon"><i className={spanIcon}></i></span>
     </FormGroup>)
 };
-
-{/*{type === 'dropdown' && <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>*/}
-{/*<DropdownToggle caret> {dropDownTitle}</DropdownToggle>*/}
-{/*<DropdownMenu right>*/}
-{/*{dropDownItems && dropDownItems.map(item => {*/}
-{/*<DropdownItem key={item.id}>{item.value}</DropdownItem>*/}
-{/*})}*/}
-{/*</DropdownMenu>*/}
-{/*</Dropdown>}*/}

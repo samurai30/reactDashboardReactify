@@ -16,6 +16,7 @@ module.exports = {
    "sidebar.settings":"Settings",
    "sidebar.tasks":"Tasks",
    "sidebar.assignTasks":"Assign Tasks",
+   "sidebar.createTasks":"Create Tasks",
    "sidebar.client":"Client",
    "sidebar.location":"Location",
    "sidebar.invoices":"Invoices",

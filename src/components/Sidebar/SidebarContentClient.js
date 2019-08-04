@@ -9,10 +9,10 @@ import { connect } from 'react-redux';
 
 import IntlMessages from 'Util/IntlMessages';
 
-import NavMenuItem from './NavMenuItem';
+import NavMenuItemClient from './NavMenuItemClient';
 
 // redux actions
-import { onToggleMenu } from 'Actions';
+import {onClientToggleMenu} from "Actions/AppSettingsActions";
 
 class SidebarContentClient extends Component {
 
@@ -21,11 +21,11 @@ class SidebarContentClient extends Component {
             menu,
             stateCategory
         };
-        this.props.onToggleMenu(data);
+        this.props.onClientToggleMenu(data);
     }
 
     render() {
-        const { sidebarMenus } = this.props.sidebar;
+        const { ClientSidebarMenu } = this.props.sidebar;
         const {userData} = this.props;
 
         return (
@@ -38,11 +38,11 @@ class SidebarContentClient extends Component {
                                 <IntlMessages id="sidebar.general" />
                             </ListSubheader>}
                     >
-                        {sidebarMenus.category1.map((menu, key) => (
-                            <NavMenuItem
+                        {ClientSidebarMenu.Clientcategory1.map((menu, key) => (
+                            <NavMenuItemClient
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'category1')}
+                                onClientToggleMenu={() => this.toggleMenu(menu, 'category1')}
                             />
                         ))}
                     </List>
@@ -53,11 +53,11 @@ class SidebarContentClient extends Component {
                                 <IntlMessages id="sidebar.tasks" />
                             </ListSubheader>}
                     >
-                        {sidebarMenus.category2.map((menu, key) => (
-                            <NavMenuItem
+                        {ClientSidebarMenu.Clientcategory2.map((menu, key) => (
+                            <NavMenuItemClient
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'category2')}
+                                onClientToggleMenu={() => this.toggleMenu(menu, 'category2')}
                             />
                         ))}
                     </List>
@@ -69,11 +69,11 @@ class SidebarContentClient extends Component {
                                 <IntlMessages id="sidebar.users" />
                             </ListSubheader>}
                     >
-                        {sidebarMenus.category3.map((menu, key) => (
-                            <NavMenuItem
+                        {ClientSidebarMenu.Clientcategory3.map((menu, key) => (
+                            <NavMenuItemClient
                                 menu={menu}
                                 key={key}
-                                onToggleMenu={() => this.toggleMenu(menu, 'category3')}
+                                onClientToggleMenu={() => this.toggleMenu(menu, 'Clientcategory3')}
                             />
                         ))}
                     </List>
@@ -92,5 +92,5 @@ const mapStateToProps = ({ sidebar }) => {
 };
 
 export default withRouter(connect(mapStateToProps, {
-    onToggleMenu
+    onClientToggleMenu
 })(SidebarContentClient));

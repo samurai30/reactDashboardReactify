@@ -13,7 +13,7 @@ import Chip from '@material-ui/core/Chip';
 // intl messages
 import IntlMessages from 'Util/IntlMessages';
 
-class NavMenuItem extends Component {
+class NavMenuItemClient extends Component {
 
    state = {
       subMenuOpen: ''
@@ -39,12 +39,12 @@ class NavMenuItem extends Component {
    }
 
    render() {
-      const { menu, onSupToggleMenu } = this.props;
+      const { menu, onClientToggleMenu } = this.props;
       const { subMenuOpen } = this.state;
       if (menu.child_routes != null) {
          return (
             <Fragment>
-               <ListItem button component="li" onClick={onSupToggleMenu} className={`list-item ${classNames({ 'item-active': menu.open })}`}>
+               <ListItem button component="li" onClick={onClientToggleMenu} className={`list-item ${classNames({ 'item-active': menu.open })}`}>
                   <ListItemIcon className="menu-icon">
                      <i className={menu.menu_icon}></i>
                   </ListItemIcon>
@@ -130,4 +130,4 @@ class NavMenuItem extends Component {
    }
 }
 
-export default NavMenuItem;
+export default NavMenuItemClient;
