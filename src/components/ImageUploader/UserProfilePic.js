@@ -37,6 +37,10 @@ class UserProfilePic extends React.Component{
         this.setState({
             cropResult: this.cropper.getCroppedCanvas().toDataURL(),
         });
+
+    }
+    onUpload(file){
+        this.props.profilePicUpload(file);
     }
     render() {
         return(<div className="form-group input-image-upload">
@@ -64,6 +68,7 @@ class UserProfilePic extends React.Component{
                 heading={<IntlMessages id="widgets.croppedImage" />}
             >
                 <img style={{ width: '100%' }} src={this.state.cropResult} alt="cropped_img" />
+                <Button onClick={this.onUpload.bind(this.state.cropResult)}>Upload</Button>
             </RctCollapsibleCard>
             }
 
