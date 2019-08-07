@@ -13,7 +13,7 @@ import {configureStore} from "../store";
 export const userLoginAttempt = (username,password) =>{
     return(dispatch) => {
         dispatch({type:LOGIN_USER});
-        return api.post('/login_check',{username,password},false).then(
+        return api.post('/dashboard/login_check',{username,password},false).then(
             response => {
                 let store = configureStore();
                 store.dispatch(userLoginSuccess(response.token,response.id));

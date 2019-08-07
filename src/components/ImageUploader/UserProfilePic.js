@@ -10,20 +10,13 @@ import {Button} from "reactstrap";
 const mapDispatchToProps={
     profilePicUpload
 };
-function convertURIToImageData(URI) {
-    return new Promise(function(resolve, reject) {
-        if (URI == null) return reject();
-        var canvas = document.createElement('canvas'),
-            context = canvas.getContext('2d'),
-            image = new Image();
-        image.addEventListener('load', function() {
-            canvas.width = image.width;
-            canvas.height = image.height;
-            context.drawImage(image, 0, 0, canvas.width, canvas.height);
-            resolve(context.getImageData(0, 0, canvas.width, canvas.height));
-        }, false);
-        image.src = URI;
-    });
+function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {type:mime});
 }
 
 
@@ -61,9 +54,7 @@ class UserProfilePic extends React.Component{
 
     onUpload(e){
         e.preventDefault();
-        convertURIToImageData(this.state.cropResult).then(function(imageData) {
-            this.props.profilePicUpload(imageData);
-        });
+        this.props.profilePicUpload(dataURLtoBlob(this.state.cropResult));
     }
 
     render() {
@@ -88,11 +79,11 @@ class UserProfilePic extends React.Component{
 
             {this.state.cropResult &&
             <RctCollapsibleCard
-                colClasses="col-sm-12 col-md-12 col-lg-6"
+
                 heading={<IntlMessages id="widgets.croppedImage" />}
             >
                 <img style={{ width: '100%' }} src={this.state.cropResult} alt="cropped_img" />
-                <Button id="upload_pic" onClick={this.onUpload.bind(this)}>Upload</Button>
+                <Button id="upload_pic" className="bg-success text-white w-100" onClick={this.onUpload.bind(this)}>Upload</Button>
             </RctCollapsibleCard>
             }
 

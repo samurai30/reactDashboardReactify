@@ -1,11 +1,11 @@
 import {api} from "Api";
 import {parseApiErrors} from "Util/apiUtils";
-import {SubmissionError,reset} from "redux-form";
+import {SubmissionError} from "redux-form";
 import {
   ADD_USER_FAILURE,
   ADD_USER_REQUEST,
-  ADD_USER_SUCCESS,
-  PROFILE_PIC_ERROR, PROFILE_PIC_REQUEST, PROFILE_PIC_SET,
+  ADD_USER_SUCCESS, PROFILE_PIC_DELETE, PROFILE_PIC_DELETE_REQUEST,
+  PROFILE_PIC_ERROR, PROFILE_PIC_REQUEST,
   PROFILE_PIC_UPLOADED
 } from "Actions/types";
 import {NotificationManager} from "react-notifications";
@@ -19,7 +19,7 @@ export const AddUserRequest = (values) =>{
     }).catch(error =>{
       if (error.message === 'Unauthorized'){
         NotificationManager.error("Session Timed out");
-        this.props.dispatch(this.props.fetchUserError);
+
       }
       dispatch({type:ADD_USER_FAILURE});
       NotificationManager.error("Something is not right! Please check your form");
@@ -56,9 +56,28 @@ export const profilePicUpload = (file) =>{
           .catch(error => {
             if (error.message === 'Unauthorized'){
               NotificationManager.error("Session Timed out");
-              this.props.dispatch(this.props.fetchUserError);
+
             }
             dispatch(profilePicUploadError())})
   }
 };
+export const profilePicDeelteRequest = () =>{
+  return{
+    type:PROFILE_PIC_DELETE_REQUEST
+  }
+};
 
+export const profilePicDelete = (url) =>{
+  return(dispatch) =>{
+    dispatch(profilePicDeelteRequest());
+    return api.delete(url).then(response =>{
+      return dispatch({type:PROFILE_PIC_DELETE})
+    }).catch(error =>{
+      if (error.message === 'Unauthorized'){
+        NotificationManager.error("Session Timed out");
+
+      }
+    })
+
+  }
+};

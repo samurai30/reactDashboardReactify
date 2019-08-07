@@ -81,7 +81,7 @@ class SidebarContentSuperAdmin extends Component {
                         className="rct-mainMenu p-0 m-0 list-unstyled"
                         subheader={
                             <ListSubheader className="side-title" component="li">
-                                <IntlMessages id="sidebar.formbuilder" />
+                                <IntlMessages id="sidebar.formBuilder" />
                             </ListSubheader>}
                     >
                         {sidebarMenus.SupAdmincategory4.map((menu, key) => (
@@ -89,6 +89,21 @@ class SidebarContentSuperAdmin extends Component {
                                 menu={menu}
                                 key={key}
                                 onSupToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory4')}
+                            />
+                        ))}
+                    </List>
+                    <List
+                        className="rct-mainMenu p-0 m-0 list-unstyled"
+                        subheader={
+                            <ListSubheader className="side-title" component="li">
+                                <IntlMessages id="sidebar.location" />
+                            </ListSubheader>}
+                    >
+                        {sidebarMenus.SupAdmincategory5.map((menu, key) => (
+                            <NavMenuItem
+                                menu={menu}
+                                key={key}
+                                onSupToggleMenu={() => this.toggleMenu(menu, 'SupAdmincategory5')}
                             />
                         ))}
                     </List>

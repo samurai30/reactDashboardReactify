@@ -83,15 +83,30 @@ export default {
    ],
    SupAdmincategory4: [
       {
-         "menu_title": "sidebar.formbuilder",
+         "menu_title": "sidebar.formBuilder",
          "menu_icon": "zmdi zmdi-plus-circle",
          "new_item": false,
          "type_multi": null,
          "child_routes": [
             {
-               "menu_title": "sidebar.createform",
+               "menu_title": "sidebar.createForm",
                "new_item": false,
-               "path": "/app/forms/form-builder",
+               "path": "/app/form-builder/create-form",
+            }
+         ]
+      }
+   ],
+   SupAdmincategory5: [
+      {
+         "menu_title": "sidebar.location",
+         "menu_icon": "zmdi zmdi-gps-dot",
+         "new_item": false,
+         "type_multi": null,
+         "child_routes": [
+            {
+               "menu_title": "sidebar.maps",
+               "new_item": false,
+               "path": "/app/location/map",
             }
          ]
       }

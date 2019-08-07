@@ -4,13 +4,17 @@ import CardBody from "reactstrap/es/CardBody";
 import CardImg from "reactstrap/es/CardImg";
 import {SERVER_PATH} from "Actions/types";
 import {Button} from "reactstrap";
-
+import {profilePicDelete} from "Actions/AddUserActions";
+import {connect} from "react-redux";
+const mapDispatchToProps = {
+    profilePicDelete
+};
 class ProfilePicBrowser extends React.Component{
-    onDelete(){
-        alert('delete')
-    }
-    componentWillUnmount() {
 
+
+    onDelete(e){
+        const {ProfilePic} = this.props;
+        return this.props.profilePicDelete(`/images/${ProfilePic.id}`)
     }
 
     render() {
@@ -20,10 +24,10 @@ class ProfilePicBrowser extends React.Component{
                 <CardBody>
                     <CardImg src={`${SERVER_PATH}${ProfilePic.url}`} top width="100%" alt="Profile Pic"/>
                 </CardBody>
-                <Button onClick={this.onDelete} className="btn btn-warning">Remove</Button>
+                <Button onClick={this.onDelete.bind(this)} className="btn btn-warning">Remove</Button>
             </Card>}
         </div>)
     }
 }
 
-export default ProfilePicBrowser;
+export default connect(null,mapDispatchToProps)(ProfilePicBrowser);

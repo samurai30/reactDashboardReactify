@@ -12,6 +12,7 @@ import feedbacksReducer from './FeedbacksReducer';
 import ecommerceReducer from './EcommerceReducer';
 import {reducer as formReducer} from 'redux-form'
 import {routerReducer} from 'react-router-redux'
+import formBuilderReducer from './UploadFormBuilder'
 import {ADD_USER_SUCCESS, LOGIN_USER_FAILURE} from "Actions/types";
 const reducers = combineReducers({
   settings,
@@ -22,6 +23,7 @@ const reducers = combineReducers({
   ecommerce: ecommerceReducer,
   auth: authUserReducer,
   addUser: addUserReducer,
+  formBuilderRed : formBuilderReducer,
   form: formReducer.plugin({
     addUserForm: (state,action)=>{
       switch (action.type) {
@@ -38,7 +40,6 @@ const reducers = combineReducers({
           return undefined;
         default:
           return state;
-
       }
     }
   }),

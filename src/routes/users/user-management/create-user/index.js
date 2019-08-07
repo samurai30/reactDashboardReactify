@@ -323,7 +323,7 @@ class UserProfile extends Component {
 
    render() {
       const { users, loading, selectedUser, editUser, countries , selectedUsers } = this.state;
-      const {handleSubmit,error,addUserLoader,profilePicImage} = this.props;
+      const {handleSubmit,error,addUserLoader,profilePicImage,profilePicUploaded} = this.props;
       return (
 
           <div className="user-management">
@@ -476,8 +476,8 @@ class UserProfile extends Component {
                           <Field name="roles" label="Role" type="select" selectItems={this.state.roles} component={renderField}/>
                           <Field name="countries" label="Country" type="select" selectItems={countries} component={renderField}/>
                           <hr/>
-                             <UserProfilePic/>
-                             <ProfilePicBrowser ProfilePic={profilePicImage}/>
+                          {profilePicUploaded ?  <ProfilePicBrowser ProfilePic={profilePicImage}/>:
+                              <UserProfilePic/> }
                            <hr/>
                           <FormGroup className="mb-15">
                              {addUserLoader?

@@ -72,12 +72,11 @@ export default class UserComponent extends Component {
                                  <div className="media-body py-10">
                                     <p className="mb-0">{user.username}</p>
                                     <span className="text-muted fs-12"><i className="ti-world mr-5"></i>{user.countries.countryName}</span>
-                                     {user.roles[0] === ROLE_ADMIN ?   <p className="mb-0">Admin</p> :
-                                         user.roles[0] === ROLE_SUBADMIN ?   <p className="mb-0">Sub-Admin</p> :
-                                             user.roles[0] === ROLE_CLIENT ?   <p className="mb-0">Client</p> :
-                                                 user.roles[0] === ROLE_SURVEYOR &&  <p className="mb-0">Surveyor</p>}
-
                                  </div>
+                                  {/*{user.roles[0] === ROLE_ADMIN ?   <p className="mb-0">Admin</p> :*/}
+                                  {/*    user.roles[0] === ROLE_SUBADMIN ?   <p className="mb-0">Sub-Admin</p> :*/}
+                                  {/*        user.roles[0] === ROLE_CLIENT ?   <p className="mb-0">Client</p> :*/}
+                                  {/*            user.roles[0] === ROLE_SURVEYOR &&  <p className="mb-0">Surveyor</p>}*/}
                               </div>
                            </div>
                            <div className="d-flex align-items-end card-action pt-15">
@@ -89,9 +88,12 @@ export default class UserComponent extends Component {
 
                         {user.enabled ?
                            <div className="d-flex justify-content-between">
-                              <Button variant="contained" color="primary" className="text-white btn-xs">
-                                 <i className="zmdi zmdi-assignment-o mr-10"></i>Assign Task
-                              </Button>
+                               {user.roles[0] === ROLE_SURVEYOR &&
+                               <Button variant="contained" color="primary" className="text-white btn-xs">
+                                   <i className="zmdi zmdi-assignment-o mr-10"></i>Assign Task
+                               </Button>
+                               }
+
                               <Button className="text-success btn-xs"><i className="zmdi zmdi-check-circle mr-10"></i> Activated</Button>
                            </div>
                            : <div className="d-flex justify-content-center">

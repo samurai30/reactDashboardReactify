@@ -1,7 +1,7 @@
 import {
     ADD_USER_FAILURE,
     ADD_USER_REQUEST,
-    ADD_USER_SUCCESS, PROFILE_PIC_ERROR,
+    ADD_USER_SUCCESS, PROFILE_PIC_DELETE, PROFILE_PIC_DELETE_REQUEST, PROFILE_PIC_ERROR,
     PROFILE_PIC_REQUEST,
     PROFILE_PIC_UPLOADED
 } from "Actions/types";
@@ -24,6 +24,10 @@ action) =>{
         case PROFILE_PIC_UPLOADED:
             return{...state,addUserLoader:false,profilePicImage: action.profilePicImage,profilePicUploaded: true};
         case PROFILE_PIC_ERROR:
+            return{...state,addUserLoader:false,profilePicImage:null,profilePicUploaded: false};
+        case PROFILE_PIC_DELETE_REQUEST:
+            return{...state,addUserLoader:true};
+        case PROFILE_PIC_DELETE:
             return{...state,addUserLoader:false,profilePicImage:null,profilePicUploaded: false};
         default:
             return{...state}
