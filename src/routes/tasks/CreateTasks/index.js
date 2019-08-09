@@ -18,8 +18,6 @@ export default class CreateTask extends Component{
         selectedTask: null, // selected user to perform operations
         loading: false, // loading activity
         addNewTaskModal: false, // add new user form modal
-
-
         profilePicUploaded: false,
         openViewUserDialog: false, // view user dialog box
         editUser: null,
@@ -48,6 +46,7 @@ export default class CreateTask extends Component{
                             </div>
                         </div>
                     </div>
+
                 </RctCollapsibleCard>
             </div>
         );

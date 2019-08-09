@@ -57,6 +57,9 @@ import {
    ROLE_SUBADMIN_BADGE,
    ROLE_SURVEYOR, ROLE_SURVEYOR_BADGE
 } from "Util/apiUtils";
+import Menu from "@material-ui/core/es/Menu";
+import MenuItem from "@material-ui/core/es/MenuItem";
+import PaginatorCustom from "Components/PaginatorCustom";
 
 const valueList = [];
 const mapStateToProps = state => ({
@@ -97,13 +100,16 @@ class UserProfile extends Component {
             URI: 'ROLE_SURVEYOR'
          }
       ],
+      rolesApi:['ROLE_ADMIN','ROLE_SUBADMIN','ROLE_SURVEYOR','ROLE_CLIENT'],
       profilePicUploaded: false,
       openViewUserDialog: false, // view user dialog box
       editUser: null,
       allSelected: false,
       selectedUsers: 0,
       paginationHydra: null,
-      hydraTotalItem: null
+      hydraTotalItem: null,
+      anchorEl: null,
+      selectedIndex: 1,
    };
 
    getUsers(url){
@@ -146,7 +152,19 @@ class UserProfile extends Component {
 
 
    }
+   // Menu Functions
+   handleClickListItem = (event, index) => {
+      this.getUsers(`/users/all-users?roles=${this.state.rolesApi[index]}`);
+      this.setState({ anchorEl: event });
+   };
 
+
+   handleClose = () => {
+      this.setState({ anchorEl: null });
+   };
+   handleClick = event => {
+      this.setState({ anchorEl: event.currentTarget });
+   };
 	/**
 	 * On Delete
 	 */
@@ -300,9 +318,13 @@ class UserProfile extends Component {
       }
 
    }
+   componentDidUpdate(prevProps){
+      console.log('previous',prevProps.paginationHydra)
+      console.log('this prop',this.props.paginationHydra)
+   }
 
    render() {
-      const { users, loading, selectedUser, editUser, countries , selectedUsers,paginationHydra } = this.state;
+      const { users, loading, selectedUser, editUser, countries , selectedUsers,paginationHydra,anchorEl } = this.state;
       const {handleSubmit,error,addUserLoader,profilePicImage,profilePicUploaded} = this.props;
       return (
 
@@ -323,8 +345,20 @@ class UserProfile extends Component {
                          <a href="javascript:void(0)" onClick={() => this.onReload()} className="btn-outline-default mr-10"><i className="ti-reload"></i></a>
                       </div>
                       <div>
+                         <Button variant="contained" color="primary" className="text-white" aria-owns={anchorEl ? 'simple-menu' : null} aria-haspopup="true" onClick={this.handleClick} >
+                            Select Type
+                         </Button>
+                         <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose} >
+                            <MenuItem onClick={(e) => this.handleClickListItem(e.target,0)}>Admin</MenuItem>
+                            <MenuItem onClick={(e) => this.handleClickListItem(e.target,1)}>Sub-Admin</MenuItem>
+                            <MenuItem onClick={(e) => this.handleClickListItem(e.target,2)}>Surveyor</MenuItem>
+                            <MenuItem onClick={(e) => this.handleClickListItem(e.target,3)}>Client</MenuItem>
+                         </Menu>
+                      </div>
+                      <div>
                          <a href="javascript:void(0)" onClick={() => this.opnAddNewUserModal()} color="primary" className="caret btn-sm mr-10">Add New User <i className="zmdi zmdi-plus"></i></a>
                       </div>
+
                    </div>
                    <table className="table table-middle table-hover mb-0">
                       <thead>
@@ -352,7 +386,8 @@ class UserProfile extends Component {
                       </tr>
                       </thead>
                       <tbody>
-                      {users && users.map((user) => (
+
+                      {users && (users.length !==0 ) ? users.map((user) => (
                           <tr key={user.id}>
                              <td>
                                 <FormControlLabel
@@ -400,30 +435,21 @@ class UserProfile extends Component {
                                 <a href="javascript:void(0)" onClick={() => this.onDelete(user)}><i className="ti-close"></i></a>
                              </td>
                           </tr>
-                      ))}
+                      )):
+                         <tr>
+                            <td>Nothing Found</td>
+                         </tr>
+                      }
+
                       </tbody>
                       <tfoot className="border-top">
-                      {paginationHydra &&    <tr>
+                      {paginationHydra && <tr>
+                         {console.log(paginationHydra)}
                          <td colSpan="100%">
-                            <Pagination className="mb-0 py-10 px-10">
-                               <PaginationItem>
-                                  <PaginationLink previous href="#" />
-                               </PaginationItem>
-                               <PaginationItem active>
-                                  <PaginationLink href="javascript:void(0)">1</PaginationLink>
-                               </PaginationItem>
-                               <PaginationItem>
-                                  <PaginationLink href="javascript:void(0)">2</PaginationLink>
-                               </PaginationItem>
-                               <PaginationItem>
-                                  <PaginationLink href="javascript:void(0)">3</PaginationLink>
-                               </PaginationItem>
-                               <PaginationItem>
-                                  <PaginationLink next href="javascript:void(0)" />
-                               </PaginationItem>
-                            </Pagination>
+                           <PaginatorCustom currentPage={3} pageCount={5} />
                          </td>
-                      </tr>}
+                      </tr>
+                      }
 
                       </tfoot>
                    </table>
