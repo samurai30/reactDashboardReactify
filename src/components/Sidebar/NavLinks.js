@@ -42,7 +42,18 @@ export default {
                "menu_title": "sidebar.rejected",
                "new_item": false,
                "path": "/app/tasks/rejected",
+            },
+            {
+               "menu_title": "sidebar.completed",
+               "new_item": false,
+               "path": "/app/tasks/completed",
+            },
+            {
+               "menu_title": "sidebar.inProgress",
+               "new_item": false,
+               "path": "/app/tasks/in-progress",
             }
+
          ]
       },
       {

@@ -62,7 +62,10 @@ const valueList = [];
 const mapStateToProps = state => ({
    ...state.addUser
 });
-
+const mapDispatchToProps = {
+   AddUserRequest,
+   fetchUserError
+};
 class UserProfile extends Component {
 
    state = {
@@ -98,8 +101,29 @@ class UserProfile extends Component {
       openViewUserDialog: false, // view user dialog box
       editUser: null,
       allSelected: false,
-      selectedUsers: 0
+      selectedUsers: 0,
+      paginationHydra: null,
+      hydraTotalItem: null
    };
+
+   getUsers(url){
+      this.setState({loading:true});
+      api.get(url,true)
+          .then(response => {
+             this.setState({users: response['hydra:member']});
+             if(response['hydra:view']){
+                this.setState({paginationHydra: response['hydra:view']});
+             }
+             this.setState({loading:false});
+          })
+          .catch(error => {
+             this.setState({loading:false});
+             if (error.message === 'Unauthorized'){
+                NotificationManager.error("Session Timed out");
+                this.props.dispatch(this.props.fetchUserError);
+             }
+          });
+   }
 
    componentDidMount() {
       this.setState({loading:true});
@@ -108,6 +132,7 @@ class UserProfile extends Component {
             response['hydra:member'].map(country => {
                valueList.push({id:country.id,URI:country['@id'],value:country.countryName});
                this.setState({countries:valueList});
+               this.setState({hydraTotalItem: response['hydra:totalItems']});
                 });
             this.setState({loading:false});
          })
@@ -117,18 +142,8 @@ class UserProfile extends Component {
                this.props.dispatch(this.props.fetchUserError);
             }
          });
+         this.getUsers('/users/all-users');
 
-      api.get('/users',true)
-          .then(response => {
-             this.setState({users: response['hydra:member']});
-             this.setState({loading:false});
-          })
-          .catch(error => {
-             if (error.message === 'Unauthorized'){
-                NotificationManager.error("Session Timed out");
-                this.props.dispatch(this.props.fetchUserError);
-             }
-          });
 
    }
 
@@ -137,7 +152,7 @@ class UserProfile extends Component {
 	 */
    onDelete(data) {
       this.refs.deleteConfirmationDialog.open();
-      console.log(data);
+
       this.setState({ selectedUser: data });
    }
 
@@ -178,11 +193,7 @@ class UserProfile extends Component {
 	 * On Reload
 	 */
    onReload() {
-      this.setState({ loading: true });
-      let self = this;
-      setTimeout(() => {
-         self.setState({ loading: false });
-      }, 2000);
+       this.getUsers('/users/all-users');
    }
 
 	/**
@@ -207,38 +218,6 @@ class UserProfile extends Component {
       this.setState({ users, selectedUsers });
    }
 
-	/**
-	 * On Change Add New User Details
-	 */
-   onChangeAddNewUserDetails(key, value) {
-      this.setState({
-         addNewUserDetail: {
-            ...this.state.addNewUserDetail,
-            [key]: value
-         }
-      });
-   }
-
-	/**
-	 * Add New User
-	 */
-   addNewUser() {
-      const { name, emailAddress } = this.state.addNewUserDetail;
-      if (name !== '' && emailAddress !== '') {
-         let users = this.state.users;
-         let newUser = {
-            ...this.state.addNewUserDetail,
-            id: new Date().getTime()
-         };
-         users.push(newUser);
-         this.setState({ addNewUserModal: false, loading: true });
-         let self = this;
-         setTimeout(() => {
-            self.setState({ loading: false, users });
-            NotificationManager.success('User Created!');
-         }, 2000);
-      }
-   }
 
 	/**
 	 * View User Detail Hanlder
@@ -303,6 +282,7 @@ class UserProfile extends Component {
          this.setState({ selectedUsers: 0, users: unselectedUsers });
       }
    }
+
    onSubmit(values){
       if(this.props.profilePicUploaded){
          if(Array.isArray(values.roles)){
@@ -312,17 +292,17 @@ class UserProfile extends Component {
          }else {
             values.roles = [values.roles]
          }
-
          const {profilePicImage} = this.props;
          values.profilePic = `/api/images/${profilePicImage['id']}`;
-         return this.props.AddUserRequest(values);
+         return this.props.AddUserRequest(values,this);
       }else{
-         NotificationManager.error("Please upload the image again");
+         NotificationManager.error("Please upload the image.");
       }
+
    }
 
    render() {
-      const { users, loading, selectedUser, editUser, countries , selectedUsers } = this.state;
+      const { users, loading, selectedUser, editUser, countries , selectedUsers,paginationHydra } = this.state;
       const {handleSubmit,error,addUserLoader,profilePicImage,profilePicUploaded} = this.props;
       return (
 
@@ -423,7 +403,7 @@ class UserProfile extends Component {
                       ))}
                       </tbody>
                       <tfoot className="border-top">
-                      <tr>
+                      {paginationHydra &&    <tr>
                          <td colSpan="100%">
                             <Pagination className="mb-0 py-10 px-10">
                                <PaginationItem>
@@ -443,7 +423,8 @@ class UserProfile extends Component {
                                </PaginationItem>
                             </Pagination>
                          </td>
-                      </tr>
+                      </tr>}
+
                       </tfoot>
                    </table>
                 </div>
@@ -548,9 +529,6 @@ class UserProfile extends Component {
 }
 
 
-const mapDispatchToProps = {
-   AddUserRequest,
-   fetchUserError
-};
+
 
 export default reduxForm({form:'addUserForm'})(connect(mapStateToProps,mapDispatchToProps)(UserProfile))

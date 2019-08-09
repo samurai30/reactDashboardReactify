@@ -33,7 +33,7 @@ export default class UserComponent extends Component {
 
    // get users
    getUsers() {
-      api.get('/users',true)
+      api.get('/users/all-users',true)
          .then(response => {
             this.setState({ users: response['hydra:member'] });
          })

@@ -9,20 +9,23 @@ import {
   PROFILE_PIC_UPLOADED
 } from "Actions/types";
 import {NotificationManager} from "react-notifications";
+import {fetchUserError} from "Actions/AuthActions";
 
-export const AddUserRequest = (values) =>{
+export const AddUserRequest = (values,prop) =>{
   return (dispatch) =>{
     dispatch({type:ADD_USER_REQUEST});
     return api.post('/users',values,true).then(response =>{
       dispatch({type:ADD_USER_SUCCESS});
+      prop.getUsers('/users/all-users');
       NotificationManager.success("User Added");
     }).catch(error =>{
       if (error.message === 'Unauthorized'){
         NotificationManager.error("Session Timed out");
-
+        dispatch(fetchUserError);
       }
       dispatch({type:ADD_USER_FAILURE});
       NotificationManager.error("Something is not right! Please check your form");
+
       throw new SubmissionError(parseApiErrors(error));
 
     });
@@ -74,6 +77,7 @@ export const profilePicDelete = (url) =>{
       return dispatch({type:PROFILE_PIC_DELETE})
     }).catch(error =>{
       if (error.message === 'Unauthorized'){
+
         NotificationManager.error("Session Timed out");
 
       }

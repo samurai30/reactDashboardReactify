@@ -19,6 +19,11 @@ const AysncTasksApprovedComponent = Loadable({
    loader: () => import('Routes/tasks/approved'),
    loading : () => <RctPageLoader/>
 });
+const AsyncInProgressComponent = Loadable({
+   loader: () => import('Routes/tasks/InProgress'),
+   loading: () => <RctPageLoader/>
+});
+
 const AysncTasksPendingComponent = Loadable({
    loader: () => import('Routes/tasks/pending'),
    loading : () => <RctPageLoader/>
@@ -90,6 +95,7 @@ export {
    AsyncGooleMapsComponent,
    AysncTasksApprovedComponent,
    AysncCreateTaskComponent,
+   AsyncInProgressComponent,
    AysncAssignTaskComponent,
    AysncTasksPendingComponent,
    AysncTasksRejectedComponent,

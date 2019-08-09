@@ -28,7 +28,7 @@ module.exports = {
    "sidebar.rejected":"Rejected",
    "sidebar.completed":"Completed",
    "sidebar.approved":"Approved",
-   "sidebar.inprogess":"In Progress",
+   "sidebar.inProgress":"In Progress",
    "sidebar.pages": "Pages",
    "sidebar.gallery": "Gallery",
    "sidebar.pricing": "Pricing",
