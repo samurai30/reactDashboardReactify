@@ -6,9 +6,11 @@ import Cropper from 'react-cropper';
 import RctCollapsibleCard from "Components/RctCollapsibleCard/RctCollapsibleCard";
 import IntlMessages from "Util/IntlMessages";
 import {Button} from "reactstrap";
+import {fetchUserError} from "Actions/AuthActions";
 
 const mapDispatchToProps={
-    profilePicUpload
+    profilePicUpload,
+    fetchUserError
 };
 function dataURLtoBlob(dataurl) {
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
@@ -54,7 +56,7 @@ class UserProfilePic extends React.Component{
 
     onUpload(e){
         e.preventDefault();
-        this.props.profilePicUpload(dataURLtoBlob(this.state.cropResult));
+        this.props.profilePicUpload(dataURLtoBlob(this.state.cropResult),this.props);
     }
 
     render() {

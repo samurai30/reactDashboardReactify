@@ -7,13 +7,10 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import {
-   Pagination,
-   PaginationItem,
-   PaginationLink,
    Modal,
    ModalHeader,
    ModalBody,
-   Badge, Form, FormGroup
+   Badge, Form, FormGroup, PaginationItem, PaginationLink, Pagination
 } from 'reactstrap';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -41,7 +38,7 @@ import IntlMessages from "Util/IntlMessages";
 import {Field, reduxForm,reset} from "redux-form";
 import {renderField} from "../../../../forms/ComonForm";
 import {connect} from "react-redux";
-import {AddUserRequest} from "Actions/AddUserActions";
+import {AddUserRequest, getUsersManage} from "Actions/AddUserActions";
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 import {NotificationContainer} from "react-notifications";
 import {fetchUserError} from "Actions";
@@ -59,7 +56,7 @@ import {
 } from "Util/apiUtils";
 import Menu from "@material-ui/core/es/Menu";
 import MenuItem from "@material-ui/core/es/MenuItem";
-import PaginatorCustom from "Components/PaginatorCustom";
+import classNames from "classnames";
 
 const valueList = [];
 const mapStateToProps = state => ({
@@ -67,15 +64,14 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = {
    AddUserRequest,
-   fetchUserError
+   fetchUserError,
+   getUsersManage
 };
 class UserProfile extends Component {
 
    state = {
       all: false,
-      users: null, // initial user data
       selectedUser: null, // selected user to perform operations
-      loading: false, // loading activity
       addNewUserModal: false, // add new user form modal
       countries: {},
       roles:[
@@ -106,29 +102,14 @@ class UserProfile extends Component {
       editUser: null,
       allSelected: false,
       selectedUsers: 0,
-      paginationHydra: null,
-      hydraTotalItem: null,
       anchorEl: null,
-      selectedIndex: 1,
+      selectedIndex: 1
+
+
    };
 
    getUsers(url){
-      this.setState({loading:true});
-      api.get(url,true)
-          .then(response => {
-             this.setState({users: response['hydra:member']});
-             if(response['hydra:view']){
-                this.setState({paginationHydra: response['hydra:view']});
-             }
-             this.setState({loading:false});
-          })
-          .catch(error => {
-             this.setState({loading:false});
-             if (error.message === 'Unauthorized'){
-                NotificationManager.error("Session Timed out");
-                this.props.dispatch(this.props.fetchUserError);
-             }
-          });
+      return this.props.getUsersManage(url);
    }
 
    componentDidMount() {
@@ -138,7 +119,6 @@ class UserProfile extends Component {
             response['hydra:member'].map(country => {
                valueList.push({id:country.id,URI:country['@id'],value:country.countryName});
                this.setState({countries:valueList});
-               this.setState({hydraTotalItem: response['hydra:totalItems']});
                 });
             this.setState({loading:false});
          })
@@ -149,7 +129,6 @@ class UserProfile extends Component {
             }
          });
          this.getUsers('/users/all-users');
-
 
    }
    // Menu Functions
@@ -170,7 +149,6 @@ class UserProfile extends Component {
 	 */
    onDelete(data) {
       this.refs.deleteConfirmationDialog.open();
-
       this.setState({ selectedUser: data });
    }
 
@@ -179,14 +157,17 @@ class UserProfile extends Component {
 	 */
    deleteUserPermanently() {
       const { selectedUser } = this.state;
-      let users = this.state.users;
+      let users = this.props.users;
       let indexOfDeleteUser = users.indexOf(selectedUser);
       this.setState({ loading: true });
-      api.delete(`/users/${selectedUser['id']}`).then(response =>{
+      const url = `/users/${selectedUser['id']}`;
+
+      api.delete(url).then(response =>{
          users.splice(indexOfDeleteUser, 1);
          this.refs.deleteConfirmationDialog.close();
-         this.setState({ loading: false, users, selectedUser: null });
+         this.setState({ selectedUser: null });
          NotificationManager.success('User Deleted!');
+         return this.props.getUsersManage('/users/all-users');
       }).catch(error =>{
          this.setState({ loading: false, users, selectedUser: null });
          if (error.message === 'Unauthorized'){
@@ -233,7 +214,8 @@ class UserProfile extends Component {
             return userData;
          }
       });
-      this.setState({ users, selectedUsers });
+      this.setProps({users});
+      this.setState({ selectedUsers });
    }
 
 
@@ -266,7 +248,7 @@ class UserProfile extends Component {
    updateUser(value) {
       const { editUser } = this.state;
       let indexOfUpdateUser = '';
-      let users = this.state.users;
+      let users = this.props.users;
       for (let i = 0; i < users.length; i++) {
          const user = users[i];
          if (user.id === editUser.id) {
@@ -284,20 +266,23 @@ class UserProfile extends Component {
 
    //Select All user
    onSelectAllUser(e) {
-      const { selectedUsers, users } = this.state;
+      const { selectedUsers } = this.state;
+      const {users} = this.props;
       let selectAll = selectedUsers < users.length;
       if (selectAll) {
          let selectAllUsers = users.map(user => {
             user.checked = true;
             return user
          });
-         this.setState({ users: selectAllUsers, selectedUsers: selectAllUsers.length })
+         this.setState({  selectedUsers: selectAllUsers.length });
+         this.setProps({users: selectAllUsers});
       } else {
          let unselectedUsers = users.map(user => {
             user.checked = false;
             return user;
          });
-         this.setState({ selectedUsers: 0, users: unselectedUsers });
+         this.setState({ selectedUsers: 0 });
+         this.setProps({ users: unselectedUsers})
       }
    }
 
@@ -318,14 +303,17 @@ class UserProfile extends Component {
       }
 
    }
-   componentDidUpdate(prevProps){
-      console.log('previous',prevProps.paginationHydra)
-      console.log('this prop',this.props.paginationHydra)
-   }
+
 
    render() {
-      const { users, loading, selectedUser, editUser, countries , selectedUsers,paginationHydra,anchorEl } = this.state;
-      const {handleSubmit,error,addUserLoader,profilePicImage,profilePicUploaded} = this.props;
+      const { selectedUser, editUser, countries , selectedUsers,anchorEl, } = this.state;
+      const {users, loading, handleSubmit,error,addUserLoader,profilePicImage,profilePicUploaded,paginationHydra,HydraPageCount,CurrentPage} = this.props;
+      let range = [];
+      if(HydraPageCount){
+         for(let i =1; i<= HydraPageCount; i++){
+             range.push(i);
+         }
+      }
       return (
 
           <div className="user-management">
@@ -443,10 +431,31 @@ class UserProfile extends Component {
 
                       </tbody>
                       <tfoot className="border-top">
-                      {paginationHydra && <tr>
-                         {console.log(paginationHydra)}
+                      {(paginationHydra && HydraPageCount && CurrentPage !== null) && <tr>
+
                          <td colSpan="100%">
-                           <PaginatorCustom currentPage={3} pageCount={5} />
+                            {/* eslint-disable-next-line radix */}
+                            <Pagination className="mb-0 py-10 px-10">
+
+                               <PaginationItem>
+                                  <PaginationLink previous href="#"/>
+                                    {/*<Button onClick={(e) => this.getUsers('/users/all-users?page=2')}>Next</Button>*/}
+                               </PaginationItem>
+                               {
+                                  range.map(page => {
+                                     return(
+                                         // eslint-disable-next-line radix
+                                         <PaginationItem key={page} className={classNames({active: parseInt(CurrentPage) === page})}>
+                                            <PaginationLink href="javascript:void(0)">{page}</PaginationLink>
+                                         </PaginationItem>
+                                     )
+                                  })
+                               }
+
+                               <PaginationItem>
+                                  <PaginationLink next href="javascript:void(0)" />
+                               </PaginationItem>
+                            </Pagination>
                          </td>
                       </tr>
                       }
@@ -454,7 +463,7 @@ class UserProfile extends Component {
                       </tfoot>
                    </table>
                 </div>
-                {loading &&
+                {(loading) &&
                 <RctSectionLoader />
                 }
              </RctCollapsibleCard>
