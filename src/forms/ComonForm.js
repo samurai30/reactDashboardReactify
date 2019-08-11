@@ -18,7 +18,6 @@ export const renderField = ({values,selectItems,input,label,type,placeholder,spa
             {selectItems && selectItems.map(item =><option key={item.value} value={item.URI}>{item.value}</option>)}
         </Input>}
         {type === 'select_multiple' && <Input {...input} type='select' multiple required>
-
             {selectItems && selectItems.map(item =><option key={item.value} value={item.URI}>{item.value}</option>)}
         </Input>}
         {error && <small className="form-text text-danger">{error}</small>}

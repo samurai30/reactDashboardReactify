@@ -27,12 +27,12 @@ export default class EmailPrefrences extends Component {
       const userId = localStorage.getItem('user_id');
       api.put(`/users/${userId}/reset-email`,{email:email}).then(response =>{
          this.setState({loading: false});
-         window.location.reload();
+         setTimeout(function(){  window.location.reload(); }, 5000);
          NotificationManager.success('Please confirm email and re-login');
       }).catch(error =>{
          this.setState({loading: false});
          const errors = parseApiErrors(error);
-         console.log(error.response)
+         console.log(error.response);
          if (errors){
             NotificationManager.error(errors.email);
          }

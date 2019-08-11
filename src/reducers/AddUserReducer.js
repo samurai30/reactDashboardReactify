@@ -1,5 +1,5 @@
 import {
-    ADD_USER_FAILURE,
+    ADD_USER_FAILURE, ADD_USER_PROP,
     ADD_USER_REQUEST,
     ADD_USER_SUCCESS,
     PROFILE_PIC_DELETE,
@@ -56,6 +56,9 @@ action) =>{
             return {...state,loading: false};
         case USER_CREATE_DELETE_FAILURE:
             return {...state,loading: false};
+        case ADD_USER_PROP:
+
+            return {...state,users: action.data};
         default:
             return{...state}
     }

@@ -8,15 +8,37 @@ import RctCollapsibleCard from "Components/RctCollapsibleCard/RctCollapsibleCard
 import {addCategory, addTask, getCategoryData, getFormData, getTaskData} from "Actions/CreateTaskAction";
 import {connect} from 'react-redux';
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
-import {Alert, Form, FormGroup, Modal, ModalBody, ModalHeader} from "reactstrap";
+import {
+    Alert,
+    Form,
+    FormGroup,
+    Modal,
+    ModalBody,
+    ModalHeader,
+    Pagination,
+    PaginationItem,
+    PaginationLink
+} from "reactstrap";
 import SweetAlert from 'react-bootstrap-sweetalert'
 import RctSectionLoader from "Components/RctSectionLoader/RctSectionLoader";
 import {Field, reduxForm, reset} from "redux-form";
 import {renderField} from "../../../forms/ComonForm";
-import ProfilePicBrowser from "Components/ImageUploader/ProfilePicBrowser";
-import UserProfilePic from "Components/ImageUploader/UserProfilePic";
 import Button from "@material-ui/core/Button";
 import {NotificationContainer} from "react-notifications";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import {SERVER_PATH} from "Actions/types";
+import Avatar from "@material-ui/core/Avatar";
+import {
+    ROLE_ADMIN,
+    ROLE_ADMIN_BADGE,
+    ROLE_CLIENT,
+    ROLE_CLIENT_BADGE,
+    ROLE_SUBADMIN,
+    ROLE_SUBADMIN_BADGE, ROLE_SURVEYOR, ROLE_SURVEYOR_BADGE
+} from "Util/apiUtils";
+import Moment from "react-moment";
+import classNames from "classnames";
 const mapDispatchToProps = {
     getFormData,
     getCategoryData,
@@ -67,6 +89,11 @@ class CreateTask extends Component{
             }
         ],
     };
+    componentDidMount(){
+        this.getForms('/forms');
+        this.getCategory('/task_categories');
+        this.props.getTaskData();
+    }
 
     /**
      * On Confirm dialog
@@ -90,11 +117,7 @@ class CreateTask extends Component{
     getCategory(url){
         return this.props.getCategoryData(url);
     }
-    componentDidMount(){
-        this.getForms('/forms');
-        this.getCategory('/task_categories');
-        this.props.getTaskData();
-    }
+
     opnAddNewTaskModal(){
         this.setState({addNewTaskModal:true})
     }
@@ -117,6 +140,12 @@ class CreateTask extends Component{
         this.setState({addNewTaskModal:false})
     }
 
+    onSelectTask(task){
+
+    }
+    onReload(){
+        return this.props.getTaskData()
+    }
     render(){
         const{match,taskLoading,formData,categoryData,handleSubmit,formSelectData,catSelectDat,taskData} = this.props;
         const { withDes,addNewCategoryModal,addNewTaskModal} = this.state;
@@ -171,7 +200,106 @@ class CreateTask extends Component{
                             </div>
 
                         </div>
+                        <table className="table table-middle table-hover mb-0">
+                            <thead>
+                            <tr>
+                                {/*<th className="w-5">*/}
+                                {/*    <FormControlLabel*/}
+                                {/*        control={*/}
+                                {/*            <Checkbox*/}
+                                {/*                indeterminate={selectedUsers > 0 && selectedUsers < users.length}*/}
+                                {/*                checked={selectedUsers > 0}*/}
+                                {/*                onChange={(e) => this.onSelectAllUser(e)}*/}
+                                {/*                value="all"*/}
+                                {/*                color="primary"*/}
+                                {/*            />*/}
+                                {/*        }*/}
+                                {/*        label="All"*/}
+                                {/*    />*/}
+                                {/*</th>*/}
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Category</th>
+                                <th>Date Created</th>
+                                <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            {taskData && (taskData.length !==0 ) ? taskData.map((task) => (
+                                    <tr key={task.id}>
+                                        {/*<td>*/}
+                                        {/*    <FormControlLabel*/}
+                                        {/*        control={*/}
+                                        {/*            <Checkbox*/}
+                                        {/*                onChange={() => this.onSelectTask(task)}*/}
+                                        {/*                color="primary"*/}
+                                        {/*            />*/}
+                                        {/*        }*/}
+                                        {/*    />*/}
+                                        {/*</td>*/}
+                                        <td>
+                                            {task.Title}
+                                        </td>
+                                        <td>{task.description}</td>
+                                        <td className="d-flex justify-content-start">
+                                            <span className="d-block text-uppercase text-yellow">{task.status}</span>
+                                        </td>
+                                        <td>
+                                            {task.category.catagoryName}
+                                        </td>
+
+                                        <td>  <Moment format="YYYY/MM/DD">
+                                            {task.createdDate}
+                                        </Moment></td>
+                                        <td className="list-action">
+                                            <a href="javascript:void(0)" onClick={() => null}><i className="ti-eye"></i></a>
+                                            <a href="javascript:void(0)" onClick={() => null}><i className="ti-pencil"></i></a>
+                                            <a href="javascript:void(0)" onClick={() => null}><i className="ti-close"></i></a>
+                                        </td>
+                                    </tr>
+                                )):
+                                <tr>
+                                    <td>Nothing Found</td>
+                                </tr>
+                            }
+
+                            </tbody>
+                            <tfoot className="border-top">
+                            {/*{(paginationHydra && HydraPageCount && CurrentPage !== null) && <tr>*/}
+
+                            {/*    <td colSpan="100%">*/}
+                            {/*        /!* eslint-disable-next-line radix *!/*/}
+                            {/*        <Pagination className="mb-0 py-10 px-10">*/}
+
+                            {/*            <PaginationItem>*/}
+                            {/*                <PaginationLink previous href="#"/>*/}
+                            {/*                /!*<Button onClick={(e) => this.getUsers('/users/all-users?page=2')}>Next</Button>*!/*/}
+                            {/*            </PaginationItem>*/}
+                            {/*            {*/}
+                            {/*                range.map(page => {*/}
+                            {/*                    return(*/}
+                            {/*                        // eslint-disable-next-line radix*/}
+                            {/*                        <PaginationItem key={page} className={classNames({active: parseInt(CurrentPage) === page})}>*/}
+                            {/*                            <PaginationLink href="javascript:void(0)">{page}</PaginationLink>*/}
+                            {/*                        </PaginationItem>*/}
+                            {/*                    )*/}
+                            {/*                })*/}
+                            {/*            }*/}
+
+                            {/*            <PaginationItem>*/}
+                            {/*                <PaginationLink next href="javascript:void(0)" />*/}
+                            {/*            </PaginationItem>*/}
+                            {/*        </Pagination>*/}
+                            {/*    </td>*/}
+                            {/*</tr>*/}
+                            {/*}*/}
+
+                            </tfoot>
+                        </table>
                     </div>
+
                     {(taskLoading) &&
                         <RctSectionLoader/>}
 

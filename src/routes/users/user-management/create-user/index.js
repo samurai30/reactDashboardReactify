@@ -38,7 +38,7 @@ import IntlMessages from "Util/IntlMessages";
 import {Field, reduxForm,reset} from "redux-form";
 import {renderField} from "../../../../forms/ComonForm";
 import {connect} from "react-redux";
-import {AddUserRequest, getUsersManage} from "Actions/AddUserActions";
+import {AddUserRequest, getUsersManage, setUserProp, updateUser} from "Actions/AddUserActions";
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 import {NotificationContainer} from "react-notifications";
 import {fetchUserError} from "Actions";
@@ -65,7 +65,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
    AddUserRequest,
    fetchUserError,
-   getUsersManage
+   getUsersManage,
+   setUserProp,
+   updateUser
 };
 class UserProfile extends Component {
 
@@ -201,7 +203,7 @@ class UserProfile extends Component {
    onSelectUser(user) {
       user.checked = !user.checked;
       let selectedUsers = 0;
-      let users = this.state.users.map(userData => {
+      let users = this.props.users.map(userData => {
          if (userData.checked) {
             selectedUsers++;
          }
@@ -214,8 +216,8 @@ class UserProfile extends Component {
             return userData;
          }
       });
-      this.setProps({users});
-      this.setState({ selectedUsers });
+      this.setState({ selectedUsers:selectedUsers });
+      return this.props.setUserProp(users);
    }
 
 
@@ -246,22 +248,9 @@ class UserProfile extends Component {
 	 * Update User
 	 */
    updateUser(value) {
-      const { editUser } = this.state;
-      let indexOfUpdateUser = '';
-      let users = this.props.users;
-      for (let i = 0; i < users.length; i++) {
-         const user = users[i];
-         if (user.id === editUser.id) {
-            indexOfUpdateUser = i
-         }
-      }
-      users[indexOfUpdateUser] = editUser;
-      this.setState({ loading: true, editUser: null, addNewUserModal: false });
-      let self = this;
-      setTimeout(() => {
-         self.setState({ users, loading: false });
-         NotificationManager.success('User Updated!');
-      }, 2000);
+      const {editUser} = this.state;
+
+      return this.props.updateUser(value,editUser);
    }
 
    //Select All user
@@ -269,20 +258,23 @@ class UserProfile extends Component {
       const { selectedUsers } = this.state;
       const {users} = this.props;
       let selectAll = selectedUsers < users.length;
+
       if (selectAll) {
          let selectAllUsers = users.map(user => {
             user.checked = true;
             return user
          });
          this.setState({  selectedUsers: selectAllUsers.length });
-         this.setProps({users: selectAllUsers});
+
+         return this.props.setUserProp(selectAllUsers);
       } else {
          let unselectedUsers = users.map(user => {
             user.checked = false;
             return user;
          });
          this.setState({ selectedUsers: 0 });
-         this.setProps({ users: unselectedUsers})
+         return this.props.setUserProp(unselectedUsers);
+
       }
    }
 
@@ -304,6 +296,12 @@ class UserProfile extends Component {
 
    }
 
+   handleValueChange(e){
+      const {editUser} = this.state;
+      let newEdit = editUser;
+      newEdit[e.target.name] = e.target.value;
+      this.setState({editUser:newEdit})
+   }
 
    render() {
       const { selectedUser, editUser, countries , selectedUsers,anchorEl, } = this.state;
@@ -351,7 +349,7 @@ class UserProfile extends Component {
                    <table className="table table-middle table-hover mb-0">
                       <thead>
                       <tr>
-                         <th className="w-5">
+                         {users && <th className="w-5">
                             <FormControlLabel
                                 control={
                                    <Checkbox
@@ -364,7 +362,7 @@ class UserProfile extends Component {
                                 }
                                 label="All"
                             />
-                         </th>
+                         </th>}
                          <th>User</th>
                          <th>Email Address</th>
                          <th>Status</th>
@@ -400,7 +398,8 @@ class UserProfile extends Component {
                              </td>
                              <td>{user.email}</td>
                              <td className="d-flex justify-content-start">
-                                {user.enabled ?  <span className={`badge badge-xs badge-success mr-10 mt-10 position-relative`}>&nbsp;</span>:
+                                {user.enabled ?  <span className={`badge badge-xs badge-success mr-10 mt-10 position-relative`}>&nbsp;</span>
+                                    :
                                     <span className={`badge badge-xs badge-warning mr-10 mt-10 position-relative`}>&nbsp;</span>}
                                 <div className="status">
                                    {user.enabled ?  <span className="d-block text-uppercase">Activated</span>:
@@ -511,12 +510,12 @@ class UserProfile extends Component {
                        </Form>
 
                        :
-                       <Form onSubmit={handleSubmit(this.updateUser.bind(this))}>
-                      {error && <div className="alert alert-danger">{error}</div>}
-                         <Field name="firstName" values={editUser.firstName} label="First Name" type="text" placeholder="First Name" component={renderField}/>
-                         <Field name="lastName" values={editUser.lastName} label="Last Name" type="text" placeholder="Last Name" component={renderField}/>
-                         <Field name="username" values={editUser.username} label="Username" type="text" placeholder="Username" component={renderField}/>
-                         <Field name="email" values={editUser.email} label="Email" type="email" placeholder="Email" component={renderField}/>
+                       <Form onSubmit={handleSubmit(this.updateUser.bind(this))} >
+
+                         <Field name="firstName" onChange={this.handleValueChange.bind(this)} values={editUser.firstName} label="First Name" type="text" placeholder="First Name" component={renderField}/>
+                         <Field name="lastName" onChange={this.handleValueChange.bind(this)}  values={editUser.lastName} label="Last Name" type="text" placeholder="Last Name" component={renderField}/>
+                         <Field name="username" onChange={this.handleValueChange.bind(this)}  values={editUser.username} label="Username" type="text" placeholder="Username" component={renderField}/>
+                         <Field name="email" onChange={this.handleValueChange.bind(this)}  values={editUser.email} label="Email" type="email" placeholder="Email" component={renderField}/>
                          <hr/>
                          <FormGroup className="mb-15">
                          {addUserLoader?
@@ -543,14 +542,21 @@ class UserProfile extends Component {
                    <div>
                       <div className="clearfix d-flex">
                          <div className="media pull-left">
-                            <img src={selectedUser.avatar} alt="user prof" className="rounded-circle mr-15" width="50" height="50" />
+                            <img src={`${SERVER_PATH}${selectedUser.profilePic.url}`} alt="user prof" className="rounded-circle mr-15" width="50" height="50" />
                             <div className="media-body">
-                               <p>Name: <span className="fw-bold">{selectedUser.name}</span></p>
-                               <p>Email: <span className="fw-bold">{selectedUser.emailAddress}</span></p>
-                               <p>Type: <span className="badge badge-warning">{selectedUser.type}</span></p>
-                               <p>Account Type: <span className={`badge ${selectedUser.badgeClass} badge-pill`}>{selectedUser.accountType}</span></p>
-                               <p>Status: {selectedUser.status}</p>
-                               <p>Last Seen: {selectedUser.lastSeen}</p>
+                               <p>Name: <span className="fw-bold">{selectedUser.firstName}</span></p>
+                               <p>Email: <span className="fw-bold">{selectedUser.email}</span></p>
+                               <p>Account Type:{' '}
+                                  {selectedUser.roles[0] === ROLE_ADMIN ?    <span className={`badge ${ROLE_ADMIN_BADGE} badge-pill`}>Admin</span> :
+                                      selectedUser.roles[0] === ROLE_SUBADMIN ?    <span className={`badge ${ROLE_SUBADMIN_BADGE}  badge-pill`}>Sub-Admin</span>  :
+                                          selectedUser.roles[0] === ROLE_CLIENT ?   <span className={`badge ${ROLE_CLIENT_BADGE}  badge-pill`}>Client</span>  :
+                                              selectedUser.roles[0] === ROLE_SURVEYOR &&  <span className={`badge ${ROLE_SURVEYOR_BADGE}  badge-pill`}>Surveyor</span> }
+                               </p>
+                               <p>Status:
+                                  {selectedUser.enabled ?  <span className="d-block text-uppercase">Activated</span>:
+                                      <span className="d-block text-uppercase text-yellow">Not Activated</span>}
+                               </p>
+
                             </div>
                          </div>
                       </div>

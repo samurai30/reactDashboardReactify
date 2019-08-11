@@ -2,7 +2,7 @@ import {api} from "Api";
 import {parseApiErrors} from "Util/apiUtils";
 import {SubmissionError} from "redux-form";
 import {
-  ADD_USER_FAILURE,
+  ADD_USER_FAILURE, ADD_USER_PROP,
   ADD_USER_REQUEST,
   ADD_USER_SUCCESS,
   PROFILE_PIC_DELETE,
@@ -130,6 +130,25 @@ export const getUsersManage = (url) => {
   }
 };
 
+export const updateUser = (values,user) =>{
+  return(dispatch) =>{
+    dispatch();
+    return api.put(`/users/${user.id}`,values,true).then(response =>{
+
+    }).catch(error =>{
+
+    })
+  }
+};
+
+export const setUserProp = (data) =>{
+  return(dispatch) =>{
+    dispatch({
+      type:ADD_USER_PROP,
+      data:data
+    })
+  }
+};
 export const paginationData = (paginationData,pageCount,currentPage) =>({
   type:USER_PAGINATION,
   paginationData:paginationData,
