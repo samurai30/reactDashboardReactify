@@ -20,12 +20,14 @@ export const userLoginAttempt = (username,password) =>{
                 dispatch(userLoginSuccess(response.token,response.id));
             }).catch(error => {
             dispatch({type:LOGIN_USER_FAILURE});
+            console.log(error.message);
             if (error.message === 'Forbidden'){
                     NotificationManager.error("Did you forget something? Please activate your account");
                 }
             else if (error.message === 'Unauthorized') {
                     throw new SubmissionError({_error: "Username or Password Invalid"});
                      }
+
                             });
     }
 

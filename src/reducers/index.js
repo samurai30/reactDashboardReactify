@@ -14,7 +14,7 @@ import {reducer as formReducer} from 'redux-form'
 import {routerReducer} from 'react-router-redux'
 import createTask from './CreateTaskReducer'
 import formBuilderReducer from './UploadFormBuilder'
-import {ADD_USER_SUCCESS, LOGIN_USER_FAILURE} from "Actions/types";
+import {ADD_USER_SUCCESS, CREATE_TASK_CATEGORY_SUCCESS, CREATE_TASK_SUCCESS, LOGIN_USER_FAILURE} from "Actions/types";
 const reducers = combineReducers({
   settings,
   chatAppReducer,
@@ -39,6 +39,16 @@ const reducers = combineReducers({
     adminLoginForm: (state,action) =>{
       switch (action.type) {
         case LOGIN_USER_FAILURE:
+          return undefined;
+        default:
+          return state;
+      }
+    },
+    createTaskForm: (state,action) =>{
+      switch (action.type) {
+        case CREATE_TASK_CATEGORY_SUCCESS:
+          return undefined;
+        case CREATE_TASK_SUCCESS:
           return undefined;
         default:
           return state;
