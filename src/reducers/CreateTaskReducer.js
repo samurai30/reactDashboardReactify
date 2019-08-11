@@ -5,37 +5,39 @@ import {
     CREATE_TASK_FORM_REQUEST,
     CREATE_TASK_FORM_SUCCESS,
     CREATE_TASK_REQUEST,
-    CREATE_TASK_SUCCESS
+    CREATE_TASK_SUCCESS, FETCH_TASK_REQUEST
 } from "Actions/types";
 
 export default (state ={
     taskData:null,
     taskLoading:false,
-    formLoading:false,
-    catLoading:false,
     formData: null,
-    categoryData:null
+    categoryData:null,
+    formSelectData:null,
+    catSelectDat:null
 
 },action) =>{
     switch (action.type) {
+        case FETCH_TASK_REQUEST:
+            return {...state,taskLoading:true};
         case CREATE_TASK_REQUEST:
             return  {...state,taskLoading:true};
         case CREATE_TASK_SUCCESS:
-            return {...state,taskLoading:false};
+            return {...state,taskLoading:false,taskData: action.data};
         case CREATE_TASK_FAILURE:
-            return {...state,taskLoading:false};
+            return {...state,taskLoading:false,taskData:null};
         case CREATE_TASK_FORM_REQUEST:
-            return {...state,formLoading:true};
+            return {...state,taskLoading:true};
         case CREATE_TASK_FORM_SUCCESS:
-            return {...state,formLoading:false,formData: action.data};
+            return {...state,taskLoading:false,formData: action.data,formSelectData:action.selectData};
         case CREATE_TASK_FORM_FAILURE:
-            return {...state,formLoading:false,formData: null};
+            return {...state,taskLoading:false,formData: null,formSelectData:null};
         case CREATE_TASK_CATEGORY_REQUEST:
-            return {...state,catLoading:true};
+            return {...state,taskLoading:true};
         case CREATE_TASK_CATEGORY_SUCCESS:
-            return {...state,catLoading:false,categoryData: action.data};
+            return {...state,taskLoading:false,categoryData: action.data,catSelectDat: action.selectData};
         case CREATE_TASK_CATEGORY_FAILURE:
-            return {...state,catLoading:false,categoryData: null};
+            return {...state,taskLoading:false,categoryData: null,catSelectDat:null};
         default:
             return {...state}
     }

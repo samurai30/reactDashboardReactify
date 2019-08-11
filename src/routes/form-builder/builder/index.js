@@ -84,10 +84,10 @@ class BuilderCreateForm extends Component{
                 </div>
                 <div ref={this.rf}>
 
-
                     <div id="view-form"/>
                     <Form onSubmit={handleSubmit(this.onUpload.bind(this))}>
                         <Field name="description" label="Form Description" type="text" placeholder="Description" component={renderField}/>
+                        <Field name="name" label="Form Name" type="text" placeholder="Name" component={renderField}/>
                         {isUploading ? <RctPageLoader/>:
                             <Button variant="contained" className="bg-warning text-white w-100" type="submit">Upload</Button>
                         }

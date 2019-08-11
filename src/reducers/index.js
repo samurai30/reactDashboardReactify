@@ -14,7 +14,13 @@ import {reducer as formReducer} from 'redux-form'
 import {routerReducer} from 'react-router-redux'
 import createTask from './CreateTaskReducer'
 import formBuilderReducer from './UploadFormBuilder'
-import {ADD_USER_SUCCESS, CREATE_TASK_CATEGORY_SUCCESS, CREATE_TASK_SUCCESS, LOGIN_USER_FAILURE} from "Actions/types";
+import {
+  ADD_USER_SUCCESS, CREATE_TASK_CATEGORY_CLEAR,
+  CREATE_TASK_CATEGORY_SUCCESS,
+  CREATE_TASK_CLEAR,
+  CREATE_TASK_SUCCESS,
+  LOGIN_USER_FAILURE
+} from "Actions/types";
 const reducers = combineReducers({
   settings,
   chatAppReducer,

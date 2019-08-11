@@ -2,23 +2,28 @@ import {api} from "Api/index";
 import {
     CREATE_TASK_CATEGORY_FAILURE,
     CREATE_TASK_CATEGORY_REQUEST,
-    CREATE_TASK_CATEGORY_SUCCESS, CREATE_TASK_FORM_FAILURE,
+    CREATE_TASK_CATEGORY_SUCCESS, CREATE_TASK_FAILURE, CREATE_TASK_FORM_FAILURE,
     CREATE_TASK_FORM_REQUEST,
-    CREATE_TASK_FORM_SUCCESS
+    CREATE_TASK_FORM_SUCCESS, CREATE_TASK_REQUEST, CREATE_TASK_SUCCESS, FETCH_TASK_REQUEST
 } from "Actions/types";
 import {NotificationManager} from "react-notifications";
-import {SubmissionError} from "redux-form";
+import {reset, SubmissionError} from "redux-form";
 import {parseApiErrors} from "Util/apiUtils";
 
 export const getFormData = (url) =>{
   return(dispatch)=>{
       dispatch({type:CREATE_TASK_FORM_REQUEST});
       return api.get(url).then(response =>{
-            dispatch(successFormData(response['hydra:member']))
+          let valueList = [];
+
+          response['hydra:member'].map(form => {
+              valueList.push({id:form.id,URI:form.id,value:form.name});
+          });
+
+            dispatch(successFormData(response['hydra:member'],valueList))
       }).catch(error =>{
           if (error.message === 'Unauthorized'){
               NotificationManager.error("Session Timed out");
-
           }
           dispatch({type:CREATE_TASK_FORM_FAILURE})
       });
@@ -28,8 +33,11 @@ export const getCategoryData = (url) =>{
     return(dispatch)=>{
         dispatch({type:CREATE_TASK_CATEGORY_REQUEST});
         return api.get(url).then(response =>{
-            console.log(response);
-            dispatch(successCategoryData(response['hydra:member']))
+            let valueList = [];
+            response['hydra:member'].map(category => {
+                valueList.push({id:category.id,URI:category['@id'],value:category.catagoryName});
+            });
+            dispatch(successCategoryData(response['hydra:member'],valueList))
         }).catch(error =>{
             if (error.message === 'Unauthorized'){
                 NotificationManager.error("Session Timed out");
@@ -46,23 +54,76 @@ export const addCategory = (data) =>{
             NotificationManager.success("Category Added");
             dispatch(getCategoryData('/task_categories'));
         }).catch(error =>{
+            dispatch({type:CREATE_TASK_CATEGORY_FAILURE});
             if (error.message === 'Unauthorized'){
                 NotificationManager.error("Session Timed out");
             }
-            dispatch({type:CREATE_TASK_CATEGORY_FAILURE});
+
             NotificationManager.error("Something is not right! Please check your form");
             throw new SubmissionError(parseApiErrors(error));
         })
     }
 };
 
-export const successFormData = (formData) =>({
+export const addTask = (data) =>{
+    return(dispatch) =>{
+        dispatch({type:CREATE_TASK_REQUEST});
+        let formId = data.form;
+
+        delete data.form;
+        return api.post('/tasks',data,true).then(response => {
+            formId.map(key => {
+                api.post(`/tasks/${response.id}/add-form/${key}`,{},true).then(res=>{
+                    dispatch(getTaskData());
+                    NotificationManager.success("Task Added");
+                }).catch(err =>{
+                    dispatch({type:CREATE_TASK_FAILURE});
+                    if (err.message === 'Unauthorized'){
+                        NotificationManager.error("Session Timed out");
+                    }
+                })
+            })
+        }).catch(error =>{
+            dispatch({type:CREATE_TASK_FAILURE});
+            if (error.message === 'Unauthorized'){
+                NotificationManager.error("Session Timed out");
+            }
+            NotificationManager.error("Something is not right! Please check your form");
+            throw new SubmissionError(parseApiErrors(error));
+
+        })
+
+
+    }
+};
+
+export const getTaskData = () =>{
+    return(dispatch) =>{
+        dispatch({type:FETCH_TASK_REQUEST});
+        return api.get('/tasks').then(response =>{
+
+            dispatch(successTasksData(response['hydra:member']));
+
+        }).catch(error =>{
+            dispatch({type:CREATE_TASK_FAILURE});
+            if (error.message === 'Unauthorized'){
+                NotificationManager.error("Session Timed out");
+            }
+        })
+    }
+};
+export const successTasksData = (taskData) =>({
+    type:CREATE_TASK_SUCCESS,
+    data:taskData
+});
+export const successFormData = (formData,selectD) =>({
     type: CREATE_TASK_FORM_SUCCESS,
-    data:formData
+    data:formData,
+    selectData: selectD
 
 });
-export const successCategoryData = (catData) =>({
+export const successCategoryData = (catData,selectD) =>({
     type: CREATE_TASK_CATEGORY_SUCCESS,
-    data:catData
-
+    data:catData,
+    selectData: selectD
 });
