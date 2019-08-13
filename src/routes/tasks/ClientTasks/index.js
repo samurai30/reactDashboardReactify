@@ -7,16 +7,16 @@ import PageTitleBar from "Components/PageTitleBar/PageTitleBar";
 
 
 
-export default class AssignTask extends Component{
+export default class ClientTasks extends Component{
     render(){
         const{match} = this.props;
         return(
             <div className="ecom-dashboard-wrapper">
                 <Helmet>
-                    <title>Polucon | Assign Task</title>
+                    <title>Polucon | Client Tasks</title>
                     <meta name="description" content="Assign Tasks" />
                 </Helmet>
-                <PageTitleBar title={<IntlMessages id="sidebar.assignTask" />} match={match} />
+                <PageTitleBar title={<IntlMessages id="sidebar.clientTasks" />} match={match} />
                 
             </div>
         );

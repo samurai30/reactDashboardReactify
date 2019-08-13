@@ -44,14 +44,22 @@ const AysncCompletedTaskComponent = Loadable({
    loader: () => import('Routes/tasks/completed'),
    loading : () => <RctPageLoader/>
 });
+const AysncClientTaskComponent = Loadable({
+   loader: () => import('Routes/tasks/ClientTasks'),
+   loading : () => <RctPageLoader/>
+});
 //login
 const AsyncAdminLoginComponent = Loadable({
    loader: () => import('Routes/login'),
    loading: () => <RctPageLoader/>
 });
 //user management
-const AsyncUsersListComponent = Loadable({
-   loader: () => import('Routes/users/user-list'),
+const AsyncClientListComponent = Loadable({
+   loader: () => import('Routes/users/client-list'),
+   loading: () => <RctPageLoader/>
+});
+const AsyncSurveyorListComponent = Loadable({
+   loader: () => import('Routes/users/surveyor-list'),
    loading: () => <RctPageLoader/>
 });
 const AsyncUserProfileComponent = Loadable({
@@ -100,10 +108,12 @@ export {
    AysncTasksPendingComponent,
    AysncTasksRejectedComponent,
    AsyncAdminLoginComponent,
-   AsyncUsersListComponent,
+   AsyncClientListComponent,
+   AsyncSurveyorListComponent,
    AsyncUserProfile1Component,
    AsyncUserManagementCreateUserComponent,
    AsyncUserProfileComponent,
    AsyncSessionPage404Component,
-   AsyncSessionPage500Component
+   AsyncSessionPage500Component,
+   AysncClientTaskComponent
 };

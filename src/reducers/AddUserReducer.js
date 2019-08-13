@@ -1,7 +1,7 @@
 import {
     ADD_USER_FAILURE, ADD_USER_PROP,
     ADD_USER_REQUEST,
-    ADD_USER_SUCCESS,
+    ADD_USER_SUCCESS, ADD_USER_UPDATE_SUCCESS,
     PROFILE_PIC_DELETE,
     PROFILE_PIC_DELETE_REQUEST,
     PROFILE_PIC_ERROR,
@@ -24,6 +24,8 @@ export default (state = {
                 },
 action) =>{
     switch (action.type) {
+        case ADD_USER_UPDATE_SUCCESS:
+            return {...state,addUserLoader:false};
         case ADD_USER_REQUEST:
             return {...state, addUserLoader: true};
         case ADD_USER_SUCCESS:

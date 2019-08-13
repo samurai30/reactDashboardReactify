@@ -24,7 +24,7 @@ import RctSectionLoader from "Components/RctSectionLoader/RctSectionLoader";
 import {Field, reduxForm, reset} from "redux-form";
 import {renderField} from "../../../forms/ComonForm";
 import Button from "@material-ui/core/Button";
-import {NotificationContainer} from "react-notifications";
+import {NotificationContainer, NotificationManager} from "react-notifications";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import {SERVER_PATH} from "Actions/types";
@@ -39,6 +39,10 @@ import {
 } from "Util/apiUtils";
 import Moment from "react-moment";
 import classNames from "classnames";
+import DeleteConfirmationDialog from "Components/DeleteConfirmationDialog/DeleteConfirmationDialog";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@material-ui/core/DialogContent";
+import {api} from "Api/index";
 const mapDispatchToProps = {
     getFormData,
     getCategoryData,
@@ -55,17 +59,13 @@ class CreateTask extends Component{
 
     state = {
         withDes: false,
-        all: false,
         tasks: null, // initial task data
-        users:null,
         selectedTask: null, // selected user to perform operations
         addNewTaskModal: false, // add new user form modal
         addNewCategoryModal: false,
-        profilePicUploaded: false,
-        openViewUserDialog: false, // view user dialog box
-        editUser: null,
-        allSelected: false,
-        selectedUsers: 0,
+        openViewTaskDialog: false, // view user dialog box
+        editTask: null,
+        deleteLoader:false,
         status:[
             {
                 id:1,
@@ -137,18 +137,52 @@ class CreateTask extends Component{
     }
     onTaskModalClose(){
         this.props.dispatch(reset('createTaskForm'));
-        this.setState({addNewTaskModal:false})
+        this.setState({addNewTaskModal:false,editTask:null})
     }
 
-    onSelectTask(task){
-
-    }
     onReload(){
         return this.props.getTaskData()
     }
+
+    //Delete Task
+    onDelete(data) {
+        this.refs.deleteConfirmationDialog.open();
+        this.setState({ selectedTask: data });
+    }
+
+    deleteTaskPermanently(){
+        const { selectedTask } = this.state;
+        let task = this.props.taskData;
+        let indexOfDeleteTask = task.indexOf(selectedTask);
+        this.setState({deleteLoader:true});
+        api.delete(`/tasks/${selectedTask['id']}`).then(response =>{
+            task.splice(indexOfDeleteTask, 1);
+            this.refs.deleteConfirmationDialog.close();
+            this.setState({deleteLoader:false, selectedTask: null });
+            NotificationManager.success('Task Deleted!');
+            return this.props.getTaskData();
+        }).catch(error =>{
+            this.setState({deleteLoader:false,selectedTask: null });
+            if (error.message === 'Unauthorized'){
+                NotificationManager.error("Session Timed out");
+                this.props.dispatch(this.props.fetchUserError);
+            }
+            else {
+                NotificationManager.error('Something Went Wrong');
+            }
+        });
+    }
+    //View Details
+    viewTaskDetail(data) {
+        this.setState({ openViewTaskDialog: true, selectedTask: data });
+    }
+    //edit Task
+    onTaskUser(task) {
+        this.setState({ addNewTaskModal: true, editTask: task });
+    }
     render(){
         const{match,taskLoading,formData,categoryData,handleSubmit,formSelectData,catSelectDat,taskData} = this.props;
-        const { withDes,addNewCategoryModal,addNewTaskModal} = this.state;
+        const { withDes,addNewCategoryModal,addNewTaskModal,editTask,openViewTaskDialog,selectedTask,deleteLoader} = this.state;
 
         return(
             <div className="user-management">
@@ -203,20 +237,6 @@ class CreateTask extends Component{
                         <table className="table table-middle table-hover mb-0">
                             <thead>
                             <tr>
-                                {/*<th className="w-5">*/}
-                                {/*    <FormControlLabel*/}
-                                {/*        control={*/}
-                                {/*            <Checkbox*/}
-                                {/*                indeterminate={selectedUsers > 0 && selectedUsers < users.length}*/}
-                                {/*                checked={selectedUsers > 0}*/}
-                                {/*                onChange={(e) => this.onSelectAllUser(e)}*/}
-                                {/*                value="all"*/}
-                                {/*                color="primary"*/}
-                                {/*            />*/}
-                                {/*        }*/}
-                                {/*        label="All"*/}
-                                {/*    />*/}
-                                {/*</th>*/}
                                 <th>Title</th>
                                 <th>Description</th>
                                 <th>Status</th>
@@ -229,16 +249,6 @@ class CreateTask extends Component{
 
                             {taskData && (taskData.length !==0 ) ? taskData.map((task) => (
                                     <tr key={task.id}>
-                                        {/*<td>*/}
-                                        {/*    <FormControlLabel*/}
-                                        {/*        control={*/}
-                                        {/*            <Checkbox*/}
-                                        {/*                onChange={() => this.onSelectTask(task)}*/}
-                                        {/*                color="primary"*/}
-                                        {/*            />*/}
-                                        {/*        }*/}
-                                        {/*    />*/}
-                                        {/*</td>*/}
                                         <td>
                                             {task.Title}
                                         </td>
@@ -254,9 +264,9 @@ class CreateTask extends Component{
                                             {task.createdDate}
                                         </Moment></td>
                                         <td className="list-action">
-                                            <a href="javascript:void(0)" onClick={() => null}><i className="ti-eye"></i></a>
-                                            <a href="javascript:void(0)" onClick={() => null}><i className="ti-pencil"></i></a>
-                                            <a href="javascript:void(0)" onClick={() => null}><i className="ti-close"></i></a>
+                                            <a href="javascript:void(0)" onClick={() => this.viewTaskDetail(task)}><i className="ti-eye"></i></a>
+                                            <a href="javascript:void(0)" onClick={() => this.onTaskUser(task)}><i className="ti-pencil"></i></a>
+                                            <a href="javascript:void(0)" onClick={() => this.onDelete(task)}><i className="ti-close"></i></a>
                                         </td>
                                     </tr>
                                 )):
@@ -304,6 +314,14 @@ class CreateTask extends Component{
                         <RctSectionLoader/>}
 
                 </RctCollapsibleCard>
+                <DeleteConfirmationDialog
+                    ref="deleteConfirmationDialog"
+                    title="Are You Sure Want To Delete?"
+                    message="This will delete user permanently."
+                    onConfirm={() => this.deleteTaskPermanently()}
+                />
+                {(deleteLoader) &&
+                    <RctSectionLoader/>}
                 <Modal isOpen={addNewCategoryModal} toggle={() => this.onCategoryModalClose()}>
                     <ModalHeader toggle={() => this.onCategoryModalClose()}>
                             Add Category
@@ -328,30 +346,79 @@ class CreateTask extends Component{
                 </Modal>
                 <Modal isOpen={addNewTaskModal} toggle={() => this.onTaskModalClose()}>
                     <ModalHeader toggle={() => this.onTaskModalClose()}>
-                        Add Task
+                        {editTask === null ?'Add Task':
+                         'Update Task'}
                     </ModalHeader>
                     <ModalBody>
-                        <Form onSubmit={handleSubmit(this.onSubmitTask.bind(this))}>
-                            <Field name="Title" label="Title" type="text" placeholder="Enter Title" component={renderField}/>
-                            <Field name="description" label="Description" type="text" placeholder="Enter Description" component={renderField}/>
-                            <Field name="category" label="Category" type="select" selectItems={(catSelectDat) && catSelectDat} component={renderField}/>
-                            <Field name="form" label="Forms" type="select_multiple" selectItems={(formSelectData) && formSelectData} component={renderField}/>
+                        {editTask === null ?
+                            <Form onSubmit={handleSubmit(this.onSubmitTask.bind(this))}>
+                                <Field name="Title" label="Title" type="text" placeholder="Enter Title" component={renderField}/>
+                                <Field name="description" label="Description" type="text" placeholder="Enter Description" component={renderField}/>
+                                <Field name="category" label="Category" type="select" selectItems={(catSelectDat) && catSelectDat} component={renderField}/>
+                                <Field name="form" label="Forms" type="select_multiple" selectItems={(formSelectData) && formSelectData} component={renderField}/>
 
-                            <hr/>
-                            <FormGroup className="mb-15">
-                                {taskLoading?
-                                    <RctPageLoader/>
-                                    :
-                                    <div>
-                                        <Button variant="contained" className="text-white btn-success" type="submit">Add</Button>
-                                        {' '}
-                                        <Button variant="contained" className="text-white btn-danger" onClick={() => this.onTaskModalClose()}>Cancel</Button>
-                                    </div>
-                                }
-                            </FormGroup>
-                        </Form>
+                                <hr/>
+                                <FormGroup className="mb-15">
+                                    {taskLoading?
+                                        <RctPageLoader/>
+                                        :
+                                        <div>
+                                            <Button variant="contained" className="text-white btn-success" type="submit">Add</Button>
+                                            {' '}
+                                            <Button variant="contained" className="text-white btn-danger" onClick={() => this.onTaskModalClose()}>Cancel</Button>
+                                        </div>
+                                    }
+                                </FormGroup>
+                            </Form>
+                            :
+                            <Form onSubmit={handleSubmit(this.onSubmitTask.bind(this))}>
+                                <Field name="Title" values={editTask.Title} label="Title" type="text" placeholder="Enter Title" component={renderField}/>
+                                <Field name="description" values={editTask.description} label="Description" type="text" placeholder="Enter Description" component={renderField}/>
+
+                                <hr/>
+                                <FormGroup className="mb-15">
+                                    {taskLoading?
+                                        <RctPageLoader/>
+                                        :
+                                        <div>
+                                            <Button variant="contained" className="text-white btn-success" type="submit">Add</Button>
+                                            {' '}
+                                            <Button variant="contained" className="text-white btn-danger" onClick={() => this.onTaskModalClose()}>Cancel</Button>
+                                        </div>
+                                    }
+                                </FormGroup>
+                            </Form>
+                        }
                     </ModalBody>
                 </Modal>
+                <Dialog
+                    onClose={() => this.setState({ openViewTaskDialog: false })}
+                    open={openViewTaskDialog}
+                >
+                    <DialogContent>
+                        {selectedTask !== null &&
+                        <div>
+                            <div className="clearfix d-flex">
+                                <div className="media pull-left">
+
+                                    <div className="media-body">
+                                        <p>Title: <span className="fw-bold">{selectedTask.Title}</span></p>
+                                        <p>Category: <span className="fw-bold">{selectedTask.category.catagoryName}</span></p>
+                                        <p>Description: <span className="fw-bold">{selectedTask.description}</span></p>
+                                        <p>Status:{' '}
+                                            {selectedTask.status === 'Pending' ?    <span className={`badge badge-warning badge-pill`}>Pending</span> :
+                                                selectedTask.status === 'Completed' ?    <span className={`badge badge-success badge-pill`}>Completed</span>  :
+                                                    selectedTask.status === 'Rejected' ?   <span className={`badge badge-danger badge-pill`}>Rejected</span>  :
+                                                        selectedTask.status === 'Approved' ?   <span className={`badge badge-info badge-pill`}>Approved</span>  :
+                                                        selectedTask.status === 'InProgress' &&  <span className={`badge badge-primary badge-pill`}>In Progress</span> }
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                    </DialogContent>
+                </Dialog>
             </div>
         );
     }

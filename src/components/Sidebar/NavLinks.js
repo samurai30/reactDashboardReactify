@@ -64,12 +64,19 @@ export default {
          "child_routes": null
       },
       {
+         "menu_title": "sidebar.clientTasks",
+         "new_item": false,
+         "menu_icon": "zmdi zmdi-assignment",
+         "path": "/app/tasks/client-tasks",
+         "child_routes": null
+      },
+      {
          "menu_title": "sidebar.createTask",
          "new_item": false,
          "menu_icon": "zmdi zmdi-assignment",
          "path": "/app/tasks/create-task",
          "child_routes": null
-      },
+      }
 
    ],
    SupAdmincategory3: [
@@ -84,10 +91,16 @@ export default {
                "path": "/app/users/user-management/create-user",
             },
             {
-               "menu_title": "sidebar.userList",
+               "menu_title": "sidebar.clientList",
                "new_item": false,
-               "path": "/app/users/user-list",
+               "path": "/app/users/client-list",
+            },
+            {
+               "menu_title": "sidebar.surveyorList",
+               "new_item": false,
+               "path": "/app/users/surveyor-list",
             }
+
          ]
       },
 

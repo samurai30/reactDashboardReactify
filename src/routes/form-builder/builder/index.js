@@ -8,7 +8,7 @@ import {Button} from "reactstrap";
 import {Field, Form, reduxForm} from "redux-form";
 import {renderField} from "../../../forms/ComonForm";
 import {connect} from "react-redux";
-import {uploadFormRequest} from "Actions/UploadCreateForm";
+import {uploadFormRequest, uploadReset} from "Actions/UploadCreateForm";
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 import {NotificationContainer} from "react-notifications";
 
@@ -40,7 +40,7 @@ class BuilderCreateForm extends Component{
         $(this.rf.current).toggle();
 
     }
-    onSave(e){
+    onSave(){
         $(this.fb.current).toggle();
         $(this.rf.current).toggle();
        this.formRender = $('#view-form',this.rf.current).formRender({
@@ -49,7 +49,7 @@ class BuilderCreateForm extends Component{
 
 
     }
-    onClear(e){
+    onClear(){
         this.formBuilder.actions.clearFields()
     }
 
@@ -62,9 +62,14 @@ class BuilderCreateForm extends Component{
         return this.props.uploadFormRequest(e);
     }
     componentDidUpdate(prevProps){
+        if (this.props.uploaded){
 
+            this.onClear();
+            $(this.fb.current).toggle();
+            $(this.rf.current).toggle();
+            return this.props.uploadReset();
+        }
     }
-
     render(){
         const{match,handleSubmit,isUploading} = this.props;
 
@@ -79,8 +84,8 @@ class BuilderCreateForm extends Component{
                 <PageTitleBar title={<IntlMessages id="sidebar.createForm" />} match={match} />
                 <div ref={this.fb}>
                     <div id="editor-form"/>
-                    <Button onClick={this.onSave.bind(this)} className="bg-success text-white w-50">Save</Button>
-                    <Button onClick={this.onClear.bind(this)} className="bg-warning text-white w-50">Clear</Button>
+                    <Button onClick={() => this.onSave()} className="bg-success text-white w-50">Save</Button>
+                    <Button onClick={() => this.onClear()} className="bg-warning text-white w-50">Clear</Button>
                 </div>
                 <div ref={this.rf}>
 
@@ -103,7 +108,8 @@ class BuilderCreateForm extends Component{
     }
 }
 const mapDispatchToProps = {
-    uploadFormRequest
+    uploadFormRequest,
+    uploadReset
 };
 const mapStateToProps = state =>({
     ...state.formBuilderRed

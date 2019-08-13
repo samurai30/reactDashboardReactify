@@ -15,7 +15,6 @@ export const getFormData = (url) =>{
       dispatch({type:CREATE_TASK_FORM_REQUEST});
       return api.get(url).then(response =>{
           let valueList = [];
-
           response['hydra:member'].map(form => {
               valueList.push({id:form.id,URI:form.id,value:form.name});
           });

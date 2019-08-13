@@ -65,11 +65,17 @@ class App extends Component {
                  authToken = {token}
                  component={RctDefaultLayout}
              />
-             <Route exact path="/admin-login" component={AsyncAdminLoginComponent}/>
-             <Route path="/session/404" component={AsyncSessionPage404Component} />
-             <Route path="/session/500" component={AsyncSessionPage500Component} />
 
+             <Switch>
+
+                 <Route exact path="/admin-login" component={AsyncAdminLoginComponent}/>
+                 <Route path="/session/404" component={AsyncSessionPage404Component} />
+                 <Route path="/session/500" component={AsyncSessionPage500Component} />
+                 <Route path="*" component={AsyncSessionPage404Component}/>
+
+             </Switch>
          </RctThemeProvider>
+
       );
    }
 }

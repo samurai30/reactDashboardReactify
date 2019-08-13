@@ -13,6 +13,8 @@ import './lib/reactifyCss';
 import App from './container/App';
 
 import { configureStore } from './store';
+import {Redirect} from "react-router";
+import {AsyncSessionPage404Component} from "Components/AsyncComponent/AsyncComponent";
 
 
 
@@ -21,7 +23,9 @@ const MainApp = () => (
 		<MuiPickersUtilsProvider utils={MomentUtils}>
 			<Router>
 				<Switch>
+
 					<Route path="/" component={App} />
+
 				</Switch>
 			</Router>
 		</MuiPickersUtilsProvider>

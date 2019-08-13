@@ -3,14 +3,12 @@
  */
 import React, { Component } from 'react';
 import { Helmet } from "react-helmet";
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Button from '@material-ui/core/Button';
-import Checkbox from '@material-ui/core/Checkbox';
 import {
    Modal,
    ModalHeader,
    ModalBody,
-   Badge, Form, FormGroup, PaginationItem, PaginationLink, Pagination
+   Form, FormGroup, PaginationItem, PaginationLink, Pagination
 } from 'reactstrap';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -58,7 +56,8 @@ import Menu from "@material-ui/core/es/Menu";
 import MenuItem from "@material-ui/core/es/MenuItem";
 import classNames from "classnames";
 
-const valueList = [];
+
+
 const mapStateToProps = state => ({
    ...state.addUser
 });
@@ -105,7 +104,8 @@ class UserProfile extends Component {
       allSelected: false,
       selectedUsers: 0,
       anchorEl: null,
-      selectedIndex: 1
+      selectedIndex: 1,
+      addFieldDepartment:false,
 
 
    };
@@ -118,6 +118,7 @@ class UserProfile extends Component {
       this.setState({loading:true});
       api.get('/user_countries',true)
          .then(response => {
+            const valueList = [];
             response['hydra:member'].map(country => {
                valueList.push({id:country.id,URI:country['@id'],value:country.countryName});
                this.setState({countries:valueList});
@@ -134,17 +135,15 @@ class UserProfile extends Component {
 
    }
    // Menu Functions
+   handleClick = event => {
+      this.setState({ anchorEl: event.currentTarget });
+   };
    handleClickListItem = (event, index) => {
       this.getUsers(`/users/all-users?roles=${this.state.rolesApi[index]}`);
       this.setState({ anchorEl: event });
    };
-
-
    handleClose = () => {
       this.setState({ anchorEl: null });
-   };
-   handleClick = event => {
-      this.setState({ anchorEl: event.currentTarget });
    };
 	/**
 	 * On Delete
@@ -171,7 +170,7 @@ class UserProfile extends Component {
          NotificationManager.success('User Deleted!');
          return this.props.getUsersManage('/users/all-users');
       }).catch(error =>{
-         this.setState({ loading: false, users, selectedUser: null });
+         this.setState({ loading: false, selectedUser: null });
          if (error.message === 'Unauthorized'){
             NotificationManager.error("Session Timed out");
             this.props.dispatch(this.props.fetchUserError);
@@ -197,29 +196,6 @@ class UserProfile extends Component {
        this.getUsers('/users/all-users');
    }
 
-	/**
-	 * On Select User
-	 */
-   onSelectUser(user) {
-      user.checked = !user.checked;
-      let selectedUsers = 0;
-      let users = this.props.users.map(userData => {
-         if (userData.checked) {
-            selectedUsers++;
-         }
-         if (userData.id === user.id) {
-            if (userData.checked) {
-               selectedUsers++;
-            }
-            return user;
-         } else {
-            return userData;
-         }
-      });
-      this.setState({ selectedUsers:selectedUsers });
-      return this.props.setUserProp(users);
-   }
-
 
 	/**
 	 * View User Detail Hanlder
@@ -228,12 +204,7 @@ class UserProfile extends Component {
       this.setState({ openViewUserDialog: true, selectedUser: data });
    }
 
-	/**
-	 * On Edit User
-	 */
-   onEditUser(user) {
-      this.setState({ addNewUserModal: true, editUser: user });
-   }
+
 
 	/**
 	 * On Add & Update User Modal Close
@@ -241,41 +212,6 @@ class UserProfile extends Component {
    onAddUpdateUserModalClose() {
       this.props.dispatch(reset('addUserForm'));
       this.setState({ addNewUserModal: false, editUser: null })
-   }
-
-
-	/**
-	 * Update User
-	 */
-   updateUser(value) {
-      const {editUser} = this.state;
-
-      return this.props.updateUser(value,editUser);
-   }
-
-   //Select All user
-   onSelectAllUser(e) {
-      const { selectedUsers } = this.state;
-      const {users} = this.props;
-      let selectAll = selectedUsers < users.length;
-
-      if (selectAll) {
-         let selectAllUsers = users.map(user => {
-            user.checked = true;
-            return user
-         });
-         this.setState({  selectedUsers: selectAllUsers.length });
-
-         return this.props.setUserProp(selectAllUsers);
-      } else {
-         let unselectedUsers = users.map(user => {
-            user.checked = false;
-            return user;
-         });
-         this.setState({ selectedUsers: 0 });
-         return this.props.setUserProp(unselectedUsers);
-
-      }
    }
 
    onSubmit(values){
@@ -295,16 +231,40 @@ class UserProfile extends Component {
       }
 
    }
-
-   handleValueChange(e){
+   /**
+    * On Edit User
+    */
+   onEditUser(user) {
+      this.setState({ addNewUserModal: true, editUser: user });
+   }
+   /**
+    * Update User
+    */
+   updateUser(value) {
       const {editUser} = this.state;
-      let newEdit = editUser;
-      newEdit[e.target.name] = e.target.value;
-      this.setState({editUser:newEdit})
+      return this.props.updateUser(value,editUser)
+   }
+   handleValueChange = e =>{
+
+      const name = e.target.name;
+      const value = e.target.value;
+      var editUser2 = {...this.state.editUser, [name]: value};
+      this.setState({editUser:editUser2});
+   };
+
+   //add Department
+   departmentFunction(value){
+
+      if ('ROLE_SURVEYOR' === value.currentTarget.value){
+         this.setState({addFieldDepartment:true})
+      }
+      else {
+         this.setState({addFieldDepartment:false})
+      }
    }
 
    render() {
-      const { selectedUser, editUser, countries , selectedUsers,anchorEl, } = this.state;
+      const { selectedUser, editUser, countries ,anchorEl,addFieldDepartment } = this.state;
       const {users, loading, handleSubmit,error,addUserLoader,profilePicImage,profilePicUploaded,paginationHydra,HydraPageCount,CurrentPage} = this.props;
       let range = [];
       if(HydraPageCount){
@@ -324,6 +284,7 @@ class UserProfile extends Component {
                  title={<IntlMessages id="sidebar.userManagement" />}
                  match={this.props.match}
              />
+
              <RctCollapsibleCard fullBlock>
                 <div className="table-responsive">
                    <div className="d-flex justify-content-between py-20 px-10 border-bottom">
@@ -332,7 +293,7 @@ class UserProfile extends Component {
                       </div>
                       <div>
                          <Button variant="contained" color="primary" className="text-white" aria-owns={anchorEl ? 'simple-menu' : null} aria-haspopup="true" onClick={this.handleClick} >
-                            Select Type
+                            Select Role
                          </Button>
                          <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose} >
                             <MenuItem onClick={(e) => this.handleClickListItem(e.target,0)}>Admin</MenuItem>
@@ -349,20 +310,6 @@ class UserProfile extends Component {
                    <table className="table table-middle table-hover mb-0">
                       <thead>
                       <tr>
-                         {users && <th className="w-5">
-                            <FormControlLabel
-                                control={
-                                   <Checkbox
-                                       indeterminate={selectedUsers > 0 && selectedUsers < users.length}
-                                       checked={selectedUsers > 0}
-                                       onChange={(e) => this.onSelectAllUser(e)}
-                                       value="all"
-                                       color="primary"
-                                   />
-                                }
-                                label="All"
-                            />
-                         </th>}
                          <th>User</th>
                          <th>Email Address</th>
                          <th>Status</th>
@@ -375,16 +322,6 @@ class UserProfile extends Component {
 
                       {users && (users.length !==0 ) ? users.map((user) => (
                           <tr key={user.id}>
-                             <td>
-                                <FormControlLabel
-                                    control={
-                                       <Checkbox
-                                           onChange={() => this.onSelectUser(user)}
-                                           color="primary"
-                                       />
-                                    }
-                                />
-                             </td>
                              <td>
                                 <div className="media">
                                    {(user.profilePic !== null) ?
@@ -417,7 +354,7 @@ class UserProfile extends Component {
                                 {user.createdDate}
                              </Moment></td>
                              <td className="list-action">
-                                <a href="javascript:void(0)" onClick={() => this.viewUserDetail(user)}><i className="ti-eye"></i></a>
+                                <a href="javascript:void(0)" onClick={() =>  this.viewUserDetail(user) }><i className="ti-eye"></i></a>
                                 <a href="javascript:void(0)" onClick={() => this.onEditUser(user)}><i className="ti-pencil"></i></a>
                                 <a href="javascript:void(0)" onClick={() => this.onDelete(user)}><i className="ti-close"></i></a>
                              </td>
@@ -488,8 +425,9 @@ class UserProfile extends Component {
                           <Field name="password"  label="Password" type="password" placeholder="Password" component={renderField}/>
                           <Field name="retypePassword"  label="Confirm Password" type="password" placeholder="Confirm Password" component={renderField}/>
                           <Field name="email" label="Email" type="email" placeholder="Email" component={renderField}/>
-                          <Field name="roles" label="Role" type="select" selectItems={this.state.roles} component={renderField}/>
+                          <Field name="roles" label="Role" onChange={this.departmentFunction.bind(this)} type="select" selectItems={this.state.roles} component={renderField}/>
                           <Field name="countries" label="Country" type="select" selectItems={countries} component={renderField}/>
+                          {addFieldDepartment && <Field name="department"  label="Department" type="text" placeholder="Department" component={renderField}/> }
                           <hr/>
                           {profilePicUploaded ?  <ProfilePicBrowser ProfilePic={profilePicImage}/>:
                               <UserProfilePic/> }
@@ -512,10 +450,10 @@ class UserProfile extends Component {
                        :
                        <Form onSubmit={handleSubmit(this.updateUser.bind(this))} >
 
-                         <Field name="firstName" onChange={this.handleValueChange.bind(this)} values={editUser.firstName} label="First Name" type="text" placeholder="First Name" component={renderField}/>
-                         <Field name="lastName" onChange={this.handleValueChange.bind(this)}  values={editUser.lastName} label="Last Name" type="text" placeholder="Last Name" component={renderField}/>
-                         <Field name="username" onChange={this.handleValueChange.bind(this)}  values={editUser.username} label="Username" type="text" placeholder="Username" component={renderField}/>
-                         <Field name="email" onChange={this.handleValueChange.bind(this)}  values={editUser.email} label="Email" type="email" placeholder="Email" component={renderField}/>
+                         <Field name="firstName" onChange={ (e) =>this.handleValueChange(e)} values={editUser.firstName} label="First Name" type="text" placeholder="First Name" component={renderField}/>
+                         <Field name="lastName" onChange={ (e) =>this.handleValueChange(e)}  values={editUser.lastName} label="Last Name" type="text" placeholder="Last Name" component={renderField}/>
+                         <Field name="username" onChange={  (e) =>this.handleValueChange(e)}  values={editUser.username} label="Username" type="text" placeholder="Username" component={renderField}/>
+                         <Field name="email" onChange={  (e) =>this.handleValueChange(e)}  values={editUser.email} label="Email" type="email" placeholder="Email" component={renderField}/>
                          <hr/>
                          <FormGroup className="mb-15">
                          {addUserLoader?

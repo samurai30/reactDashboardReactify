@@ -19,6 +19,7 @@ import IntlMessages from 'Util/IntlMessages';
 import CircularProgress from "@material-ui/core/CircularProgress";
 import {api} from "Api";
 import {SERVER_PATH} from "Actions/types";
+import RctSectionLoader from "Components/RctSectionLoader/RctSectionLoader";
 
 
 
@@ -106,7 +107,7 @@ class UserBlock extends Component {
 									<div>
 										<span className="user-name ml-4">{userData.username}</span><i className="zmdi zmdi-chevron-down dropdown-icon mx-4"></i>
 									</div>
-									:<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={2.5} />}
+									:<RctSectionLoader/>}
 
 							</div>
 						</DropdownToggle>
@@ -114,7 +115,7 @@ class UserBlock extends Component {
 							<ul className="list-unstyled mb-0">
 								<li className="p-15 border-bottom user-profile-top bg-primary rounded-top">
 									{userData ?<p className="text-white mb-0 fs-14">{userData.firstName+" "+userData.lastName}</p> :<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={1.5} />}
-									{userData ? <span className="text-white fs-14">{userData.email}</span>:<CircularProgress className="w-10 mr-30 mb-10 progress-primary" thickness={1.5} />}
+									{userData ? <span className="text-white fs-14">{userData.email}</span>:<RctSectionLoader/>}
 								</li>
 								<li>
 									<Link to={{

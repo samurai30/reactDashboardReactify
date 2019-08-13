@@ -4,12 +4,12 @@ import {SubmissionError} from "redux-form";
 import {
   ADD_USER_FAILURE, ADD_USER_PROP,
   ADD_USER_REQUEST,
-  ADD_USER_SUCCESS,
+  ADD_USER_SUCCESS, ADD_USER_UPDATE_SUCCESS,
   PROFILE_PIC_DELETE,
   PROFILE_PIC_DELETE_REQUEST,
   PROFILE_PIC_ERROR,
   PROFILE_PIC_REQUEST,
-  PROFILE_PIC_UPLOADED,
+  PROFILE_PIC_UPLOADED, USER_CREATE_DELETE_FAILURE,
   USER_FETCH_ERROR, USER_FETCH_ERROR_CREATE,
   USER_FETCH_REQUEST,
   USER_FETCH_REQUEST_CREATE,
@@ -124,7 +124,7 @@ export const getUsersManage = (url) => {
           dispatch({type:USER_FETCH_ERROR_CREATE});
           if (error.message === 'Unauthorized'){
             NotificationManager.error("Session Timed out");
-            this.props.dispatch(this.props.fetchUserError);
+
           }
         });
   }
@@ -132,11 +132,19 @@ export const getUsersManage = (url) => {
 
 export const updateUser = (values,user) =>{
   return(dispatch) =>{
-    dispatch();
+    dispatch({type:ADD_USER_REQUEST});
     return api.put(`/users/${user.id}`,values,true).then(response =>{
-
+      NotificationManager.success("Updated");
+              dispatch({type:ADD_USER_UPDATE_SUCCESS});
+              dispatch(getUsersManage('/users/all-users'));
     }).catch(error =>{
+      dispatch({type:ADD_USER_UPDATE_SUCCESS});
+      if (error.message === 'Unauthorized'){
+        NotificationManager.error("Session Timed out");
+      }
+      NotificationManager.error("Something is not right! Please check your form");
 
+      throw new SubmissionError(parseApiErrors(error));
     })
   }
 };

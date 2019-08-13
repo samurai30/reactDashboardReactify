@@ -1,4 +1,9 @@
-import {UPLOAD_FORM_BUILDER_FAILURE, UPLOAD_FORM_BUILDER_REQUEST, UPLOAD_FORM_BUILDER_SUCCESS} from "Actions/types";
+import {
+    UPLOAD_FORM_BUILDER_FAILURE,
+    UPLOAD_FORM_BUILDER_REQUEST,
+    UPLOAD_FORM_BUILDER_RESET,
+    UPLOAD_FORM_BUILDER_SUCCESS
+} from "Actions/types";
 import {api} from "Api/index";
 import {NotificationManager} from "react-notifications";
 
@@ -16,4 +21,10 @@ export const uploadFormRequest = (data) =>{
 
   })
  }
+};
+
+export const uploadReset = () => {
+    return(dispatch) =>{
+        dispatch({type:UPLOAD_FORM_BUILDER_RESET})
+    }
 };

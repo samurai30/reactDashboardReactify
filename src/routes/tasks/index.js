@@ -8,6 +8,7 @@ import {AysncCreateTaskComponent} from "Components/AsyncComponent/AsyncComponent
 import {AysncAssignTaskComponent} from "Components/AsyncComponent/AsyncComponent";
 import {AysncCompletedTaskComponent} from "Components/AsyncComponent/AsyncComponent";
 import {AsyncInProgressComponent} from "Components/AsyncComponent/AsyncComponent";
+import {AysncClientTaskComponent} from "Components/AsyncComponent/AsyncComponent";
 
 
 const Tasks = ({match}) =>(
@@ -22,6 +23,8 @@ const Tasks = ({match}) =>(
             <Route path={`${match.url}/rejected`} component={AysncTasksRejectedComponent} />
             <Route path={`${match.url}/in-progress`} component={AsyncInProgressComponent} />
             <Route path={`${match.url}/completed`} component={AysncCompletedTaskComponent} />
+            <Route path={`${match.url}/completed`} component={AysncCompletedTaskComponent} />
+            <Route path={`${match.url}/client-tasks`} component={AysncClientTaskComponent} />
         </Switch>
     </div>
 );
