@@ -91,7 +91,7 @@ class UserBlock extends Component {
 												height="100"
 											/>
 											: <img
-												src={require('Assets/img/profileLogo.png')}
+												src={require('Assets/avatars/profile.jpg')}
 												alt="user profile"
 												className="img-fluid rounded-circle bg-light"
 												width="50"
@@ -126,17 +126,6 @@ class UserBlock extends Component {
 										<IntlMessages id="widgets.profile" />
 									</Link>
 								</li>
-								<li>
-									<Link to={{
-										pathname: '/app/users/user-profile-1',
-										state: { activeTab: 2 }
-									}}>
-										<i className="zmdi zmdi-comment-text-alt text-success mr-3"></i>
-										<IntlMessages id="widgets.messages" />
-										<Badge color="danger" className="pull-right">3</Badge>
-									</Link>
-								</li>
-
 								<li className="border-top">
 									<a href="javascript:void(0)"  onClick={() => this.logoutUser()}>
 										<i className="zmdi zmdi-power text-danger mr-3"></i>

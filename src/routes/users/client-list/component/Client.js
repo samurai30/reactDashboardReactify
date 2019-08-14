@@ -99,13 +99,22 @@ class ClientTab extends Component {
                                                         <RctCardContent>
                                                             <div className="client-post text-center">
                                                                 <div className="client-thumb mb-20">
-                                                                    <img
-                                                                        className="rounded"
-                                                                        src={`${SERVER_PATH}${data.profilePic.url}`}
-                                                                        alt="client"
-                                                                        width="95"
-                                                                        height="95"
-                                                                    />
+                                                                    {data.profilePic ?
+                                                                        <img
+                                                                            className="rounded"
+                                                                            src={`${SERVER_PATH}${data.profilePic.url}`}
+                                                                            alt="client"
+                                                                            width="95"
+                                                                            height="95"
+                                                                        />:
+                                                                        <img
+                                                                            className="rounded"
+                                                                            src={require('Assets/avatars/profile.jpg')}
+                                                                            alt="client"
+                                                                            width="95"
+                                                                            height="95"
+                                                                        />
+                                                                    }
                                                                 </div>
                                                                 <div className="client-content">
                                                                     <h4 className="fw-bold text-capitalize text-primary">{data.firstName}</h4>
