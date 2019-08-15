@@ -15,6 +15,7 @@ import {routerReducer} from 'react-router-redux'
 import createTask from './CreateTaskReducer'
 import formBuilderReducer from './UploadFormBuilder'
 import {
+  ADD_DEPARTMENT_SUCCESS_ADD,
   ADD_USER_SUCCESS, CREATE_TASK_CATEGORY_CLEAR,
   CREATE_TASK_CATEGORY_SUCCESS,
   CREATE_TASK_CLEAR,
@@ -39,7 +40,14 @@ const reducers = combineReducers({
           return undefined;
         default:
           return state;
-
+      }
+    },
+    addDeptFrom:(state,action) =>{
+      switch (action.type) {
+        case ADD_DEPARTMENT_SUCCESS_ADD:
+          return undefined;
+        default:
+          return state;
       }
     },
     adminLoginForm: (state,action) =>{

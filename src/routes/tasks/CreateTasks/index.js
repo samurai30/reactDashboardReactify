@@ -260,9 +260,11 @@ class CreateTask extends Component{
                                             {task.category.catagoryName}
                                         </td>
 
-                                        <td>  <Moment format="YYYY/MM/DD">
-                                            {task.createdDate}
-                                        </Moment></td>
+                                        <td>
+                                            <Moment format="YYYY/MM/DD">
+                                                     {task.createdDate}
+                                            </Moment>
+                                        </td>
                                         <td className="list-action">
                                             <a href="javascript:void(0)" onClick={() => this.viewTaskDetail(task)}><i className="ti-eye"></i></a>
                                             <a href="javascript:void(0)" onClick={() => this.onTaskUser(task)}><i className="ti-pencil"></i></a>

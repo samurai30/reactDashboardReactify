@@ -45,7 +45,7 @@ class SurveyorTab extends Component {
         this.setState({loading:true});
         api.get('/users/all-users?roles=ROLE_SURVEYOR',true)
             .then(response => {
-
+                console.log(response['hydra:member'])
                 this.setState({ users: response['hydra:member'] });
                 this.setState({loading:false});
             })
@@ -116,12 +116,14 @@ class SurveyorTab extends Component {
                                                                    }
                                                                 </div>
                                                                 <div className="client-content">
-                                                                    <h4 className="fw-bold text-capitalize text-primary">{data.firstName}</h4>
-                                                                    <span className="d-block">
-                                                      <a href="#" mailto="JerryBRied@jourrapide.com" className="text-dark text-capitalize">{data.email}</a>
-                                                   </span>
+                                                                    <h4 className="fw-bold text-capitalize text-primary">{data.firstName}{' '}{data.lastName}</h4>
+                                                                      <span className="d-block">
+                                                                             <a href="#" className="text-dark">{data.email}</a>
+                                                                       </span>
+                                                                    <span className="d-block text-dark text-capitalize"><b>SUID:</b> #{data.surveyorUID.UID}</span>
+                                                                    <span className="d-block text-dark text-capitalize"><b>DEPARTMENT:</b> {data.surveyorUID.department.DepartmentName}</span>
+                                                                    <span className="d-block text-dark text-capitalize"><b>{data.countries.countryName}</b></span>
 
-                                                                    <span className="d-block text-dark text-capitalize">{data.countries.countryName}</span>
                                                                 </div>
 
                                                             </div>

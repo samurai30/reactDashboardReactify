@@ -8,7 +8,7 @@ import {
    Modal,
    ModalHeader,
    ModalBody,
-   Form, FormGroup, PaginationItem, PaginationLink, Pagination
+   Form, FormGroup, PaginationItem, PaginationLink, Pagination, Alert
 } from 'reactstrap';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -33,15 +33,13 @@ import RctCollapsibleCard from 'Components/RctCollapsibleCard/RctCollapsibleCard
 // rct section loader
 import RctSectionLoader from 'Components/RctSectionLoader/RctSectionLoader';
 import IntlMessages from "Util/IntlMessages";
-import {Field, reduxForm,reset} from "redux-form";
+import {Field} from "redux-form";
 import {renderField} from "../../../../forms/ComonForm";
 import {connect} from "react-redux";
-import {AddUserRequest, getUsersManage, setUserProp, updateUser} from "Actions/AddUserActions";
+import {getCountries, getDept, getUsersManage, setUserProp, updateUser} from "Actions/AddUserActions";
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 import {NotificationContainer} from "react-notifications";
 import {fetchUserError} from "Actions";
-import UserProfilePic from "Components/ImageUploader/UserProfilePic";
-import ProfilePicBrowser from "Components/ImageUploader/ProfilePicBrowser";
 import {SERVER_PATH} from "Actions/types";
 import Moment from 'react-moment';
 import {
@@ -55,6 +53,10 @@ import {
 import Menu from "@material-ui/core/es/Menu";
 import MenuItem from "@material-ui/core/es/MenuItem";
 import classNames from "classnames";
+import SweetAlert from "react-bootstrap-sweetalert";
+import DepartmentForm from "Routes/users/user-management/create-user/forms/departmentForm";
+import AddUserForm from "Routes/users/user-management/create-user/forms/addUserForm";
+import UpdateUserForm from "Routes/users/user-management/create-user/forms/updateUserForm";
 
 
 
@@ -62,11 +64,12 @@ const mapStateToProps = state => ({
    ...state.addUser
 });
 const mapDispatchToProps = {
-   AddUserRequest,
    fetchUserError,
    getUsersManage,
    setUserProp,
-   updateUser
+   updateUser,
+   getDept,
+   getCountries
 };
 class UserProfile extends Component {
 
@@ -74,29 +77,6 @@ class UserProfile extends Component {
       all: false,
       selectedUser: null, // selected user to perform operations
       addNewUserModal: false, // add new user form modal
-      countries: {},
-      roles:[
-         {
-            id:1,
-            value:'ADMIN',
-            URI: 'ROLE_ADMIN'
-         },
-         {
-            id:2,
-            value:'SUB-ADMIN',
-            URI: 'ROLE_SUBADMIN'
-         },
-         {
-            id:3,
-            value:'CLIENT',
-            URI: 'ROLE_CLIENT'
-         },
-         {
-            id:4,
-            value:'SURVEYOR',
-            URI: 'ROLE_SURVEYOR'
-         }
-      ],
       rolesApi:['ROLE_ADMIN','ROLE_SUBADMIN','ROLE_SURVEYOR','ROLE_CLIENT'],
       profilePicUploaded: false,
       openViewUserDialog: false, // view user dialog box
@@ -105,7 +85,8 @@ class UserProfile extends Component {
       selectedUsers: 0,
       anchorEl: null,
       selectedIndex: 1,
-      addFieldDepartment:false,
+      department:null,
+      withDes:false
 
 
    };
@@ -115,24 +96,9 @@ class UserProfile extends Component {
    }
 
    componentDidMount() {
-      this.setState({loading:true});
-      api.get('/user_countries',true)
-         .then(response => {
-            const valueList = [];
-            response['hydra:member'].map(country => {
-               valueList.push({id:country.id,URI:country['@id'],value:country.countryName});
-               this.setState({countries:valueList});
-                });
-            this.setState({loading:false});
-         })
-         .catch(error => {
-            if (error.message === 'Unauthorized'){
-               NotificationManager.error("Session Timed out");
-               this.props.dispatch(this.props.fetchUserError);
-            }
-         });
-         this.getUsers('/users/all-users');
-
+      this.props.getDept();
+      this.props.getCountries();
+      this.getUsers('/users/all-users');
    }
    // Menu Functions
    handleClick = event => {
@@ -204,68 +170,50 @@ class UserProfile extends Component {
       this.setState({ openViewUserDialog: true, selectedUser: data });
    }
 
-
-
 	/**
 	 * On Add & Update User Modal Close
 	 */
    onAddUpdateUserModalClose() {
-      this.props.dispatch(reset('addUserForm'));
       this.setState({ addNewUserModal: false, editUser: null })
    }
 
-   onSubmit(values){
-      if(this.props.profilePicUploaded){
-         if(Array.isArray(values.roles)){
-            let temp = values.roles[0];
-            values.roles = [];
-            values.roles[0] = temp
-         }else {
-            values.roles = [values.roles]
-         }
-         const {profilePicImage} = this.props;
-         values.profilePic = `/api/images/${profilePicImage['id']}`;
-         return this.props.AddUserRequest(values,this);
-      }else{
-         NotificationManager.error("Please upload the image.");
-      }
 
-   }
    /**
     * On Edit User
     */
    onEditUser(user) {
       this.setState({ addNewUserModal: true, editUser: user });
    }
-   /**
-    * Update User
-    */
-   updateUser(value) {
-      const {editUser} = this.state;
-      return this.props.updateUser(value,editUser)
-   }
-   handleValueChange = e =>{
 
+
+   handleValueChange = e =>{
       const name = e.target.name;
       const value = e.target.value;
       var editUser2 = {...this.state.editUser, [name]: value};
       this.setState({editUser:editUser2});
    };
 
-   //add Department
-   departmentFunction(value){
 
-      if ('ROLE_SURVEYOR' === value.currentTarget.value){
-         this.setState({addFieldDepartment:true})
-      }
-      else {
-         this.setState({addFieldDepartment:false})
-      }
+   //alert
+   /**
+    * On Confirm dialog
+    * @param {string} key
+    */
+   onConfirm(key) {
+      this.setState({ [key]: false })
+   }
+
+   /**
+    * Open Alert
+    * @param {key} key
+    */
+   openAlert(key) {
+      this.setState({ [key]: true });
    }
 
    render() {
-      const { selectedUser, editUser, countries ,anchorEl,addFieldDepartment } = this.state;
-      const {users, loading, handleSubmit,error,addUserLoader,profilePicImage,profilePicUploaded,paginationHydra,HydraPageCount,CurrentPage} = this.props;
+      const { selectedUser, editUser ,anchorEl,withDes } = this.state;
+      const {users, loading, paginationHydra, HydraPageCount, CurrentPage, department} = this.props;
       let range = [];
       if(HydraPageCount){
          for(let i =1; i<= HydraPageCount; i++){
@@ -285,7 +233,34 @@ class UserProfile extends Component {
                  match={this.props.match}
              />
 
-             <RctCollapsibleCard fullBlock>
+
+             <SweetAlert
+                 show={withDes}
+                 title="Opps!"
+                 btnSize="sm"
+                 onConfirm={() => this.onConfirm('withDes')}
+             >
+                Please fix the warnings to continue.
+             </SweetAlert>
+             <RctCollapsibleCard
+                 heading={<IntlMessages id="register.departmentAdd" />}
+                 collapsible
+                 reloadable
+                 fullBlock
+             >
+
+               <div className="container">
+                  {!department &&
+                  <Alert color="warning">
+                     No Departments found please add below.
+                  </Alert>
+                  }
+                  <DepartmentForm/>
+               </div>
+                <br></br>
+             </RctCollapsibleCard>
+             <RctCollapsibleCard  heading={<IntlMessages id="register.registerUser" />}
+                                  collapsible fullBlock>
                 <div className="table-responsive">
                    <div className="d-flex justify-content-between py-20 px-10 border-bottom">
                       <div>
@@ -303,7 +278,14 @@ class UserProfile extends Component {
                          </Menu>
                       </div>
                       <div>
-                         <a href="javascript:void(0)" onClick={() => this.opnAddNewUserModal()} color="primary" className="caret btn-sm mr-10">Add New User <i className="zmdi zmdi-plus"></i></a>
+                         <a href="javascript:void(0)" onClick={() => {
+                            if (department){
+                               return  this.opnAddNewUserModal();
+                            }
+                            else {
+                               return this.openAlert('withDes');
+                            }
+                         }} color="primary" className="caret btn-sm mr-10">Add New User <i className="zmdi zmdi-plus"></i></a>
                       </div>
 
                    </div>
@@ -417,56 +399,9 @@ class UserProfile extends Component {
                 </ModalHeader>
                 <ModalBody>
                    {editUser === null ?
-                       <Form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
-                          {error && <div className="alert alert-danger">{error}</div>}
-                          <Field name="firstName" label="First Name" type="text" placeholder="First Name" component={renderField}/>
-                          <Field name="lastName" label="Last Name" type="text" placeholder="Last Name" component={renderField}/>
-                          <Field name="username" label="Username" type="text" placeholder="Username" component={renderField}/>
-                          <Field name="password"  label="Password" type="password" placeholder="Password" component={renderField}/>
-                          <Field name="retypePassword"  label="Confirm Password" type="password" placeholder="Confirm Password" component={renderField}/>
-                          <Field name="email" label="Email" type="email" placeholder="Email" component={renderField}/>
-                          <Field name="roles" label="Role" onChange={this.departmentFunction.bind(this)} type="select" selectItems={this.state.roles} component={renderField}/>
-                          <Field name="countries" label="Country" type="select" selectItems={countries} component={renderField}/>
-                          {addFieldDepartment && <Field name="department"  label="Department" type="text" placeholder="Department" component={renderField}/> }
-                          <hr/>
-                          {profilePicUploaded ?  <ProfilePicBrowser ProfilePic={profilePicImage}/>:
-                              <UserProfilePic/> }
-                           <hr/>
-                          <FormGroup className="mb-15">
-                             {addUserLoader?
-                                 <RctPageLoader/>
-                                 :
-                                 <div>
-                                    <Button variant="contained" className="text-white btn-success" type="submit">Add</Button>
-                                    {' '}
-                                    <Button variant="contained" className="text-white btn-danger" onClick={() => this.onAddUpdateUserModalClose()}>Cancel</Button>
-                                 </div>
-                             }
-
-
-                          </FormGroup>
-                       </Form>
-
+                       <AddUserForm closeModal={this.onAddUpdateUserModalClose.bind(this)}/>
                        :
-                       <Form onSubmit={handleSubmit(this.updateUser.bind(this))} >
-
-                         <Field name="firstName" onChange={ (e) =>this.handleValueChange(e)} values={editUser.firstName} label="First Name" type="text" placeholder="First Name" component={renderField}/>
-                         <Field name="lastName" onChange={ (e) =>this.handleValueChange(e)}  values={editUser.lastName} label="Last Name" type="text" placeholder="Last Name" component={renderField}/>
-                         <Field name="username" onChange={  (e) =>this.handleValueChange(e)}  values={editUser.username} label="Username" type="text" placeholder="Username" component={renderField}/>
-                         <Field name="email" onChange={  (e) =>this.handleValueChange(e)}  values={editUser.email} label="Email" type="email" placeholder="Email" component={renderField}/>
-                         <hr/>
-                         <FormGroup className="mb-15">
-                         {addUserLoader?
-                            <RctPageLoader/>
-                            :
-                            <div>
-                            <Button variant="contained" className="text-white btn-success" type="submit">Update</Button>
-                            {' '}
-                            <Button variant="contained" className="text-white btn-danger" onClick={() => this.onAddUpdateUserModalClose()}>Cancel</Button>
-                            </div>
-                         }
-                         </FormGroup>
-                      </Form>
+                      <UpdateUserForm editUser={editUser} closeModal={this.onAddUpdateUserModalClose.bind(this)} handleChange={this.handleValueChange.bind(this)}/>
                    }
                 </ModalBody>
 
@@ -480,7 +415,11 @@ class UserProfile extends Component {
                    <div>
                       <div className="clearfix d-flex">
                          <div className="media pull-left">
-                            <img src={`${SERVER_PATH}${selectedUser.profilePic.url}`} alt="user prof" className="rounded-circle mr-15" width="50" height="50" />
+                            {(selectedUser.profilePic !== null) ?
+                                <img src={`${SERVER_PATH}${selectedUser.profilePic.url}`} alt="user prof" className="rounded-circle mr-15" width="50" height="50" />
+                                : <Avatar className="mr-15">{`${selectedUser.firstName.charAt(0)}${selectedUser.lastName.charAt(0)}`}</Avatar>
+                            }
+
                             <div className="media-body">
                                <p>Name: <span className="fw-bold">{selectedUser.firstName}</span></p>
                                <p>Email: <span className="fw-bold">{selectedUser.email}</span></p>
@@ -508,6 +447,4 @@ class UserProfile extends Component {
 }
 
 
-
-
-export default reduxForm({form:'addUserForm'})(connect(mapStateToProps,mapDispatchToProps)(UserProfile))
+export default connect(mapStateToProps,mapDispatchToProps)(UserProfile)

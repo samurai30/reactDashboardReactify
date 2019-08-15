@@ -274,10 +274,10 @@ const TopSellingWidget = Loadable({
    loading: MyLoadingComponent
 })
 
-const RecentOrdersWidget = Loadable({
-   loader: () => import("./RecentOrders"),
+const ApprovedTasksWidget = Loadable({
+   loader: () => import("./ApprovedTasksStat"),
    loading: MyLoadingComponent
-})
+});
 
 const SocialCompaninesWidget = Loadable({
    loader: () => import("./SocialCompanies"),
@@ -344,10 +344,14 @@ const CurrentDateWidget = Loadable({
    loading: MyLoadingComponent
 })
 
-const TodayOrdersStatsWidget = Loadable({
-   loader: () => import("./TodayOrdersStats"),
+const TotalTaskWidget = Loadable({
+   loader: () => import("./TotalTaskWidget"),
    loading: MyLoadingComponent
-})
+});
+const TotalClientWidget = Loadable({
+   loader: () => import("./TotalClientsWidget"),
+   loading: MyLoadingComponent
+});
 
 const ActivityWidget = Loadable({
    loader: () => import("./Activity"),
@@ -483,6 +487,7 @@ export {
    SupportRequest,
    NewCustomersWidget,
    Notifications,
+   TotalClientWidget,
    UserProfile,
    QuoteOFTheDay,
    WeatherWidgetV2,
@@ -530,7 +535,7 @@ export {
    SiteVisitorChartWidget,
    CommentsWidget,
    TopSellingWidget,
-   RecentOrdersWidget,
+   ApprovedTasksWidget,
    SocialCompaninesWidget,
    Reminders,
    ContactRequestWidget,
@@ -544,7 +549,7 @@ export {
    ComposeEmailWidget,
    CurrentTimeLocation,
    CurrentDateWidget,
-   TodayOrdersStatsWidget,
+   TotalTaskWidget,
    ActivityWidget,
    SessionSlider,
    AgencyWelcomeBlock,

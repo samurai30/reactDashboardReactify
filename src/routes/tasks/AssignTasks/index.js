@@ -4,6 +4,7 @@ import {Helmet} from "react-helmet";
 
 import IntlMessages from "Util/IntlMessages";
 import PageTitleBar from "Components/PageTitleBar/PageTitleBar";
+import RctCollapsibleCard from "Components/RctCollapsibleCard/RctCollapsibleCard";
 
 
 
@@ -17,7 +18,13 @@ export default class AssignTask extends Component{
                     <meta name="description" content="Assign Tasks" />
                 </Helmet>
                 <PageTitleBar title={<IntlMessages id="sidebar.assignTask" />} match={match} />
-                
+                <RctCollapsibleCard
+                    heading={<IntlMessages id="assignment.assignTask" />}
+                    collapsible
+                    reloadable
+                    fullBlock>
+
+                </RctCollapsibleCard>
             </div>
         );
     }
