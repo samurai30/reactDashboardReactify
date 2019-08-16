@@ -2,9 +2,19 @@ import {api} from "Api/index";
 import {
     CREATE_TASK_CATEGORY_FAILURE,
     CREATE_TASK_CATEGORY_REQUEST,
-    CREATE_TASK_CATEGORY_SUCCESS, CREATE_TASK_FAILURE, CREATE_TASK_FORM_FAILURE,
+    CREATE_TASK_CATEGORY_SUCCESS,
+    CREATE_TASK_CLIENT_ASSIGN,
+    CREATE_TASK_CLIENT_GET_FAILURE,
+    CREATE_TASK_CLIENT_GET_REQUEST,
+    CREATE_TASK_CLIENT_GET_SUCCESS,
+    CREATE_TASK_CLIENT_REMOVE,
+    CREATE_TASK_FAILURE,
+    CREATE_TASK_FORM_FAILURE,
     CREATE_TASK_FORM_REQUEST,
-    CREATE_TASK_FORM_SUCCESS, CREATE_TASK_REQUEST, CREATE_TASK_SUCCESS, FETCH_TASK_REQUEST
+    CREATE_TASK_FORM_SUCCESS,
+    CREATE_TASK_REQUEST,
+    CREATE_TASK_SUCCESS,
+    FETCH_TASK_REQUEST
 } from "Actions/types";
 import {NotificationManager} from "react-notifications";
 import {reset, SubmissionError} from "redux-form";
@@ -51,9 +61,12 @@ export const addCategory = (data) =>{
         dispatch({type:CREATE_TASK_CATEGORY_REQUEST});
         return api.post('/task_categories',data,true).then(response =>{
             NotificationManager.success("Category Added");
+
             dispatch(getCategoryData('/task_categories'));
+
         }).catch(error =>{
             dispatch({type:CREATE_TASK_CATEGORY_FAILURE});
+
             if (error.message === 'Unauthorized'){
                 NotificationManager.error("Session Timed out");
             }
@@ -111,6 +124,31 @@ export const getTaskData = () =>{
         })
     }
 };
+
+export const clientCreateTask = (value) =>{
+    return(dispatch) =>{
+        dispatch({type:CREATE_TASK_CLIENT_ASSIGN,data:value});
+    }
+};
+
+export const clientRemoveTask = () =>{
+    return(dispatch) =>{
+        dispatch({type:CREATE_TASK_CLIENT_REMOVE});
+    }
+};
+export const getClientList = (url) =>{
+    return(dispatch) =>{
+        dispatch({type:CREATE_TASK_CLIENT_GET_REQUEST});
+        return api.get(url,true).then(response =>{
+            dispatch({type:CREATE_TASK_CLIENT_GET_SUCCESS,data:response['hydra:member']});
+        }).catch(error =>{
+            dispatch({type:CREATE_TASK_CLIENT_GET_FAILURE});
+            if (error.message === 'Unauthorized'){
+                NotificationManager.error("Session Timed out");
+            }
+        })
+    }
+}
 export const successTasksData = (taskData) =>({
     type:CREATE_TASK_SUCCESS,
     data:taskData

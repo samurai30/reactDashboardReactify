@@ -10,7 +10,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
-
+import { withRouter } from 'react-router-dom';
 
 // rct card box
 import { RctCard, RctCardContent } from 'Components/RctCard';
@@ -21,6 +21,8 @@ import {api} from "Api/index";
 import {NotificationManager} from "react-notifications";
 import {SERVER_PATH} from "Actions/types";
 import RctSectionLoader from "Components/RctSectionLoader/RctSectionLoader";
+import Button from "reactstrap/es/Button";
+import {clientCreateTask} from "Actions/CreateTaskAction";
 
 function TabContainer({ children, dir }) {
     return (
@@ -31,14 +33,11 @@ function TabContainer({ children, dir }) {
 }
 
 class ClientTab extends Component {
-
-
     state = {
         value: 0,
         users: null,
         isUpdated:false,
-        loading:false,
-        searchValue:this.props.searchKey
+        loading:false
     };
 
     // get users
@@ -64,11 +63,19 @@ class ClientTab extends Component {
     componentDidMount() {
         this.getUsers();
     }
-
-
+    createTaskAddClient(value){
+        return this.props.clientCreateTask(value);
+    }
+    onCreateTask(value){
+        this.createTaskAddClient(value);
+       return this.props.history.push('/app/tasks/create-task')
+    }
     render() {
-        const { theme } = this.props;
+        const { theme ,clientData} = this.props;
         const { users,loading } = this.state;
+        if (clientData){
+            console.log(clientData)
+        }
         return (
             <div className="client-tab-wrap p-15 Tab-wrap">
 
@@ -121,9 +128,10 @@ class ClientTab extends Component {
                                                                     <span className="d-block">
                                                                              <a href="#" className="text-dark">{data.email}</a>
                                                                        </span>
-                                                                    <span className="d-block text-dark text-capitalize"><b>SUID:</b> #{data.clientsUID.UID}</span>
+                                                                    <span className="d-block text-dark text-capitalize"><b>CUID:</b> #{data.clientsUID.UID}</span>
 
                                                                     <span className="d-block text-dark text-capitalize"><b>{data.countries.countryName}</b></span>
+                                                                    <Button outline  onClick={() => this.onCreateTask(data)} color="primary">Create Task</Button>
                                                                 </div>
 
                                                             </div>
@@ -145,6 +153,9 @@ class ClientTab extends Component {
         );
     }
 }
+const mapDispatchToProps = {
+    clientCreateTask
+};
 
 
-export default connect(null,null)(withStyles(null, { withTheme: true })(ClientTab));
+export default withRouter(connect(null,mapDispatchToProps)(withStyles(null, { withTheme: true })(ClientTab)));

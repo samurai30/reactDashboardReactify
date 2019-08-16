@@ -85,10 +85,7 @@ class UserProfile extends Component {
       selectedUsers: 0,
       anchorEl: null,
       selectedIndex: 1,
-      department:null,
       withDes:false
-
-
    };
 
    getUsers(url){
@@ -250,7 +247,7 @@ class UserProfile extends Component {
              >
 
                <div className="container">
-                  {!department &&
+                  {department && (department.length === 0) &&
                   <Alert color="warning">
                      No Departments found please add below.
                   </Alert>

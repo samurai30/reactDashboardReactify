@@ -5,12 +5,24 @@ import {Helmet} from "react-helmet";
 import IntlMessages from "Util/IntlMessages";
 import PageTitleBar from "Components/PageTitleBar/PageTitleBar";
 import RctCollapsibleCard from "Components/RctCollapsibleCard/RctCollapsibleCard";
+import {connect} from 'react-redux';
+import {getTaskToAssign} from "Actions/AssignTaskAction";
 
+const mapStateToProps = state =>({
+...state.assignTask
+});
 
+const mapDispatchToProps = {
+    getTaskToAssign
+};
 
-export default class AssignTask extends Component{
+class AssignTask extends Component{
+    componentDidMount(){
+        this.props.getTaskToAssign('/tasks');
+    }
     render(){
-        const{match} = this.props;
+        const{match,tasksData} = this.props;
+
         return(
             <div className="ecom-dashboard-wrapper">
                 <Helmet>
@@ -29,6 +41,6 @@ export default class AssignTask extends Component{
         );
     }
 }
-
+export default connect(mapStateToProps,mapDispatchToProps)(AssignTask);
 
 

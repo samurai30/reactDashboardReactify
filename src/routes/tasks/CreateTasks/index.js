@@ -1,11 +1,18 @@
 /* eslint-disable */
-import React ,{Component} from 'react';
+import React, {Component, createRef} from 'react';
 import {Helmet} from "react-helmet";
 
 import IntlMessages from "Util/IntlMessages";
 import PageTitleBar from "Components/PageTitleBar/PageTitleBar";
 import RctCollapsibleCard from "Components/RctCollapsibleCard/RctCollapsibleCard";
-import {addCategory, addTask, getCategoryData, getFormData, getTaskData} from "Actions/CreateTaskAction";
+import {
+    addCategory,
+    addTask, clientCreateTask,
+    clientRemoveTask,
+    getCategoryData, getClientList,
+    getFormData,
+    getTaskData
+} from "Actions/CreateTaskAction";
 import {connect} from 'react-redux';
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 import {
@@ -43,16 +50,35 @@ import DeleteConfirmationDialog from "Components/DeleteConfirmationDialog/Delete
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import {api} from "Api/index";
+import DepartmentForm from "Routes/users/user-management/create-user/forms/departmentForm";
+import {getDept} from "Actions/AddUserActions";
+import Badge from "reactstrap/es/Badge";
+import {RctCard, RctCardContent} from "Components/RctCard";
+import SwipeableViews from "react-swipeable-views";
+import Chip from "@material-ui/core/es/Chip";
+import Link from "@material-ui/core/Link";
+import { withRouter } from 'react-router-dom';
+import TextField from "@material-ui/core/es/TextField";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+import {Scrollbars} from "react-custom-scrollbars";
 const mapDispatchToProps = {
     getFormData,
     getCategoryData,
     addCategory,
     addTask,
-    getTaskData
+    getTaskData,
+    clientRemoveTask,
+    getDept,getClientList,
+    clientCreateTask
 };
 
 const mapStateToProps =  state => ({
+    ...state.addUser,
     ...state.createTaskReducer
+
 });
 
 class CreateTask extends Component{
@@ -89,10 +115,13 @@ class CreateTask extends Component{
             }
         ],
     };
+    search_index = createRef();
     componentDidMount(){
         this.getForms('/forms');
         this.getCategory('/task_categories');
         this.props.getTaskData();
+        this.props.getClientList('/users/all-users?roles=ROLE_CLIENT');
+        this.props.getDept();
     }
 
     /**
@@ -129,6 +158,10 @@ class CreateTask extends Component{
          return this.props.addCategory(values);
     }
     onSubmitTask(values){
+        const {clientData} =this.props;
+        values.department = `/api/departments/${values.department}`;
+        values.clients = clientData['@id'];
+
         return this.props.addTask(values);
     }
     onCategoryModalClose(){
@@ -180,8 +213,34 @@ class CreateTask extends Component{
     onTaskUser(task) {
         this.setState({ addNewTaskModal: true, editTask: task });
     }
+
+    componentWillUnmount(){
+        this.props.clientRemoveTask();
+    }
+
+    registerUser(){
+        this.props.history.push('/app/users/user-management/create-user')
+    }
+    //search clients
+    searchClient(){
+        return this.props.getClientList(`/users/all-users?roles=ROLE_CLIENT&username=${this.search_index.current.value}`);
+    }
+    //reload clients
+    reloadClients(){
+      return this.props.getClientList('/users/all-users?roles=ROLE_CLIENT');
+    }
+    //select client
+    selectClient(value){
+        return this.props.clientCreateTask(value);
+    }
+    handleDeleteChip(){
+        return this.props.clientRemoveTask();
+    }
+    createFormLink(){
+        this.props.history.push('/app/form-builder/create-form');
+    }
     render(){
-        const{match,taskLoading,formData,categoryData,handleSubmit,formSelectData,catSelectDat,taskData} = this.props;
+        const{match,taskLoading,formData,categoryData,handleSubmit,formSelectData,catSelectDat,taskData,clientData,department,clientList} = this.props;
         const { withDes,addNewCategoryModal,addNewTaskModal,editTask,openViewTaskDialog,selectedTask,deleteLoader} = this.state;
 
         return(
@@ -200,40 +259,131 @@ class CreateTask extends Component{
                 >
                    Please fix the warnings to continue.
                 </SweetAlert>
-                <RctCollapsibleCard>
-                    {categoryData && (categoryData.length === 0) &&
+                <RctCollapsibleCard
+                    heading={<IntlMessages id="register.departmentAdd" />}
+                    collapsible
+                    reloadable
+                    fullBlock
+                >
+                    <div className="container">
+                        {department && (department.length === 0) &&
                         <Alert color="warning">
-                            Please add category. None found
+                            No Departments found please add below.
                         </Alert>
-                    }
-                    {formData && (formData.length === 0) &&
-                    <Alert color="warning">
-                        No forms found please click create forms to add.
-                    </Alert>
-                    }
-                    <div className="table-responsive">
-                        <div className="d-flex justify-content-between py-20 px-10 border-bottom">
-                            <div>
-                                <a href="javascript:void(0)" onClick={() => this.onReload()} className="btn-outline-default mr-10"><i className="ti-reload"></i></a>
+                        }
+                        <DepartmentForm/>
+                    </div>
+                    <br></br>
+                </RctCollapsibleCard>
+                <RctCollapsibleCard
+                    heading="Create Tasks"
+                    collapsible
+                    fullBlock>
+                    <div className="d-flex justify-content-center">
+                        <a href="javascript:void(0)" onClick={() => this.reloadClients()} className="btn-outline-default mr-10"><i className="ti-reload"></i></a>
+                    </div>
+                    {clientData ?
+                        <div>
+                            <div className="container">
+                                {categoryData && (categoryData.length === 0) &&
+                                <Alert color="warning">
+                                    Please add category. None found
+                                </Alert>
+                                }
+                                {formData && (formData.length === 0) &&
+                                <Alert color="warning">
+                                    No forms found please click create forms to add.
+                                </Alert>
+                                }
                             </div>
-                            <div>
-                                <a href="/app/form-builder/create-form" color="primary" className="caret btn-sm mr-10">Create Forms <i className="zmdi zmdi-plus"></i></a>
+                            <br></br>
+                            <div className="d-flex justify-content-center">
+                                <Chip className="bg-info text-white mr-10 mb-10"
+                                      avatar={clientData.profilePic?<Avatar src={`${SERVER_PATH}${clientData.profilePic.url}`} /> :
+                                          <Avatar className="mr-15">{`${clientData.firstName.charAt(0)}${clientData.lastName.charAt(0)}`}</Avatar>} label={clientData.username} onDelete={() => this.handleDeleteChip()} />
                             </div>
-                            <div>
-                                <a href="javascript:void(0)" onClick={() => this.opnAddNewCategoryModal()} color="primary" className="caret btn-sm mr-10">Add Category<i className="zmdi zmdi-plus"></i></a>
-                            </div>
-                            <div>
-                                <a href="javascript:void(0)" onClick={() => {
-                                    if ((categoryData.length !== 0) && (formData.length !== 0)){
-                                        return this.opnAddNewTaskModal();
-                                    }
-                                    else {
-                                        return this.openAlert('withDes');
-                                    }
-                                }} color="primary" className="caret btn-sm mr-10">Add New Task <i className="zmdi zmdi-plus"></i></a>
-                            </div>
+                            <div className="d-flex justify-content-between py-20 px-10 border-bottom">
+                                <div>
+                                    <a href="javascript:void(0)" onClick={() => this.createFormLink()} color="primary" className="caret btn-sm mr-10">Create Forms <i className="zmdi zmdi-plus"></i></a>
+                                </div>
+                                <div>
+                                    <a href="javascript:void(0)" onClick={() => this.opnAddNewCategoryModal()} color="primary" className="caret btn-sm mr-10">Add Category<i className="zmdi zmdi-plus"></i></a>
+                                </div>
+                                <div>
+                                    <a href="javascript:void(0)" onClick={() => {
+                                        if ((categoryData.length !== 0) && (formData.length !== 0)){
+                                            return this.opnAddNewTaskModal();
+                                        }
+                                        else {
+                                            return this.openAlert('withDes');
+                                        }
+                                    }} color="primary" className="caret btn-sm mr-10">Add New Task <i className="zmdi zmdi-plus"></i></a>
+                                </div>
 
+                            </div>
                         </div>
+                        :
+                    <div>
+                        {clientList && (clientList.length !== 0)?
+                           <div className="container">
+                               <br></br>
+                               <div className="search-bar">
+                                   <TextField
+                                       id="standard-with-placeholder"
+                                       inputRef={this.search_index}
+                                       placeholder="Search Client by Username"
+                                   />
+                                   {' '}
+                                   <Button variant="contained" color="primary" className="mx-sm-15" onClick={() => this.searchClient()}>
+                                       Search
+                                   </Button>
+                               </div>
+                               <RctCollapsibleCard
+                                   heading="Select Client"
+                                   fullBlock
+                               >
+                                   <Scrollbars className="rct-scroll" autoHeight>
+                                       <List className="p-0">
+                                           {clientList.map(client=>(
+                                               <div key={client.id}>
+                                               <ListItem button onClick={() => this.selectClient(client)}>
+                                                   {client.profilePic ?
+                                                       <Avatar src={`${SERVER_PATH}${client.profilePic.url}`} /> :
+                                                       <Avatar className="mr-15">{`${client.firstName.charAt(0)}${client.lastName.charAt(0)}`}</Avatar>}
+                                                   <ListItemText primary={client.username} secondary={client.email} />
+
+                                               </ListItem>
+                                               <Divider variant="inset" />
+                                           </div>
+                                           )) }
+                                       </List>
+                                   </Scrollbars>
+                               </RctCollapsibleCard>
+                               <br></br>
+                           </div>
+
+                            :
+                            <div className="container">
+                                <Alert color="warning">
+                                    No clients found
+                                </Alert>
+                                <div className="d-flex justify-content-center">
+                                    <Button onClick={() => this.registerUser()} color="primary">ADD HERE</Button>
+                                </div>
+                            </div>
+                       }
+                    </div>
+                    }
+                    {(taskLoading) &&
+                        <RctSectionLoader/>}
+                </RctCollapsibleCard>
+                <RctCollapsibleCard
+                fullBlock
+                heading="Tasks List"
+                collapsible
+                >
+                    <div className="table-responsive">
+
                         <table className="table table-middle table-hover mb-0">
                             <thead>
                             <tr>
@@ -246,7 +396,6 @@ class CreateTask extends Component{
                             </tr>
                             </thead>
                             <tbody>
-
                             {taskData && (taskData.length !==0 ) ? taskData.map((task) => (
                                     <tr key={task.id}>
                                         <td>
@@ -262,7 +411,7 @@ class CreateTask extends Component{
 
                                         <td>
                                             <Moment format="YYYY/MM/DD">
-                                                     {task.createdDate}
+                                                {task.createdDate}
                                             </Moment>
                                         </td>
                                         <td className="list-action">
@@ -276,7 +425,6 @@ class CreateTask extends Component{
                                     <td>Nothing Found</td>
                                 </tr>
                             }
-
                             </tbody>
                             <tfoot className="border-top">
                             {/*{(paginationHydra && HydraPageCount && CurrentPage !== null) && <tr>*/}
@@ -311,10 +459,8 @@ class CreateTask extends Component{
                             </tfoot>
                         </table>
                     </div>
-
                     {(taskLoading) &&
-                        <RctSectionLoader/>}
-
+                    <RctSectionLoader/>}
                 </RctCollapsibleCard>
                 <DeleteConfirmationDialog
                     ref="deleteConfirmationDialog"
@@ -358,7 +504,7 @@ class CreateTask extends Component{
                                 <Field name="description" label="Description" type="text" placeholder="Enter Description" component={renderField}/>
                                 <Field name="category" label="Category" type="select" selectItems={(catSelectDat) && catSelectDat} component={renderField}/>
                                 <Field name="form" label="Forms" type="select_multiple" selectItems={(formSelectData) && formSelectData} component={renderField}/>
-
+                                <Field name="department"  label="Department" type="select" selectItems={department} component={renderField}/>
                                 <hr/>
                                 <FormGroup className="mb-15">
                                     {taskLoading?
@@ -427,4 +573,4 @@ class CreateTask extends Component{
 }
 
 
-export default reduxForm({form:'createTaskForm'})(connect(mapStateToProps,mapDispatchToProps)(CreateTask));
+export default reduxForm({form:'createTaskForm'})(withRouter(connect(mapStateToProps,mapDispatchToProps)(CreateTask))) ;

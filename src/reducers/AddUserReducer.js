@@ -80,11 +80,11 @@ action) =>{
         case ADD_USER_PROP:
             return {...state,users: action.data};
         case ADD_DEPARTMENT_REQUEST:
-            return {...state,loading: true};
+            return {...state,deptLoading: true};
         case ADD_DEPARTMENT_SUCCESS:
-            return {...state,loading: false,department: action.data};
+            return {...state,deptLoading: false,department: action.data};
         case ADD_DEPARTMENT_FAILURE:
-            return {...state,loading: false,department: null};
+            return {...state,deptLoading: false,department: null};
         case ADD_DEPARTMENT_REQUEST_ADD:
             return {...state,deptLoading: true};
         case ADD_DEPARTMENT_SUCCESS_ADD:

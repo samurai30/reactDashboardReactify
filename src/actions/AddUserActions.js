@@ -187,8 +187,8 @@ export const getDept = () =>{
           const valueList = [];
           response['hydra:member'].map(department => {
             valueList.push({id:department.id,URI:department.id,value:department.DepartmentName});
-            dispatch({type:ADD_DEPARTMENT_SUCCESS,data:valueList});
           });
+          dispatch({type:ADD_DEPARTMENT_SUCCESS,data:valueList});
         })
         .catch(error => {
           dispatch({type:ADD_DEPARTMENT_FAILURE});

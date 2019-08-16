@@ -14,11 +14,11 @@ import {reducer as formReducer} from 'redux-form'
 import {routerReducer} from 'react-router-redux'
 import createTask from './CreateTaskReducer'
 import formBuilderReducer from './UploadFormBuilder'
+import assignTaskReducer from './AssignTaskReducer';
 import {
   ADD_DEPARTMENT_SUCCESS_ADD,
-  ADD_USER_SUCCESS, CREATE_TASK_CATEGORY_CLEAR,
+  ADD_USER_SUCCESS,
   CREATE_TASK_CATEGORY_SUCCESS,
-  CREATE_TASK_CLEAR,
   CREATE_TASK_SUCCESS,
   LOGIN_USER_FAILURE
 } from "Actions/types";
@@ -33,6 +33,7 @@ const reducers = combineReducers({
   addUser: addUserReducer,
   formBuilderRed : formBuilderReducer,
   createTaskReducer:createTask,
+  assignTask:assignTaskReducer,
   form: formReducer.plugin({
     addUserForm: (state,action)=>{
       switch (action.type) {

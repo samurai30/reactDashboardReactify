@@ -6,6 +6,8 @@ import {
 } from "Actions/types";
 import {api} from "Api/index";
 import {NotificationManager} from "react-notifications";
+import {SubmissionError} from "redux-form";
+import {parseApiErrors} from "Util/apiUtils";
 
 
 export const uploadFormRequest = (data) =>{
@@ -18,8 +20,9 @@ export const uploadFormRequest = (data) =>{
   }).catch(error =>{
     dispatch({type:UPLOAD_FORM_BUILDER_FAILURE});
       NotificationManager.error('Something went wrong');
-
+      throw new SubmissionError(parseApiErrors(error));
   })
+
  }
 };
 

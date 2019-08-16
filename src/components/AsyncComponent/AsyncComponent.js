@@ -13,6 +13,10 @@ const AsyncHomeDashboardComponent = Loadable({
    loader: () => import("Routes/dashboard/home"),
    loading: () => <RctPageLoader />,
 });
+const AsyncClientHomeDashboardComponent = Loadable({
+   loader: () => import("Routes/dashboard/client-home"),
+   loading: () => <RctPageLoader />,
+});
 
 //tasks
 const AysncTasksApprovedComponent = Loadable({
@@ -115,5 +119,6 @@ export {
    AsyncUserProfileComponent,
    AsyncSessionPage404Component,
    AsyncSessionPage500Component,
-   AysncClientTaskComponent
+   AysncClientTaskComponent,
+   AsyncClientHomeDashboardComponent
 };

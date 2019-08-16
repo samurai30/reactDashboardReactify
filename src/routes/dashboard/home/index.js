@@ -13,7 +13,7 @@ import {ApprovedTasksWidget, TotalClientWidget, TotalTaskWidget} from "Component
 import RctCollapsibleCard from "Components/RctCollapsibleCard/RctCollapsibleCard";
 
 
-export default class EcommerceDashboard extends Component {
+export default class AdminHome extends Component {
 
 
    render() {
@@ -39,7 +39,6 @@ export default class EcommerceDashboard extends Component {
                         heading={<IntlMessages id="widgets.approvedTasks" />}
                         collapsible
                         reloadable
-                        closeable
                         fullBlock
                     >
                         <ApprovedTasksWidget />

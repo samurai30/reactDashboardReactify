@@ -11,7 +11,9 @@ import {connect} from "react-redux";
 import {uploadFormRequest, uploadReset} from "Actions/UploadCreateForm";
 import RctPageLoader from "Components/RctPageLoader/RctPageLoader";
 import {NotificationContainer} from "react-notifications";
-
+import RctCollapsibleCard from "Components/RctCollapsibleCard/RctCollapsibleCard";
+import {NotificationManager} from "react-notifications";
+import {reset} from 'redux-form';
 
 global.jQuery = $;
 global.$ = $;
@@ -40,6 +42,7 @@ class BuilderCreateForm extends Component{
         $(this.rf.current).toggle();
 
     }
+
     onSave(){
         $(this.fb.current).toggle();
         $(this.rf.current).toggle();
@@ -59,11 +62,15 @@ class BuilderCreateForm extends Component{
     }
     onUpload(e){
         e.formDataJson=this.formRender.userData;
-        return this.props.uploadFormRequest(e);
+        if (e.formDataJson.length === 0){
+            NotificationManager.error('Please add fields to the form to upload.')
+        }
+        else {
+            return this.props.uploadFormRequest(e);
+        }
     }
     componentDidUpdate(prevProps){
         if (this.props.uploaded){
-
             this.onClear();
             $(this.fb.current).toggle();
             $(this.rf.current).toggle();
@@ -82,25 +89,40 @@ class BuilderCreateForm extends Component{
                 </Helmet>
 
                 <PageTitleBar title={<IntlMessages id="sidebar.createForm" />} match={match} />
-                <div ref={this.fb}>
-                    <div id="editor-form"/>
-                    <Button onClick={() => this.onSave()} className="bg-success text-white w-50">Save</Button>
-                    <Button onClick={() => this.onClear()} className="bg-warning text-white w-50">Clear</Button>
-                </div>
-                <div ref={this.rf}>
+                <RctCollapsibleCard
+                    heading="Create Form"
+                    collapsible
+                    fullBlock
+                >
+                  <div className="container">
+                      <div ref={this.fb}>
+                          <div id="editor-form"/>
+                          <div className="d-flex justify-content-center">
+                              <Button onClick={() => this.onSave()} outline  color="info">Save</Button>
 
-                    <div id="view-form"/>
-                    <Form onSubmit={handleSubmit(this.onUpload.bind(this))}>
-                        <Field name="description" label="Form Description" type="text" placeholder="Description" component={renderField}/>
-                        <Field name="name" label="Form Name" type="text" placeholder="Name" component={renderField}/>
-                        {isUploading ? <RctPageLoader/>:
-                            <Button variant="contained" className="bg-warning text-white w-100" type="submit">Upload</Button>
-                        }
+                              <Button onClick={() => this.onClear()} outline color="warning">Clear</Button>
+                          </div>
+                      </div>
+                      <div ref={this.rf}>
 
-                    </Form>
+                          <div id="view-form"/>
+                          <Form onSubmit={handleSubmit(this.onUpload.bind(this))}>
+                              <Field name="description" label="Form Description" type="text" placeholder="Description" component={renderField}/>
+                              <Field name="name" label="Form Name" type="text" placeholder="Name" component={renderField}/>
+                              {isUploading ? <RctPageLoader/>:
+                                  <div className="d-flex justify-content-center">
+                                      <Button color="success" type="submit" outline>Upload</Button>
 
-                    <Button onClick={this.onEdit.bind(this)} className="bg-success text-white w-100">Edit</Button>
-                </div>
+                                      <Button onClick={this.onEdit.bind(this)} outline>Edit</Button>
+                                  </div>
+
+                              }
+                          </Form>
+                      </div>
+                  </div>
+                    <br></br>
+
+                </RctCollapsibleCard>
 
 
             </div>

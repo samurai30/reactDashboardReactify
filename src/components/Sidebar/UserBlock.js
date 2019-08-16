@@ -86,7 +86,7 @@ class UserBlock extends Component {
 											<img
 												src={`${SERVER_PATH}${userData.profilePic.url}`}
 												alt="user profile"
-												className="img-fluid rounded-circle"
+												className="img-fluid rounded-circle bg-light"
 												width="50"
 												height="100"
 											/>
