@@ -24,7 +24,7 @@ class ProfilePicBrowser extends React.Component{
                 <CardBody>
                     <CardImg src={`${SERVER_PATH}${ProfilePic.url}`} top width="100%" alt="Profile Pic"/>
                 </CardBody>
-                <Button onClick={this.onDelete.bind(this)} className="btn btn-warning">Remove</Button>
+                <Button onClick={this.onDelete.bind(this)} color="warning" outline>Remove</Button>
             </Card>}
         </div>)
     }

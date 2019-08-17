@@ -2,95 +2,92 @@
  * Profile Page
  */
 import React, { Component } from 'react';
-import { FormGroup, Input, Form, Label, Col, InputGroup, InputGroupAddon } from 'reactstrap';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
+import { FormGroup, Input, Form, Label, Col, InputGroup, InputGroupAddon,Button } from 'reactstrap';
+
 import { NotificationManager } from 'react-notifications';
 
 // intlmessages
 import IntlMessages from 'Util/IntlMessages';
+import {Field, reduxForm} from "redux-form";
+import {connect} from "react-redux";
+import {renderField} from "../../../../forms/ComonForm";
+import Modal from "reactstrap/es/Modal";
+import ModalHeader from "reactstrap/es/ModalHeader";
+import ModalBody from "reactstrap/es/ModalBody";
+import {UpdateProfile, UpdateProfilePassword} from "Actions/UpdateUserAction";
+import RctSectionLoader from "Components/RctSectionLoader/RctSectionLoader";
 
-export default class Profile extends Component {
-
+const mapStateToProps = state =>({
+   ...state.updateUserRed,
+   ...state.auth
+});
+const mapDispatchToProps = {
+   UpdateProfile,
+   UpdateProfilePassword
+};
+class Profile extends Component {
+   constructor(props) {
+      super(props);
+      this.toggle = this.toggle.bind(this);
+   }
+   state = {
+      modal: false
+   };
+   toggle() {
+      this.setState(prevState => ({
+         modal: !prevState.modal
+      }));
+   }
    /**
     * On Update Profile
     */
-   onUpdateProfile() {
-      NotificationManager.success('Profile Updated Successfully!');
-   }
+   onUpdateProfile(values) {
+      return this.props.UpdateProfile(values,this.props.user_id);
+   };
+
+   onUpdatePassword(values){
+      return this.props.UpdateProfilePassword(values,this.props.user_id);
+   };
 
    render() {
+      const {handleSubmit,loadingUpdate} = this.props;
       return (
          <div className="profile-wrapper w-50">
             <h2 className="heading"><IntlMessages id="widgets.personalDetails" /></h2>
-            <Form>
-               <FormGroup row>
-                  <Label for="firstName" sm={3}><IntlMessages id="components.firstName" /></Label>
-                  <Col sm={9}>
-                     <Input type="text" name="firstName" id="firstName" className="input-lg" />
-                  </Col>
-               </FormGroup>
-               <FormGroup row>
-                  <Label for="lastName" sm={3}><IntlMessages id="components.lastName" /></Label>
-                  <Col sm={9}>
-                     <Input type="text" name="lastName" id="lastName" className="input-lg" />
-                  </Col>
-               </FormGroup>
-               <FormGroup row>
-                  <Label for="occupation" sm={3}><IntlMessages id="components.occupation" /></Label>
-                  <Col sm={9}>
-                     <Input type="text" name="occupation" id="occupation" className="input-lg" />
-                  </Col>
-               </FormGroup>
-               <FormGroup row>
-                  <Label for="company" sm={3}><IntlMessages id="components.companyName" /></Label>
-                  <Col sm={9}>
-                     <Input type="text" name="company" id="company" className="input-lg mb-20" />
-                     <div className="help-text d-flex p-10">
-                        <i className="ti-info-alt mr-15 pt-5"></i>
-                        <span>If you want your invoices addressed to a company. Leave blank to use your full name.</span>
-                     </div>
-                  </Col>
-               </FormGroup>
-               <FormGroup row>
-                  <Label for="telephone" sm={3}><IntlMessages id="components.phoneNo" /></Label>
-                  <Col sm={9}>
-                     <Input type="tel" name="telephone" id="telephone" className="input-lg" />
-                  </Col>
-               </FormGroup>
+            <Form onSubmit={handleSubmit(this.onUpdateProfile.bind(this))} inline>
+               <Field name="firstName" type="text" placeholder="First Name" component={renderField} />
+               {' '}
+               <Button color="primary" type="submit" outline size="md"><IntlMessages id="widgets.updateProfile" /></Button>
             </Form>
-            <hr />
-            <h2 className="heading"><IntlMessages id="components.address" /></h2>
-            <Form>
-               <FormGroup row>
-                  <Label for="address" sm={3}><IntlMessages id="components.address" /></Label>
-                  <Col sm={9}>
-                     <Input type="text" name="address" id="address" className="input-lg" />
-                  </Col>
-               </FormGroup>
-               <FormGroup row>
-                  <Label for="city" sm={3}><IntlMessages id="components.city" /></Label>
-                  <Col sm={9}>
-                     <Input type="text" name="city" id="city" className="input-lg" />
-                  </Col>
-               </FormGroup>
-               <FormGroup row>
-                  <Label for="state" sm={3}><IntlMessages id="components.state" /></Label>
-                  <Col sm={9}>
-                     <Input type="text" name="state" id="state" className="input-lg" />
-                  </Col>
-               </FormGroup>
-               <FormGroup row>
-                  <Label for="zip" sm={3}><IntlMessages id="components.zipCode" /></Label>
-                  <Col sm={9}>
-                     <Input type="text" name="zip" id="zip" className="input-lg" />
-                  </Col>
-               </FormGroup>
+            <hr/>
+            <Form onSubmit={handleSubmit(this.onUpdateProfile.bind(this))} inline>
+               <Field name="lastName" type="text" placeholder="Last Name" component={renderField}/>
+               {' '}
+               <Button color="primary" type="submit" outline size="md"><IntlMessages id="widgets.updateProfile" /></Button>
             </Form>
-            <hr />
+            <hr/>
 
-            <Button variant="contained" color="primary" className="text-white" onClick={() => this.onUpdateProfile()}><IntlMessages id="widgets.updateProfile" /></Button>
+            <Button color="danger" onClick={this.toggle} outline size="md">Change Password</Button>
+            <Modal isOpen={this.state.modal} toggle={this.toggle} backdrop>
+               <ModalHeader toggle={this.toggle}>Update Password</ModalHeader>
+               <ModalBody>
+                  <Form onSubmit={handleSubmit(this.onUpdatePassword.bind(this))}>
+                     <Field name="oldPassword" label="Old Password" type="password" placeholder="Old Password" component={renderField}/>
+                     <Field name="newPassword" label="New Password" type="password" placeholder="New Password" component={renderField}/>
+                     <Field name="newRetypePassword" label="Retype Password" type="password" placeholder="Retype Password" component={renderField}/>
+                     <Button color="primary" type="submit" outline size="md">Update</Button>
+                     {' '}
+                     <Button color="danger" onClick={this.toggle} outline size="md">Cancel</Button>
+                  </Form>
+               </ModalBody>
+            </Modal>
+            {loadingUpdate &&
+            <RctSectionLoader/>}
          </div>
       );
    }
 }
+
+
+export default reduxForm({form:'profileFormUpdate'})(connect(mapStateToProps,mapDispatchToProps)(Profile))
+

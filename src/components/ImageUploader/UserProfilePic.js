@@ -7,6 +7,7 @@ import RctCollapsibleCard from "Components/RctCollapsibleCard/RctCollapsibleCard
 import IntlMessages from "Util/IntlMessages";
 import {Button} from "reactstrap";
 import {fetchUserError} from "Actions/AuthActions";
+import Label from "reactstrap/es/Label";
 
 const mapDispatchToProps={
     profilePicUpload,
@@ -69,24 +70,28 @@ class UserProfilePic extends React.Component{
                     src={this.state.src}
                     ref={cropper => { this.cropper = cropper; }}
                 />
+                <br></br>
                 <div className="d-flex align-items-center justify-content-center mb-10">
-                    <Button onClick={this.cropImage.bind(this)} variant="contained" className="bg-success text-white w-100">
+                    <Button onClick={this.cropImage.bind(this)} variant="contained" color="primary" outline>
                         <IntlMessages id="button.cropImage" />
                     </Button>
                 </div>
             </div>}
-            <input type="file" className="form-control-file text-primary font-weight-bold"
-                   data-title="Click me or Drag & Drop file"
+            <Label for="image-file">Profile Picture</Label>
+            <input id="image-file" type="file" className="form-control-file text-primary font-weight-bold"
+                   data-title="Click me or Drag & Drop Image"
                    onChange={this.onChange.bind(this)} accept="image/*"/>
 
             {this.state.cropResult &&
-            <RctCollapsibleCard
+            <div>
+                <Label><b>Cropped Image</b></Label>
+                <br></br>
+                <img style={{ width: '100%', borderRadius:'25px', marginBottom: '10px'}} src={this.state.cropResult} alt="cropped_img" />
+                <div className="d-flex justify-content-center">
+                    <Button id="upload_pic" color="info" outline size="sm" block onClick={this.onUpload.bind(this)}>Upload</Button>
+                </div>
 
-                heading={<IntlMessages id="widgets.croppedImage" />}
-            >
-                <img style={{ width: '100%' }} src={this.state.cropResult} alt="cropped_img" />
-                <Button id="upload_pic" className="bg-success text-white w-100" onClick={this.onUpload.bind(this)}>Upload</Button>
-            </RctCollapsibleCard>
+            </div>
             }
 
         </div>)

@@ -98,9 +98,14 @@ const AsyncFormBuilderComponent = Loadable({
    loader: () => import('Routes/form-builder/builder'),
    loading: () => <RctPageLoader/>
 });
+//forgot pass
+const AsyncForgotPassComponent = Loadable({
+   loader: () => import('Routes/session/forgot-password'),
+   loading: () => <RctPageLoader/>
+});
 
 
-export {
+export {AsyncForgotPassComponent,
    AsyncHomeDashboardComponent,
    AsyncFormBuilderComponent,
    AysncCompletedTaskComponent,

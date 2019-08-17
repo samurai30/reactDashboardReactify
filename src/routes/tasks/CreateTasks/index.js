@@ -296,7 +296,7 @@ class CreateTask extends Component{
                                 </Alert>
                                 }
                             </div>
-                            <br></br>
+                            <br/>
                             <div className="d-flex justify-content-center">
                                 <Chip className="bg-info text-white mr-10 mb-10"
                                       avatar={clientData.profilePic?<Avatar src={`${SERVER_PATH}${clientData.profilePic.url}`} /> :
@@ -326,7 +326,7 @@ class CreateTask extends Component{
                     <div>
                         {clientList && (clientList.length !== 0)?
                            <div className="container">
-                               <br></br>
+                               <br/>
                                <div className="search-bar">
                                    <TextField
                                        id="standard-with-placeholder"
@@ -359,19 +359,33 @@ class CreateTask extends Component{
                                        </List>
                                    </Scrollbars>
                                </RctCollapsibleCard>
-                               <br></br>
+                               <br/>
                            </div>
-
                             :
                             <div className="container">
+                                <br/>
+                                <div className="search-bar">
+                                    <TextField
+                                        id="standard-with-placeholder"
+                                        inputRef={this.search_index}
+                                        placeholder="Search Client by Username"
+                                    />
+                                    {' '}
+                                    <Button variant="contained" color="primary" className="mx-sm-15" onClick={() => this.searchClient()}>
+                                        Search
+                                    </Button>
+                                </div>
+                                <br/>
                                 <Alert color="warning">
                                     No clients found
                                 </Alert>
                                 <div className="d-flex justify-content-center">
                                     <Button onClick={() => this.registerUser()} color="primary">ADD HERE</Button>
                                 </div>
+                                <br/>
                             </div>
                        }
+
                     </div>
                     }
                     {(taskLoading) &&

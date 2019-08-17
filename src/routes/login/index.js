@@ -103,8 +103,7 @@ class AdminLoginPage extends Component{
                                                 </Button>
                                             </FormGroup>
                                         </Form>
-                                        <p className="text-muted">If you are a client please login through client portal</p>
-                                        <p><a target="_blank" href="#/terms-condition" className="text-muted">Terms of Service</a></p>
+                                        <p><a href="javascript:void(0)" onClick={() => this.props.history.push('/forgot-password')} className="text-muted">Forgot Password?</a></p>
                                     </div>
                                 </div>
 

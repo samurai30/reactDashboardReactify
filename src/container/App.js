@@ -13,7 +13,7 @@ import RctThemeProvider from './RctThemeProvider';
 import RctDefaultLayout from './DefaultLayout';
 
 import {
-    AsyncAdminLoginComponent,
+    AsyncAdminLoginComponent, AsyncForgotPassComponent,
     AsyncSessionPage404Component,
     AsyncSessionPage500Component
 } from "Components/AsyncComponent/AsyncComponent";
@@ -71,6 +71,7 @@ class App extends Component {
                  <Route exact path="/admin-login" component={AsyncAdminLoginComponent}/>
                  <Route path="/session/404" component={AsyncSessionPage404Component} />
                  <Route path="/session/500" component={AsyncSessionPage500Component} />
+                 <Route path="/forgot-password" component={AsyncForgotPassComponent}/>
                  <Route path="*" component={AsyncSessionPage404Component}/>
 
              </Switch>

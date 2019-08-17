@@ -57,6 +57,10 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import DepartmentForm from "Routes/users/user-management/create-user/forms/departmentForm";
 import AddUserForm from "Routes/users/user-management/create-user/forms/addUserForm";
 import UpdateUserForm from "Routes/users/user-management/create-user/forms/updateUserForm";
+import Dropdown from "reactstrap/es/Dropdown";
+import DropdownToggle from "reactstrap/es/DropdownToggle";
+import DropdownMenu from "reactstrap/es/DropdownMenu";
+import DropdownItem from "reactstrap/es/DropdownItem";
 
 
 
@@ -72,8 +76,20 @@ const mapDispatchToProps = {
    getCountries
 };
 class UserProfile extends Component {
+   constructor(props) {
+      super(props);
+
+      this.toggle = this.toggle.bind(this);
+   }
+
+   toggle() {
+      this.setState(prevState => ({
+         dropdownOpen: !prevState.dropdownOpen
+      }));
+   }
 
    state = {
+      dropdownOpen: false,
       all: false,
       selectedUser: null, // selected user to perform operations
       addNewUserModal: false, // add new user form modal
@@ -97,17 +113,12 @@ class UserProfile extends Component {
       this.props.getCountries();
       this.getUsers('/users/all-users');
    }
-   // Menu Functions
-   handleClick = event => {
-      this.setState({ anchorEl: event.currentTarget });
-   };
-   handleClickListItem = (event, index) => {
+   // Drop Menu Functions
+
+   handleClickListItem = (index) => {
       this.getUsers(`/users/all-users?roles=${this.state.rolesApi[index]}`);
-      this.setState({ anchorEl: event });
    };
-   handleClose = () => {
-      this.setState({ anchorEl: null });
-   };
+
 	/**
 	 * On Delete
 	 */
@@ -264,15 +275,23 @@ class UserProfile extends Component {
                          <a href="javascript:void(0)" onClick={() => this.onReload()} className="btn-outline-default mr-10"><i className="ti-reload"></i></a>
                       </div>
                       <div>
-                         <Button variant="contained" color="primary" className="text-white" aria-owns={anchorEl ? 'simple-menu' : null} aria-haspopup="true" onClick={this.handleClick} >
-                            Select Role
-                         </Button>
-                         <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={this.handleClose} >
-                            <MenuItem onClick={(e) => this.handleClickListItem(e.target,0)}>Admin</MenuItem>
-                            <MenuItem onClick={(e) => this.handleClickListItem(e.target,1)}>Sub-Admin</MenuItem>
-                            <MenuItem onClick={(e) => this.handleClickListItem(e.target,2)}>Surveyor</MenuItem>
-                            <MenuItem onClick={(e) => this.handleClickListItem(e.target,3)}>Client</MenuItem>
-                         </Menu>
+
+                         <Dropdown group isOpen={this.state.dropdownOpen} size="sm" toggle={this.toggle}>
+                            <DropdownToggle caret>
+                               Select Role
+                            </DropdownToggle>
+                            <DropdownMenu positionFixed persist>
+                               <DropdownItem onClick={() => this.onReload()}>All</DropdownItem>
+                               <DropdownItem divider />
+                               <DropdownItem onClick={() => this.handleClickListItem(0)}>Admin</DropdownItem>
+                               <DropdownItem divider />
+                               <DropdownItem onClick={() => this.handleClickListItem(1)}>Sub-Admin</DropdownItem>
+                               <DropdownItem divider />
+                               <DropdownItem onClick={() => this.handleClickListItem(2)}>Surveyor</DropdownItem>
+                               <DropdownItem divider />
+                               <DropdownItem onClick={() => this.handleClickListItem(3)}>Client</DropdownItem>
+                            </DropdownMenu>
+                         </Dropdown>
                       </div>
                       <div>
                          <a href="javascript:void(0)" onClick={() => {

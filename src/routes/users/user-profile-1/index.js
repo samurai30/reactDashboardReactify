@@ -10,8 +10,6 @@ import { Helmet } from "react-helmet";
 // Components
 import Profile from './component/Profile';
 import EmailPrefrences from './component/EmailPrefrences';
-import Messages from './component/Messages';
-import Address from './component/Address';
 import UserBlock from './component/UserBlock';
 
 // rct card box
@@ -71,14 +69,6 @@ export default class UserProfile extends Component {
                            icon={<i className="ti-email"></i>}
                            label={<IntlMessages id="components.emailPrefrences" />}
                         />
-                        <Tab
-                           icon={<i className="ti-comment-alt"></i>}
-                           label={<IntlMessages id="widgets.messages" />}
-                        />
-                        <Tab
-                           icon={<i className="ti-home"></i>}
-                           label={<IntlMessages id="components.address" />}
-                        />
                      </Tabs>
                   </AppBar>
                   {activeTab === 0 &&
@@ -88,14 +78,6 @@ export default class UserProfile extends Component {
                   {activeTab === 1 &&
                      <TabContainer>
                         <EmailPrefrences />
-                     </TabContainer>}
-                  {activeTab === 2 &&
-                     <TabContainer>
-                        <Messages />
-                     </TabContainer>}
-                  {activeTab === 3 &&
-                     <TabContainer>
-                        <Address />
                      </TabContainer>}
                </div>
             </RctCard>
