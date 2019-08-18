@@ -10,8 +10,14 @@ import {
     ASSIGN_TASK_GET_TASK_SUCCESS,
     ASSIGN_TASK_REMOVE_DEPT,
     ASSIGN_TASK_REMOVE_DEPT_REQUEST,
+    ASSIGN_TASK_REMOVE_SURVY,
+    ASSIGN_TASK_REMOVE_TASK,
     ASSIGN_TASK_SET_DEPT,
-    ASSIGN_TASK_SET_DEPT_REQUEST
+    ASSIGN_TASK_SET_DEPT_REQUEST,
+    ASSIGN_TASK_SET_SURVY,
+    ASSIGN_TASK_SET_TASK, ASSIGN_TASK_SET_TASK_FAILURE,
+    ASSIGN_TASK_SET_TASK_REQUEST,
+    ASSIGN_TASK_SET_TASK_SUCCESS
 } from "Actions/types";
 
 export default (state ={
@@ -20,7 +26,8 @@ export default (state ={
     departmentData:null,
     selectedDept:null,
     deptLoading:false,
-    surveyorData:null
+    surveyorData:null,
+    selectedTask:null
 },action) =>{
     switch (action.type) {
         case ASSIGN_TASK_GET_TASK_REQUEST:
@@ -45,6 +52,16 @@ export default (state ={
             return {...state,selectedDept: action.data};
         case ASSIGN_TASK_REMOVE_DEPT:
             return {...state,selectedDept: null};
+        case ASSIGN_TASK_SET_TASK:
+            return {...state,selectedTask: action.data};
+        case ASSIGN_TASK_REMOVE_TASK:
+            return {...state,selectedTask: null};
+        case ASSIGN_TASK_SET_TASK_REQUEST:
+            return {...state,loading: true};
+        case ASSIGN_TASK_SET_TASK_SUCCESS:
+            return {...state,loading: false,selectedTask:null,selectedDept:null};
+        case ASSIGN_TASK_SET_TASK_FAILURE:
+            return {...state,loading: false,selectedTask: null,selectedDept:null};
         default:
             return{...state}
 

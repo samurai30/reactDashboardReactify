@@ -265,7 +265,7 @@ class UserProfile extends Component {
                   }
                   <DepartmentForm/>
                </div>
-                <br></br>
+                <br/>
              </RctCollapsibleCard>
              <RctCollapsibleCard  heading={<IntlMessages id="register.registerUser" />}
                                   collapsible fullBlock>
@@ -295,7 +295,7 @@ class UserProfile extends Component {
                       </div>
                       <div>
                          <a href="javascript:void(0)" onClick={() => {
-                            if (department){
+                            if (department.length !== 0){
                                return  this.opnAddNewUserModal();
                             }
                             else {

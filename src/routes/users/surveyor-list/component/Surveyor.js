@@ -45,7 +45,7 @@ class SurveyorTab extends Component {
         this.setState({loading:true});
         api.get('/users/all-users?roles=ROLE_SURVEYOR',true)
             .then(response => {
-                console.log(response['hydra:member'])
+
                 this.setState({ users: response['hydra:member'] });
                 this.setState({loading:false});
             })

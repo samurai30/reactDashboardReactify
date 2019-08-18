@@ -571,6 +571,7 @@ class CreateTask extends Component{
                                             {selectedTask.status === 'Pending' ?    <span className={`badge badge-warning badge-pill`}>Pending</span> :
                                                 selectedTask.status === 'Completed' ?    <span className={`badge badge-success badge-pill`}>Completed</span>  :
                                                     selectedTask.status === 'Rejected' ?   <span className={`badge badge-danger badge-pill`}>Rejected</span>  :
+                                                        selectedTask.status === 'Assigned' ?   <span className={`badge badge-secondary badge-pill`}>Assigned</span>  :
                                                         selectedTask.status === 'Approved' ?   <span className={`badge badge-info badge-pill`}>Approved</span>  :
                                                         selectedTask.status === 'InProgress' &&  <span className={`badge badge-primary badge-pill`}>In Progress</span> }
                                         </p>
