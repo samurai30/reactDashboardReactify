@@ -4,6 +4,7 @@ import Tasks from "Routes/tasks";
 import Users from "Routes/users";
 import Maps from "Routes/maps";
 import FormBuilder from "Routes/form-builder";
+import InvoicesCreate from "Routes/Invoices";
 
 
 export default [
@@ -26,5 +27,9 @@ export default [
    {
       path: 'form-builder',
       component: FormBuilder
+   },
+   {
+      path: 'invoices',
+      component: InvoicesCreate
    }
 ]

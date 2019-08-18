@@ -791,5 +791,6 @@ module.exports = {
    "sidebar.projects": "projects",
    "sidebar.projectDetail": "project Detail",
    "sidebar.clients": "clients",
-   "sidebar.reports": "reports"
+   "sidebar.reports": "reports",
+   "sidebar.createInvoices": "Create Invoice"
 }

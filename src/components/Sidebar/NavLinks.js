@@ -59,7 +59,7 @@ export default {
       {
          "menu_title": "sidebar.assignTask",
          "new_item": false,
-         "menu_icon": "zmdi zmdi-assignment",
+         "menu_icon": "zmdi zmdi-assignment-o",
          "path": "/app/tasks/assign-task",
          "child_routes": null
       },
@@ -121,6 +121,21 @@ export default {
       }
    ],
    SupAdmincategory5: [
+      {
+         "menu_title": "sidebar.invoices",
+         "menu_icon": "zmdi zmdi-file-text",
+         "new_item": false,
+         "type_multi": null,
+         "child_routes": [
+            {
+               "menu_title": "sidebar.createInvoices",
+               "new_item": false,
+               "path": "/app/invoices/create-invoices",
+            }
+         ]
+      }
+   ],
+   SupAdmincategory6: [
       {
          "menu_title": "sidebar.location",
          "menu_icon": "zmdi zmdi-gps-dot",

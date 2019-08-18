@@ -103,9 +103,14 @@ const AsyncForgotPassComponent = Loadable({
    loader: () => import('Routes/session/forgot-password'),
    loading: () => <RctPageLoader/>
 });
+const AsyncInvoicesCreateComponent = Loadable({
+   loader: () => import('Routes/Invoices/create'),
+   loading: () => <RctPageLoader/>
+});
 
 
 export {AsyncForgotPassComponent,
+   AsyncInvoicesCreateComponent,
    AsyncHomeDashboardComponent,
    AsyncFormBuilderComponent,
    AysncCompletedTaskComponent,
