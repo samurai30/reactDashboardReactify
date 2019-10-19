@@ -1,6 +1,6 @@
-# Reactify
+# Polucon Dashboard
 
-> A material design reactjs admin template
+> Surveyor Task assignment project
 
 ## Build Setup
 
